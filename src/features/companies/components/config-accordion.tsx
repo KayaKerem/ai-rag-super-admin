@@ -1,0 +1,115 @@
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Badge } from '@/components/ui/badge'
+import { configBlockSchemas, type ConfigBlockKey } from '@/lib/validations'
+import type { ZodTypeAny } from 'zod'
+
+interface FieldConfig {
+  key: string
+  label: string
+  type?: 'text' | 'number' | 'password' | 'select' | 'boolean'
+  options?: string[]
+  placeholder?: string
+}
+
+interface ConfigAccordionProps {
+  blockKey: ConfigBlockKey
+  label: string
+  icon: string
+  fields: FieldConfig[]
+  currentValues: Record<string, unknown> | undefined
+  onSave: (blockKey: ConfigBlockKey, values: Record<string, unknown>) => void
+  isSaving: boolean
+}
+
+export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, onSave, isSaving }: ConfigAccordionProps) {
+  const schema = configBlockSchemas[blockKey] as ZodTypeAny
+  const hasConfig = currentValues && Object.keys(currentValues).length > 0
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const form = useForm<Record<string, any>>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(schema as any),
+    defaultValues: (currentValues as Record<string, unknown>) ?? {},
+  })
+
+  function handleSubmit(values: Record<string, unknown>) {
+    const cleaned = Object.fromEntries(
+      Object.entries(values).filter(([, v]) => v !== '' && v !== undefined)
+    )
+    onSave(blockKey, cleaned)
+  }
+
+  function isMasked(value: unknown): boolean {
+    return typeof value === 'string' && value.includes('****')
+  }
+
+  return (
+    <AccordionItem value={blockKey} className="rounded-lg border">
+      <AccordionTrigger className="rounded-lg bg-card px-4 py-3 hover:no-underline">
+        <div className="flex items-center gap-2">
+          <span>{icon}</span>
+          <span className="text-sm font-semibold">{label}</span>
+          <Badge variant={hasConfig ? 'default' : 'secondary'} className="text-[10px]">
+            {hasConfig ? 'Configured' : 'Defaults'}
+          </Badge>
+        </div>
+      </AccordionTrigger>
+      <AccordionContent className="px-4 pb-4 pt-2">
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <div className="grid grid-cols-2 gap-3">
+            {fields.map((field) => {
+              const currentVal = currentValues?.[field.key]
+              const masked = isMasked(currentVal)
+
+              if (field.type === 'select' && field.options) {
+                const watchedValue = form.watch(field.key) as string | undefined
+                return (
+                  <div key={field.key}>
+                    <Label className="text-xs text-muted-foreground">{field.label}</Label>
+                    <Select
+                      value={watchedValue ?? ''}
+                      onValueChange={(v: string | null) => form.setValue(field.key, v ?? '')}
+                    >
+                      <SelectTrigger className="mt-1 w-full">
+                        <SelectValue placeholder={masked ? String(currentVal) : 'Seçin'} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {field.options.map((opt) => (
+                          <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )
+              }
+
+              return (
+                <div key={field.key}>
+                  <Label className="text-xs text-muted-foreground">{field.label}</Label>
+                  <Input
+                    {...form.register(field.key)}
+                    type={field.type === 'number' ? 'number' : 'text'}
+                    step={field.type === 'number' ? 'any' : undefined}
+                    placeholder={masked ? String(currentVal) : (field.placeholder ?? '')}
+                    className={`mt-1 ${masked ? 'italic text-muted-foreground' : ''}`}
+                  />
+                </div>
+              )
+            })}
+          </div>
+          <div className="mt-4 flex justify-end border-t pt-3">
+            <Button type="submit" size="sm" disabled={isSaving}>
+              {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
+            </Button>
+          </div>
+        </form>
+      </AccordionContent>
+    </AccordionItem>
+  )
+}
