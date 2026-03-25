@@ -1,0 +1,129 @@
+<h2>Platform Ayarları Sayfası</h2>
+<p class="subtitle">/settings — Platform defaults + pricing yönetimi</p>
+
+<div class="mockup">
+  <div class="mockup-header">Platform Settings</div>
+  <div class="mockup-body" style="background: #0a0a0a; padding: 24px;">
+
+    <!-- Header -->
+    <div style="margin-bottom: 24px;">
+      <div style="font-size: 20px; font-weight: 700; color: #fff;">Platform Ayarları</div>
+      <div style="font-size: 12px; color: #666; margin-top: 2px;">Yeni şirketler bu varsayılan değerlerle başlar. Şirkete özel config girilmezse bu değerler kullanılır.</div>
+    </div>
+
+    <!-- Two column layout -->
+    <div style="display: grid; grid-template-columns: 220px 1fr; gap: 0;">
+
+      <!-- Left nav -->
+      <div style="border-right: 1px solid #222; padding-right: 16px;">
+        <div style="display: flex; flex-direction: column; gap: 2px;">
+          <div style="padding: 8px 12px; background: #111; border-radius: 6px; font-size: 12px; color: #fff; font-weight: 500; display: flex; align-items: center; gap: 8px; border: 1px solid #222;">
+            <span style="font-size: 12px;">💰</span> Pricing
+          </div>
+          <div style="padding: 8px 12px; border-radius: 6px; font-size: 12px; color: #888; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <span style="font-size: 12px;">🤖</span> AI Config
+          </div>
+          <div style="padding: 8px 12px; border-radius: 6px; font-size: 12px; color: #888; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <span style="font-size: 12px;">📦</span> S3 Config
+          </div>
+          <div style="padding: 8px 12px; border-radius: 6px; font-size: 12px; color: #888; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <span style="font-size: 12px;">🌐</span> CDN Config
+          </div>
+          <div style="padding: 8px 12px; border-radius: 6px; font-size: 12px; color: #888; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <span style="font-size: 12px;">✉️</span> Mail Config
+          </div>
+          <div style="padding: 8px 12px; border-radius: 6px; font-size: 12px; color: #888; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <span style="font-size: 12px;">🧬</span> Embedding
+          </div>
+          <div style="padding: 8px 12px; border-radius: 6px; font-size: 12px; color: #888; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <span style="font-size: 12px;">📊</span> Langfuse
+          </div>
+          <div style="padding: 8px 12px; border-radius: 6px; font-size: 12px; color: #888; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <span style="font-size: 12px;">⚡</span> Trigger
+          </div>
+          <div style="padding: 8px 12px; border-radius: 6px; font-size: 12px; color: #888; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <span style="font-size: 12px;">🚧</span> Limits
+          </div>
+        </div>
+      </div>
+
+      <!-- Right content: Pricing -->
+      <div style="padding-left: 24px;">
+        <div style="font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 4px;">Pricing</div>
+        <div style="font-size: 12px; color: #666; margin-bottom: 20px;">Maliyet hesaplamasında kullanılan birim fiyatlar</div>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <!-- S3 pricing -->
+          <div style="background: #111; border: 1px solid #222; border-radius: 8px; padding: 16px;">
+            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+              <span style="font-size: 12px;">📦</span>
+              <span style="font-size: 13px; font-weight: 500; color: #fff;">S3 Storage</span>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: #888; margin-bottom: 4px;">GB başına aylık fiyat (USD)</div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="height: 36px; flex: 1; max-width: 200px; background: #0a0a0a; border: 1px solid #222; border-radius: 6px; padding: 0 12px; display: flex; align-items: center; color: #fff; font-size: 13px;">$0.0245</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CDN pricing -->
+          <div style="background: #111; border: 1px solid #222; border-radius: 8px; padding: 16px;">
+            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+              <span style="font-size: 12px;">🌐</span>
+              <span style="font-size: 13px; font-weight: 500; color: #fff;">CDN Transfer</span>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: #888; margin-bottom: 4px;">GB başına transfer fiyatı (USD)</div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="height: 36px; flex: 1; max-width: 200px; background: #0a0a0a; border: 1px solid #222; border-radius: 6px; padding: 0 12px; display: flex; align-items: center; color: #fff; font-size: 13px;">$0.085</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trigger pricing -->
+          <div style="background: #111; border: 1px solid #222; border-radius: 8px; padding: 16px;">
+            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+              <span style="font-size: 12px;">⚡</span>
+              <span style="font-size: 13px; font-weight: 500; color: #fff;">Trigger Tasks</span>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: #888; margin-bottom: 4px;">Task başına fiyat (USD)</div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="height: 36px; flex: 1; max-width: 200px; background: #0a0a0a; border: 1px solid #222; border-radius: 6px; padding: 0 12px; display: flex; align-items: center; color: #fff; font-size: 13px;">$0.0001</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Save -->
+        <div style="display: flex; justify-content: flex-end; margin-top: 20px; padding-top: 16px; border-top: 1px solid #222;">
+          <div style="height: 32px; padding: 0 16px; background: #6d28d9; border-radius: 6px; display: flex; align-items: center; color: #fff; font-size: 12px; font-weight: 600;">Kaydet</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 16px; padding: 12px; background: rgba(109, 40, 217, 0.1); border: 1px solid rgba(109, 40, 217, 0.3); border-radius: 8px;">
+  <p style="font-size: 13px; color: #ccc; margin: 0;"><strong style="color: #a78bfa;">Yapı:</strong> Sol tarafta section navigasyonu (Pricing öne çıkarılmış, diğer config blokları altında), sağ tarafta aktif section'ın formu. Şirket config'deki accordion yerine burada side-nav + content pattern kullanıyoruz — daha fazla alan, daha okunabilir. Aynı config blokları, aynı form alanları ama platform-wide scope.</p>
+</div>
+
+<h3 style="margin-top: 24px;">Platform Ayarları sayfası uygun mu?</h3>
+<div class="options">
+  <div class="option" data-choice="approve" onclick="toggleSelect(this)">
+    <div class="letter">&#10003;</div>
+    <div class="content">
+      <h3>Evet, devam</h3>
+      <p>Login sayfasına geçelim</p>
+    </div>
+  </div>
+  <div class="option" data-choice="modify" onclick="toggleSelect(this)">
+    <div class="letter">&#9998;</div>
+    <div class="content">
+      <h3>Değişiklik istiyorum</h3>
+      <p>Terminalde detay belirteyim</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,140 @@
+<h2>Şirket Detay — Kullanıcılar Tab</h2>
+<p class="subtitle">Kullanıcı listesi, davet, rol değiştirme, CSV import</p>
+
+<div class="mockup">
+  <div class="mockup-header">Company Detail — Firma Alpha — Kullanıcılar</div>
+  <div class="mockup-body" style="background: #0a0a0a; padding: 24px;">
+
+    <!-- Tabs (Users active) -->
+    <div style="display: flex; gap: 0; margin-bottom: 24px; border-bottom: 1px solid #222;">
+      <div style="padding: 8px 16px; font-size: 13px; color: #666;">Kullanım</div>
+      <div style="padding: 8px 16px; font-size: 13px; color: #666;">Konfigürasyon</div>
+      <div style="padding: 8px 16px; font-size: 13px; color: #fff; font-weight: 500; border-bottom: 2px solid #6d28d9; margin-bottom: -1px;">Kullanıcılar</div>
+    </div>
+
+    <!-- Header -->
+    <div style="display: flex; align-items: center; margin-bottom: 16px;">
+      <div style="flex: 1;">
+        <span style="font-size: 12px; color: #666;">8 kullanıcı</span>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <div style="height: 32px; padding: 0 12px; background: #111; border: 1px solid #222; border-radius: 6px; display: flex; align-items: center; color: #888; font-size: 12px;">📄 CSV Import</div>
+        <div style="height: 32px; padding: 0 14px; background: #6d28d9; border-radius: 6px; display: flex; align-items: center; color: #fff; font-size: 12px; font-weight: 600;">+ Davet Et</div>
+      </div>
+    </div>
+
+    <!-- Users table -->
+    <div style="border: 1px solid #222; border-radius: 8px; overflow: hidden;">
+      <!-- Header -->
+      <div style="display: grid; grid-template-columns: 2fr 1.2fr 0.8fr 0.8fr 60px; padding: 10px 16px; background: #111; border-bottom: 1px solid #222;">
+        <div style="font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">Kullanıcı</div>
+        <div style="font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">Email</div>
+        <div style="font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">Rol</div>
+        <div style="font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">Katılma</div>
+        <div></div>
+      </div>
+      <!-- Row 1 - Owner -->
+      <div style="display: grid; grid-template-columns: 2fr 1.2fr 0.8fr 0.8fr 60px; padding: 12px 16px; border-bottom: 1px solid #1a1a1a; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 32px; height: 32px; background: #1e1b4b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #a78bfa; font-weight: 600; font-size: 12px;">AV</div>
+          <div>
+            <div style="font-size: 13px; color: #fff; font-weight: 500;">Ali Veli</div>
+          </div>
+        </div>
+        <div style="font-size: 12px; color: #888;">ali@firma.com</div>
+        <div><span style="font-size: 11px; color: #f59e0b; background: #1a1400; padding: 2px 8px; border-radius: 4px; border: 1px solid #332800;">owner</span></div>
+        <div style="font-size: 12px; color: #888;">15 Oca</div>
+        <div style="text-align: right;">
+          <span style="color: #444; font-size: 16px; cursor: pointer;">⋯</span>
+        </div>
+      </div>
+      <!-- Row 2 - Admin -->
+      <div style="display: grid; grid-template-columns: 2fr 1.2fr 0.8fr 0.8fr 60px; padding: 12px 16px; border-bottom: 1px solid #1a1a1a; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 32px; height: 32px; background: #1a2332; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #60a5fa; font-weight: 600; font-size: 12px;">AY</div>
+          <div>
+            <div style="font-size: 13px; color: #fff; font-weight: 500;">Ayşe Yılmaz</div>
+          </div>
+        </div>
+        <div style="font-size: 12px; color: #888;">ayse@firma.com</div>
+        <div><span style="font-size: 11px; color: #6d28d9; background: #1a1040; padding: 2px 8px; border-radius: 4px; border: 1px solid #2d1a6e;">admin</span></div>
+        <div style="font-size: 12px; color: #888;">20 Oca</div>
+        <div style="text-align: right;">
+          <span style="color: #444; font-size: 16px; cursor: pointer;">⋯</span>
+        </div>
+      </div>
+      <!-- Row 3 - Member -->
+      <div style="display: grid; grid-template-columns: 2fr 1.2fr 0.8fr 0.8fr 60px; padding: 12px 16px; border-bottom: 1px solid #1a1a1a; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 32px; height: 32px; background: #1a2e1a; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #4ade80; font-weight: 600; font-size: 12px;">MK</div>
+          <div>
+            <div style="font-size: 13px; color: #fff; font-weight: 500;">Mehmet Kaya</div>
+          </div>
+        </div>
+        <div style="font-size: 12px; color: #888;">mehmet@firma.com</div>
+        <div><span style="font-size: 11px; color: #888; background: #1a1a1a; padding: 2px 8px; border-radius: 4px; border: 1px solid #333;">member</span></div>
+        <div style="font-size: 12px; color: #888;">03 Şub</div>
+        <div style="text-align: right;">
+          <span style="color: #444; font-size: 16px; cursor: pointer;">⋯</span>
+        </div>
+      </div>
+      <!-- Row 4 - Member -->
+      <div style="display: grid; grid-template-columns: 2fr 1.2fr 0.8fr 0.8fr 60px; padding: 12px 16px; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 32px; height: 32px; background: #2e1a1a; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #f87171; font-weight: 600; font-size: 12px;">ZD</div>
+          <div>
+            <div style="font-size: 13px; color: #fff; font-weight: 500;">Zeynep Demir</div>
+          </div>
+        </div>
+        <div style="font-size: 12px; color: #888;">zeynep@firma.com</div>
+        <div><span style="font-size: 11px; color: #888; background: #1a1a1a; padding: 2px 8px; border-radius: 4px; border: 1px solid #333;">member</span></div>
+        <div style="font-size: 12px; color: #888;">10 Mar</div>
+        <div style="text-align: right;">
+          <span style="color: #444; font-size: 16px; cursor: pointer;">⋯</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Invite modal preview -->
+    <div style="margin-top: 24px; padding: 20px; background: #111; border: 1px solid #222; border-radius: 8px;">
+      <div style="font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 16px;">Kullanıcı Davet Et (Dialog Preview)</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div>
+          <div style="font-size: 11px; color: #888; margin-bottom: 4px;">Email</div>
+          <div style="height: 36px; background: #0a0a0a; border: 1px solid #222; border-radius: 6px; padding: 0 12px; display: flex; align-items: center; color: #666; font-size: 12px;">user@example.com</div>
+        </div>
+        <div>
+          <div style="font-size: 11px; color: #888; margin-bottom: 4px;">Rol</div>
+          <div style="height: 36px; background: #0a0a0a; border: 1px solid #222; border-radius: 6px; padding: 0 12px; display: flex; align-items: center; color: #fff; font-size: 12px;">member ▾</div>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
+        <div style="height: 32px; padding: 0 14px; background: #111; border: 1px solid #222; border-radius: 6px; display: flex; align-items: center; color: #888; font-size: 12px;">İptal</div>
+        <div style="height: 32px; padding: 0 14px; background: #6d28d9; border-radius: 6px; display: flex; align-items: center; color: #fff; font-size: 12px; font-weight: 600;">Davet Gönder</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div style="margin-top: 16px; padding: 12px; background: rgba(109, 40, 217, 0.1); border: 1px solid rgba(109, 40, 217, 0.3); border-radius: 8px;">
+  <p style="font-size: 13px; color: #ccc; margin: 0;"><strong style="color: #a78bfa;">Öğeler:</strong> Kullanıcı tablosu (avatar, isim, email, rol badge, katılma tarihi, ⋯ menü). ⋯ menüsünden: rol değiştir, deaktif et. Davet butonu → dialog (email + rol select). CSV Import butonu → file upload dialog. Rol renkleri: <span style="color: #f59e0b;">owner</span>, <span style="color: #6d28d9;">admin</span>, <span style="color: #888;">member</span>.</p>
+</div>
+
+<h3 style="margin-top: 24px;">Kullanıcılar tab'ı uygun mu?</h3>
+<div class="options">
+  <div class="option" data-choice="approve" onclick="toggleSelect(this)">
+    <div class="letter">&#10003;</div>
+    <div class="content">
+      <h3>Evet, devam</h3>
+      <p>Platform Ayarları sayfasına geçelim</p>
+    </div>
+  </div>
+  <div class="option" data-choice="modify" onclick="toggleSelect(this)">
+    <div class="letter">&#9998;</div>
+    <div class="content">
+      <h3>Değişiklik istiyorum</h3>
+      <p>Terminalde detay belirteyim</p>
+    </div>
+  </div>
+</div>

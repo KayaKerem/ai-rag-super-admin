@@ -1,0 +1,151 @@
+<h2>Şirket Detay Sayfası</h2>
+<p class="subtitle">/companies/:id — Üstte şirket başlığı, altta 3 tab</p>
+
+<div class="mockup">
+  <div class="mockup-header">Company Detail — Firma Alpha</div>
+  <div class="mockup-body" style="background: #0a0a0a; padding: 24px;">
+
+    <!-- Company header -->
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #222;">
+      <div style="width: 48px; height: 48px; background: #1e1b4b; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #a78bfa; font-weight: 700; font-size: 18px;">FA</div>
+      <div style="flex: 1;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="font-size: 20px; font-weight: 700; color: #fff;">Firma Alpha</div>
+          <div style="font-size: 11px; color: #888; background: #111; border: 1px solid #222; padding: 2px 8px; border-radius: 4px;">ID: 3f2a...</div>
+        </div>
+        <div style="font-size: 12px; color: #666; margin-top: 2px;">Oluşturulma: 15 Ocak 2026</div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <div style="height: 32px; padding: 0 12px; background: #111; border: 1px solid #222; border-radius: 6px; display: flex; align-items: center; color: #888; font-size: 12px;">✏️ Düzenle</div>
+        <div style="height: 32px; padding: 0 12px; background: #111; border: 1px solid #450a0a; border-radius: 6px; display: flex; align-items: center; color: #ef4444; font-size: 12px;">🗑 Sil</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div style="display: flex; gap: 0; margin-bottom: 24px; border-bottom: 1px solid #222;">
+      <div style="padding: 8px 16px; font-size: 13px; color: #fff; font-weight: 500; border-bottom: 2px solid #6d28d9; margin-bottom: -1px;">Kullanım</div>
+      <div style="padding: 8px 16px; font-size: 13px; color: #666;">Konfigürasyon</div>
+      <div style="padding: 8px 16px; font-size: 13px; color: #666;">Kullanıcılar</div>
+    </div>
+
+    <!-- Tab content: Usage -->
+    <!-- KPI row -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+      <div style="background: #111; border: 1px solid #222; border-radius: 8px; padding: 14px;">
+        <div style="font-size: 11px; color: #a78bfa; text-transform: uppercase; letter-spacing: 0.5px;">AI</div>
+        <div style="font-size: 22px; font-weight: 700; color: #fff; margin-top: 4px;">$20.30</div>
+        <div style="font-size: 11px; color: #666; margin-top: 2px;">1,250,000 token</div>
+      </div>
+      <div style="background: #111; border: 1px solid #222; border-radius: 8px; padding: 14px;">
+        <div style="font-size: 11px; color: #3b82f6; text-transform: uppercase; letter-spacing: 0.5px;">CDN</div>
+        <div style="font-size: 22px; font-weight: 700; color: #fff; margin-top: 4px;">$2.80</div>
+        <div style="font-size: 11px; color: #666; margin-top: 2px;">32.9 GB transfer</div>
+      </div>
+      <div style="background: #111; border: 1px solid #222; border-radius: 8px; padding: 14px;">
+        <div style="font-size: 11px; color: #22c55e; text-transform: uppercase; letter-spacing: 0.5px;">Storage</div>
+        <div style="font-size: 22px; font-weight: 700; color: #fff; margin-top: 4px;">$0.18</div>
+        <div style="font-size: 11px; color: #666; margin-top: 2px;">5.0 GB kullanım</div>
+      </div>
+      <div style="background: #111; border: 1px solid #222; border-radius: 8px; padding: 14px;">
+        <div style="font-size: 11px; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.5px;">Trigger</div>
+        <div style="font-size: 22px; font-weight: 700; color: #fff; margin-top: 4px;">$0.05</div>
+        <div style="font-size: 11px; color: #666; margin-top: 2px;">320 task</div>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div style="background: #111; border: 1px solid #222; border-radius: 8px; padding: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div style="font-size: 13px; font-weight: 600; color: #fff;">Aylık Maliyet Trendi</div>
+        <div style="height: 28px; padding: 0 10px; background: #0a0a0a; border: 1px solid #222; border-radius: 6px; display: flex; align-items: center; color: #888; font-size: 11px;">Son 6 ay ▾</div>
+      </div>
+      <!-- Stacked bar chart mockup -->
+      <div style="display: flex; align-items: flex-end; gap: 12px; height: 120px; padding-bottom: 4px;">
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+          <div style="width: 100%; display: flex; flex-direction: column;">
+            <div style="height: 30px; background: #6d28d9; border-radius: 3px 3px 0 0;"></div>
+            <div style="height: 4px; background: #3b82f6;"></div>
+            <div style="height: 2px; background: #22c55e;"></div>
+            <div style="height: 1px; background: #f59e0b; border-radius: 0 0 3px 3px;"></div>
+          </div>
+          <span style="font-size: 10px; color: #666;">Eki</span>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+          <div style="width: 100%; display: flex; flex-direction: column;">
+            <div style="height: 38px; background: #6d28d9; border-radius: 3px 3px 0 0;"></div>
+            <div style="height: 5px; background: #3b82f6;"></div>
+            <div style="height: 2px; background: #22c55e;"></div>
+            <div style="height: 1px; background: #f59e0b; border-radius: 0 0 3px 3px;"></div>
+          </div>
+          <span style="font-size: 10px; color: #666;">Kas</span>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+          <div style="width: 100%; display: flex; flex-direction: column;">
+            <div style="height: 45px; background: #6d28d9; border-radius: 3px 3px 0 0;"></div>
+            <div style="height: 6px; background: #3b82f6;"></div>
+            <div style="height: 3px; background: #22c55e;"></div>
+            <div style="height: 1px; background: #f59e0b; border-radius: 0 0 3px 3px;"></div>
+          </div>
+          <span style="font-size: 10px; color: #666;">Ara</span>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+          <div style="width: 100%; display: flex; flex-direction: column;">
+            <div style="height: 42px; background: #6d28d9; border-radius: 3px 3px 0 0;"></div>
+            <div style="height: 5px; background: #3b82f6;"></div>
+            <div style="height: 2px; background: #22c55e;"></div>
+            <div style="height: 1px; background: #f59e0b; border-radius: 0 0 3px 3px;"></div>
+          </div>
+          <span style="font-size: 10px; color: #666;">Oca</span>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+          <div style="width: 100%; display: flex; flex-direction: column;">
+            <div style="height: 50px; background: #6d28d9; border-radius: 3px 3px 0 0;"></div>
+            <div style="height: 7px; background: #3b82f6;"></div>
+            <div style="height: 3px; background: #22c55e;"></div>
+            <div style="height: 2px; background: #f59e0b; border-radius: 0 0 3px 3px;"></div>
+          </div>
+          <span style="font-size: 10px; color: #666;">Şub</span>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+          <div style="width: 100%; display: flex; flex-direction: column;">
+            <div style="height: 55px; background: #6d28d9; border-radius: 3px 3px 0 0;"></div>
+            <div style="height: 8px; background: #3b82f6;"></div>
+            <div style="height: 3px; background: #22c55e;"></div>
+            <div style="height: 2px; background: #f59e0b; border-radius: 0 0 3px 3px;"></div>
+          </div>
+          <span style="font-size: 10px; color: #666;">Mar</span>
+        </div>
+      </div>
+      <!-- Legend -->
+      <div style="display: flex; gap: 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #222;">
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: #888;"><div style="width: 8px; height: 8px; background: #6d28d9; border-radius: 2px;"></div>AI</div>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: #888;"><div style="width: 8px; height: 8px; background: #3b82f6; border-radius: 2px;"></div>CDN</div>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: #888;"><div style="width: 8px; height: 8px; background: #22c55e; border-radius: 2px;"></div>Storage</div>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: #888;"><div style="width: 8px; height: 8px; background: #f59e0b; border-radius: 2px;"></div>Trigger</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div style="margin-top: 16px; padding: 12px; background: rgba(109, 40, 217, 0.1); border: 1px solid rgba(109, 40, 217, 0.3); border-radius: 8px;">
+  <p style="font-size: 13px; color: #ccc; margin: 0;"><strong style="color: #a78bfa;">Kullanım tab:</strong> 4 KPI kartı (AI, CDN, Storage, Trigger — her biri maliyet + ham metrik), stacked bar chart ile aylık trend, period seçici. Veri: <code>/companies/:id/usage</code></p>
+</div>
+
+<h3 style="margin-top: 24px;">Kullanım tab'ı uygun mu?</h3>
+<div class="options">
+  <div class="option" data-choice="approve" onclick="toggleSelect(this)">
+    <div class="letter">&#10003;</div>
+    <div class="content">
+      <h3>Evet, devam</h3>
+      <p>Konfigürasyon tab'ına geçelim</p>
+    </div>
+  </div>
+  <div class="option" data-choice="modify" onclick="toggleSelect(this)">
+    <div class="letter">&#9998;</div>
+    <div class="content">
+      <h3>Değişiklik istiyorum</h3>
+      <p>Terminalde detay belirteyim</p>
+    </div>
+  </div>
+</div>
