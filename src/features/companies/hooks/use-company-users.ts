@@ -14,6 +14,19 @@ export function useCompanyUsers(companyId: string) {
   })
 }
 
+export function useCreateUser(companyId: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (body: { email: string; name: string; password: string; role: 'owner' | 'admin' | 'member' }) => {
+      const { data } = await apiClient.post(`/platform/companies/${companyId}/users`, body)
+      return data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.companies.users(companyId) })
+    },
+  })
+}
+
 export function useInviteUser(companyId: string) {
   const queryClient = useQueryClient()
   return useMutation({

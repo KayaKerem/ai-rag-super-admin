@@ -96,6 +96,27 @@ export const handlers = [
     return HttpResponse.json(users)
   }),
 
+  http.post(`${BASE}/platform/companies/:id/users`, async ({ params, request }) => {
+    await delay(300)
+    const body = (await request.json()) as any
+    const id = params.id as string
+    if (!mockUsers[id]) mockUsers[id] = []
+    const existing = mockUsers[id].find((u: any) => u.email === body.email)
+    if (existing) return HttpResponse.json({ code: 'email_already_registered' }, { status: 409 })
+    const newUser = {
+      id: 'u-created-' + Date.now(),
+      email: body.email,
+      name: body.name,
+      role: body.role,
+      companyId: id,
+      isActive: true,
+      isPlatformAdmin: false,
+      createdAt: new Date().toISOString(),
+    }
+    mockUsers[id].push(newUser)
+    return HttpResponse.json(newUser, { status: 201 })
+  }),
+
   http.post(`${BASE}/platform/companies/:id/users/invite`, async ({ params, request }) => {
     await delay(300)
     const body = (await request.json()) as any

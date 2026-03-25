@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { getInitials, formatDate } from '@/lib/utils'
 import { useCompanyUsers, useUpdateUserRole, useDeactivateUser } from '../hooks/use-company-users'
+import { CreateUserDialog } from './create-user-dialog'
 import { InviteDialog } from './invite-dialog'
 import { CsvImportDialog } from './csv-import-dialog'
 import type { CompanyUser } from '../types'
@@ -156,6 +157,7 @@ export function UsersTab({ companyId }: UsersTabProps) {
         <div className="flex items-center gap-2">
           <CsvImportDialog companyId={companyId} />
           <InviteDialog companyId={companyId} />
+          <CreateUserDialog companyId={companyId} />
         </div>
       </div>
 
