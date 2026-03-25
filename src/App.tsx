@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { AuthGuard } from '@/components/layout/auth-guard'
 import { AppLayout } from '@/components/layout/app-layout'
 import { LoginPage } from '@/features/auth/pages/login-page'
+import { DashboardPage } from '@/features/dashboard/pages/dashboard-page'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,7 +23,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route element={<AuthGuard />}>
             <Route element={<AppLayout />}>
-              <Route path="/" element={<div>Dashboard</div>} />
+              <Route path="/" element={<DashboardPage />} />
               <Route path="/companies" element={<div>Companies</div>} />
               <Route path="/companies/:id" element={<div>Company Detail</div>} />
               <Route path="/settings" element={<div>Settings</div>} />
