@@ -30,6 +30,7 @@ export function CostTrendChart({ data }: CostTrendChartProps) {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               formatter={(value: any) => [`$${Number(value).toFixed(2)}`, 'Maliyet']}
               contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 8 }}
+              cursor={{ fill: 'rgba(255,255,255,0.05)' }}
             />
             <Bar dataKey="cost" fill="#6d28d9" radius={[4, 4, 0, 0]} />
           </BarChart>

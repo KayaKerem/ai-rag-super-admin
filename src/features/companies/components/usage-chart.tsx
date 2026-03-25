@@ -25,7 +25,7 @@ export function UsageChart({ data }: UsageChartProps) {
           <BarChart data={chartData}>
             <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#666' }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fontSize: 11, fill: '#666' }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${v}`} />
-            <Tooltip contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 8 }} formatter={(v: any) => `$${(v as number).toFixed(2)}`} />
+            <Tooltip contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 8 }} cursor={{ fill: 'rgba(255,255,255,0.05)' }} formatter={(v: any) => `$${(v as number).toFixed(2)}`} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
             <Bar dataKey="AI" stackId="a" fill="#6d28d9" />
             <Bar dataKey="CDN" stackId="a" fill="#3b82f6" />
