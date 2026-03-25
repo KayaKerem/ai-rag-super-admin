@@ -7,6 +7,7 @@ import { LoginPage } from '@/features/auth/pages/login-page'
 import { DashboardPage } from '@/features/dashboard/pages/dashboard-page'
 import { CompaniesPage } from '@/features/companies/pages/companies-page'
 import { CompanyDetailPage } from '@/features/companies/pages/company-detail-page'
+import { SettingsPage } from '@/features/settings/pages/settings-page'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,7 +29,7 @@ function App() {
               <Route path="/" element={<DashboardPage />} />
               <Route path="/companies" element={<CompaniesPage />} />
               <Route path="/companies/:id" element={<CompanyDetailPage />} />
-              <Route path="/settings" element={<div>Settings</div>} />
+              <Route path="/settings" element={<SettingsPage />} />
             </Route>
           </Route>
         </Routes>
