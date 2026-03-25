@@ -4,6 +4,7 @@ import { useCompany } from '../hooks/use-company'
 import { CompanyHeader } from '../components/company-header'
 import { UsageTab } from '../components/usage-tab'
 import { ConfigTab } from '../components/config-tab'
+import { UsersTab } from '../components/users-tab'
 
 export function CompanyDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -29,7 +30,7 @@ export function CompanyDetailPage() {
           <ConfigTab companyId={id!} />
         </TabsContent>
         <TabsContent value="users" className="mt-4">
-          <div className="text-sm text-muted-foreground">Kullanıcılar (yakında)</div>
+          <UsersTab companyId={id!} />
         </TabsContent>
       </Tabs>
     </div>
