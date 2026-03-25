@@ -6,6 +6,7 @@ import { AppLayout } from '@/components/layout/app-layout'
 import { LoginPage } from '@/features/auth/pages/login-page'
 import { DashboardPage } from '@/features/dashboard/pages/dashboard-page'
 import { CompaniesPage } from '@/features/companies/pages/companies-page'
+import { CompanyDetailPage } from '@/features/companies/pages/company-detail-page'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,7 +27,7 @@ function App() {
             <Route element={<AppLayout />}>
               <Route path="/" element={<DashboardPage />} />
               <Route path="/companies" element={<CompaniesPage />} />
-              <Route path="/companies/:id" element={<div>Company Detail</div>} />
+              <Route path="/companies/:id" element={<CompanyDetailPage />} />
               <Route path="/settings" element={<div>Settings</div>} />
             </Route>
           </Route>
