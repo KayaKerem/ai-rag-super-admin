@@ -114,6 +114,9 @@ importers:
       globals:
         specifier: ^17.4.0
         version: 17.4.0
+      msw:
+        specifier: ^2.12.14
+        version: 2.12.14(@types/node@24.12.0)(typescript@5.9.3)
       tailwindcss:
         specifier: ^4.2.2
         version: 4.2.2
