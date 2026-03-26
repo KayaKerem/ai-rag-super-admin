@@ -1,6 +1,9 @@
+import { useMemo } from 'react'
 import { Accordion } from '@/components/ui/accordion'
 import { useCompanyConfig, useUpdateCompanyConfig } from '../hooks/use-company-config'
+import { usePlatformModels } from '../hooks/use-platform-models'
 import { ConfigAccordion } from './config-accordion'
+import { AiConfigAccordion } from './ai-config-accordion'
 import { toast } from 'sonner'
 import type { ConfigBlockKey } from '@/lib/validations'
 import { Info } from 'lucide-react'
@@ -9,29 +12,22 @@ interface ConfigTabProps {
   companyId: string
 }
 
-const configBlocks: {
+interface FieldDef {
+  key: string
+  label: string
+  type?: 'text' | 'number' | 'select' | 'boolean'
+  options?: string[]
+  placeholder?: string
+}
+
+interface BlockDef {
   key: ConfigBlockKey
   label: string
   icon: string
-  fields: { key: string; label: string; type?: 'text' | 'number' | 'select' | 'boolean'; options?: string[]; placeholder?: string }[]
-}[] = [
-  {
-    key: 'aiConfig',
-    label: 'AI Config',
-    icon: '🤖',
-    fields: [
-      { key: 'model', label: 'Model', placeholder: 'anthropic/claude-sonnet-4-6' },
-      { key: 'compactionModel', label: 'Compaction Model', placeholder: 'anthropic/claude-haiku-4-5-20251001' },
-      { key: 'apiKey', label: 'OpenRouter API Key' },
-      { key: 'requestTimeoutMs', label: 'Timeout (ms)', type: 'number' },
-      { key: 'budgetUsd', label: 'Budget (USD)', type: 'number' },
-      { key: 'budgetDowngradeThresholdPct', label: 'Downgrade Threshold (%)', type: 'number' },
-      { key: 'citationGateMode', label: 'Citation Gate', type: 'select', options: ['off', 'warn', 'block'] },
-      { key: 'hybridRrfK', label: 'Hybrid RRF K', type: 'number' },
-      { key: 'maxOutputTokensRetryCap', label: 'Max Output Tokens Retry Cap', type: 'number' },
-      { key: 'vectorSimilarityThreshold', label: 'Vector Similarity Threshold', type: 'number' },
-    ],
-  },
+  fields: FieldDef[]
+}
+
+const configBlocks: BlockDef[] = [
   {
     key: 'embeddingConfig',
     label: 'Embedding Config',
@@ -158,6 +154,9 @@ const configBlocks: {
 export function ConfigTab({ companyId }: ConfigTabProps) {
   const { data: config, isLoading } = useCompanyConfig(companyId)
   const updateConfig = useUpdateCompanyConfig(companyId)
+  const { data: models } = usePlatformModels()
+
+  const modelOptions = useMemo(() => (models ?? []).map((m) => m.id), [models])
 
   function handleSave(blockKey: ConfigBlockKey, values: Record<string, unknown>) {
     updateConfig.mutate(
@@ -181,6 +180,14 @@ export function ConfigTab({ companyId }: ConfigTabProps) {
       </div>
 
       <Accordion className="space-y-2">
+        <AiConfigAccordion
+          currentValues={config?.aiConfig}
+          models={models ?? []}
+          modelOptions={modelOptions}
+          onSave={handleSave}
+          isSaving={updateConfig.isPending}
+        />
+
         {configBlocks.map((block) => (
           <ConfigAccordion
             key={block.key}

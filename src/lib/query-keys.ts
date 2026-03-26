@@ -10,5 +10,6 @@ export const queryKeys = {
   platform: {
     summary: (months: number) => ['platform', 'summary', months] as const,
     defaults: ['platform', 'defaults'] as const,
+    models: ['platform', 'models'] as const,
   },
 }

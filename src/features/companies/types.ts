@@ -30,3 +30,18 @@ export interface CompanyUsage {
   companyName: string
   months: UsageMonth[]
 }
+
+export interface PlatformModel {
+  id: string
+  label: string
+  tier: 'premium' | 'standard' | 'economy'
+  pricing: { inputPerMtok: number; outputPerMtok: number }
+  isDefaultForTier: boolean
+}
+
+export interface AllowedModel {
+  id: string
+  label?: string
+  tier?: 'premium' | 'standard' | 'economy'
+  isDefault?: boolean
+}

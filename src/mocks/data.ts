@@ -97,6 +97,52 @@ mockCompanies.slice(1).forEach((c) => {
   }))
 })
 
+// Available OpenRouter models
+export const mockPlatformModels = [
+  {
+    id: 'anthropic/claude-sonnet-4-6',
+    label: 'Claude Sonnet 4.6',
+    tier: 'premium',
+    pricing: { inputPerMtok: 3.0, outputPerMtok: 15.0 },
+    isDefaultForTier: true,
+  },
+  {
+    id: 'anthropic/claude-haiku-4-5-20251001',
+    label: 'Claude Haiku 4.5',
+    tier: 'standard',
+    pricing: { inputPerMtok: 1.0, outputPerMtok: 5.0 },
+    isDefaultForTier: true,
+  },
+  {
+    id: 'openai/gpt-4o',
+    label: 'GPT-4o',
+    tier: 'premium',
+    pricing: { inputPerMtok: 2.5, outputPerMtok: 10.0 },
+    isDefaultForTier: false,
+  },
+  {
+    id: 'openai/gpt-4o-mini',
+    label: 'GPT-4o Mini',
+    tier: 'economy',
+    pricing: { inputPerMtok: 0.15, outputPerMtok: 0.6 },
+    isDefaultForTier: true,
+  },
+  {
+    id: 'google/gemini-2.5-pro',
+    label: 'Gemini 2.5 Pro',
+    tier: 'premium',
+    pricing: { inputPerMtok: 2.5, outputPerMtok: 15.0 },
+    isDefaultForTier: false,
+  },
+  {
+    id: 'google/gemini-2.5-flash',
+    label: 'Gemini 2.5 Flash',
+    tier: 'standard',
+    pricing: { inputPerMtok: 0.5, outputPerMtok: 2.0 },
+    isDefaultForTier: false,
+  },
+]
+
 // Config per company (some configured, some defaults)
 export const mockCompanyConfigs: Record<string, any> = {
   [mockCompanies[0].id]: {

@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { toast } from 'sonner'
 import { SettingsNav } from '../components/settings-nav'
 import { ConfigSection } from '../components/config-section'
+import { AiConfigSection } from '../components/ai-config-section'
 import { usePlatformDefaults, useUpdatePlatformDefaults } from '../hooks/use-platform-defaults'
+import { usePlatformModels } from '@/features/companies/hooks/use-platform-models'
 import type { ConfigBlockKey } from '@/lib/validations'
 
 interface FieldConfig {
@@ -29,22 +31,7 @@ const sectionMeta: Record<string, SectionMeta> = {
       { key: 'triggerPerTaskUsd', label: 'Trigger per Task (USD)', type: 'number' },
     ],
   },
-  aiConfig: {
-    title: 'AI Config',
-    description: 'Varsayılan OpenRouter model ve AI ayarları',
-    fields: [
-      { key: 'model', label: 'Model', type: 'text', placeholder: 'anthropic/claude-sonnet-4-6' },
-      { key: 'compactionModel', label: 'Compaction Model', type: 'text', placeholder: 'anthropic/claude-haiku-4-5-20251001' },
-      { key: 'apiKey', label: 'OpenRouter API Key', type: 'password' },
-      { key: 'requestTimeoutMs', label: 'Request Timeout (ms)', type: 'number' },
-      { key: 'budgetUsd', label: 'Budget (USD)', type: 'number' },
-      { key: 'budgetDowngradeThresholdPct', label: 'Downgrade Threshold (%)', type: 'number' },
-      { key: 'citationGateMode', label: 'Citation Gate Mode', type: 'select', options: ['off', 'warn', 'block'] },
-      { key: 'hybridRrfK', label: 'Hybrid RRF K', type: 'number' },
-      { key: 'maxOutputTokensRetryCap', label: 'Max Output Tokens Retry Cap', type: 'number' },
-      { key: 'vectorSimilarityThreshold', label: 'Vector Similarity Threshold', type: 'number' },
-    ],
-  },
+  // aiConfig is handled by AiConfigSection (with dynamic model dropdown + allowedModels)
   embeddingConfig: {
     title: 'Embedding Config',
     description: 'Varsayılan embedding model ayarları',
@@ -155,16 +142,20 @@ export function SettingsPage() {
 
   const { data: defaults } = usePlatformDefaults()
   const { mutate: updateDefaults, isPending } = useUpdatePlatformDefaults()
+  const { data: models } = usePlatformModels()
+
+  const modelOptions = useMemo(() => (models ?? []).map((m) => m.id), [models])
 
   const meta = sectionMeta[activeSection]
   const currentValues = defaults?.[activeSection] as Record<string, unknown> | undefined
 
   function handleSave(blockKey: ConfigBlockKey, values: Record<string, unknown>) {
+    const title = activeSection === 'aiConfig' ? 'AI Config' : meta?.title ?? activeSection
     updateDefaults(
       { [blockKey]: values },
       {
         onSuccess: () => {
-          toast.success(`${meta.title} ayarları kaydedildi`)
+          toast.success(`${title} ayarları kaydedildi`)
         },
         onError: () => {
           toast.error('Kaydetme başarısız oldu')
@@ -181,7 +172,16 @@ export function SettingsPage() {
       </aside>
 
       <main className="flex-1 min-w-0">
-        {meta && (
+        {activeSection === 'aiConfig' ? (
+          <AiConfigSection
+            key="aiConfig"
+            currentValues={defaults?.aiConfig as Record<string, unknown> | undefined}
+            models={models ?? []}
+            modelOptions={modelOptions}
+            onSave={handleSave}
+            isSaving={isPending}
+          />
+        ) : meta ? (
           <ConfigSection
             key={activeSection}
             blockKey={activeSection as ConfigBlockKey}
@@ -192,7 +192,7 @@ export function SettingsPage() {
             onSave={handleSave}
             isSaving={isPending}
           />
-        )}
+        ) : null}
       </main>
     </div>
   )

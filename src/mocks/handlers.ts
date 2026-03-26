@@ -5,6 +5,7 @@ import {
   mockCompanyConfigs,
   mockUsers,
   mockPlatformDefaults,
+  mockPlatformModels,
   getPlatformSummary,
 } from './data'
 
@@ -205,6 +206,12 @@ export const handlers = [
     const url = new URL(request.url)
     const numMonths = parseInt(url.searchParams.get('months') ?? '1')
     return HttpResponse.json(getPlatformSummary(numMonths))
+  }),
+
+  // ─── Platform Models ───────────────────────────────
+  http.get(`${BASE}/platform/models`, async () => {
+    await delay(150)
+    return HttpResponse.json(mockPlatformModels)
   }),
 
   // ─── Platform Defaults ──────────────────────────────
