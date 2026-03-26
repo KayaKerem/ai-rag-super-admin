@@ -45,3 +45,40 @@ export interface AllowedModel {
   tier?: 'premium' | 'standard' | 'economy'
   isDefault?: boolean
 }
+
+// ─── Tool Governance ────────────────────────────────
+
+export interface RegisteredTool {
+  id: string
+  label: string
+  description: string
+  category: string
+  requiresApproval: boolean
+}
+
+export interface ToolPlan {
+  label: string
+  description: string
+  tools: string[]
+}
+
+export interface ToolPlansResponse {
+  defaultPlan: string
+  plans: Record<string, ToolPlan>
+  registeredTools: RegisteredTool[]
+}
+
+export interface ResolvedTool {
+  id: string
+  label: string
+  category: string
+  requiresApproval: boolean
+  enabled: boolean
+  source: 'plan' | 'override' | 'not_in_plan'
+}
+
+export interface CompanyToolConfig {
+  plan: string
+  overrides: Record<string, boolean>
+  resolvedTools: ResolvedTool[]
+}

@@ -4,6 +4,7 @@ import { useCompanyConfig, useUpdateCompanyConfig } from '../hooks/use-company-c
 import { usePlatformModels } from '../hooks/use-platform-models'
 import { ConfigAccordion } from './config-accordion'
 import { AiConfigAccordion } from './ai-config-accordion'
+import { ToolConfigAccordion } from './tool-config-accordion'
 import { toast } from 'sonner'
 import type { ConfigBlockKey } from '@/lib/validations'
 import { Info } from 'lucide-react'
@@ -187,6 +188,8 @@ export function ConfigTab({ companyId }: ConfigTabProps) {
           onSave={handleSave}
           isSaving={updateConfig.isPending}
         />
+
+        <ToolConfigAccordion companyId={companyId} />
 
         {configBlocks.map((block) => (
           <ConfigAccordion

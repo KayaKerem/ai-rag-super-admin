@@ -143,6 +143,68 @@ export const mockPlatformModels = [
   },
 ]
 
+// Tool governance
+export const mockRegisteredTools = [
+  { id: 'search_knowledge_base', label: 'Bilgi Bankası Arama', description: 'Bilgi tabanında arama yapar', category: 'search', requiresApproval: false },
+  { id: 'search_drive_documents', label: 'Doküman Arama', description: 'Yüklenen dokümanlarda arama yapar', category: 'search', requiresApproval: false },
+  { id: 'list_knowledge_categories', label: 'Kategori Listele', description: 'Bilgi bankası kategorilerini listeler', category: 'search', requiresApproval: false },
+  { id: 'search_templates', label: 'Şablon Arama', description: 'Şablon kütüphanesinde arama yapar', category: 'template', requiresApproval: false },
+  { id: 'retrieve_template', label: 'Şablon Öner', description: 'Göreve uygun şablon önerir', category: 'template', requiresApproval: false },
+  { id: 'fill_template', label: 'Şablon Doldur', description: 'Şablonu doldurarak belge üretir', category: 'template', requiresApproval: true },
+]
+
+export const mockToolPlans: any = {
+  defaultPlan: 'free',
+  plans: {
+    free: {
+      label: 'Ücretsiz',
+      description: 'Temel arama özellikleri',
+      tools: ['search_knowledge_base', 'list_knowledge_categories'],
+    },
+    pro: {
+      label: 'Profesyonel',
+      description: 'Tüm arama ve şablon özellikleri',
+      tools: ['search_knowledge_base', 'list_knowledge_categories', 'search_drive_documents', 'search_templates', 'retrieve_template'],
+    },
+    enterprise: {
+      label: 'Kurumsal',
+      description: 'Tüm özellikler',
+      tools: ['*'],
+    },
+  },
+}
+
+// Company tool configs
+export const mockCompanyToolConfigs: Record<string, { plan: string; overrides: Record<string, boolean> }> = {}
+
+function resolveTools(plan: string, overrides: Record<string, boolean>) {
+  const planDef = mockToolPlans.plans[plan]
+  if (!planDef) return []
+  const isWildcard = planDef.tools.includes('*')
+  return mockRegisteredTools.map((tool) => {
+    const inPlan = isWildcard || planDef.tools.includes(tool.id)
+    const hasOverride = tool.id in overrides
+    let enabled: boolean
+    let source: string
+    if (hasOverride) {
+      enabled = overrides[tool.id]
+      source = 'override'
+    } else if (inPlan) {
+      enabled = true
+      source = 'plan'
+    } else {
+      enabled = false
+      source = 'not_in_plan'
+    }
+    return { id: tool.id, label: tool.label, category: tool.category, requiresApproval: tool.requiresApproval, enabled, source }
+  })
+}
+
+export function getCompanyToolConfig(companyId: string) {
+  const cfg = mockCompanyToolConfigs[companyId] ?? { plan: mockToolPlans.defaultPlan, overrides: {} }
+  return { plan: cfg.plan, overrides: cfg.overrides, resolvedTools: resolveTools(cfg.plan, cfg.overrides) }
+}
+
 // Config per company (some configured, some defaults)
 export const mockCompanyConfigs: Record<string, any> = {
   [mockCompanies[0].id]: {

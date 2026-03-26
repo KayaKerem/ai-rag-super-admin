@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 import { SettingsNav } from '../components/settings-nav'
 import { ConfigSection } from '../components/config-section'
 import { AiConfigSection } from '../components/ai-config-section'
+import { ToolPlansSection } from '../components/tool-plans-section'
 import { usePlatformDefaults, useUpdatePlatformDefaults } from '../hooks/use-platform-defaults'
 import { usePlatformModels } from '@/features/companies/hooks/use-platform-models'
 import type { ConfigBlockKey } from '@/lib/validations'
@@ -181,6 +182,8 @@ export function SettingsPage() {
             onSave={handleSave}
             isSaving={isPending}
           />
+        ) : activeSection === 'toolPlans' ? (
+          <ToolPlansSection key="toolPlans" />
         ) : meta ? (
           <ConfigSection
             key={activeSection}

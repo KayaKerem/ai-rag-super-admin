@@ -6,6 +6,10 @@ import {
   mockUsers,
   mockPlatformDefaults,
   mockPlatformModels,
+  mockToolPlans,
+  mockRegisteredTools,
+  mockCompanyToolConfigs,
+  getCompanyToolConfig,
   getPlatformSummary,
 } from './data'
 
@@ -206,6 +210,35 @@ export const handlers = [
     const url = new URL(request.url)
     const numMonths = parseInt(url.searchParams.get('months') ?? '1')
     return HttpResponse.json(getPlatformSummary(numMonths))
+  }),
+
+  // ─── Tool Plans ────────────────────────────────────
+  http.get(`${BASE}/platform/tool-plans`, async () => {
+    await delay(150)
+    return HttpResponse.json({ ...mockToolPlans, registeredTools: mockRegisteredTools })
+  }),
+
+  http.put(`${BASE}/platform/tool-plans`, async ({ request }) => {
+    await delay(300)
+    const body = (await request.json()) as any
+    if (body.plans) mockToolPlans.plans = body.plans
+    if (body.defaultPlan) mockToolPlans.defaultPlan = body.defaultPlan
+    return HttpResponse.json({ ...mockToolPlans, registeredTools: mockRegisteredTools })
+  }),
+
+  // ─── Company Tool Config ──────────────────────────
+  http.get(`${BASE}/platform/companies/:id/tool-config`, async ({ params }) => {
+    await delay(150)
+    const id = params.id as string
+    return HttpResponse.json(getCompanyToolConfig(id))
+  }),
+
+  http.put(`${BASE}/platform/companies/:id/tool-config`, async ({ params, request }) => {
+    await delay(300)
+    const body = (await request.json()) as any
+    const id = params.id as string
+    mockCompanyToolConfigs[id] = { plan: body.plan, overrides: body.overrides ?? {} }
+    return HttpResponse.json(getCompanyToolConfig(id))
   }),
 
   // ─── Platform Models ───────────────────────────────
