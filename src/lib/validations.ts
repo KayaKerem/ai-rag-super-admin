@@ -6,6 +6,12 @@ export const s3ConfigSchema = z.object({
   endpoint: z.string().optional(),
   forcePathStyle: z.boolean().optional(),
   keyPrefix: z.string().optional(),
+  putTtlSec: z.coerce.number().optional(),
+  getTtlSec: z.coerce.number().optional(),
+  deleteTtlSec: z.coerce.number().optional(),
+  configCacheTtlMs: z.coerce.number().optional(),
+  accessKeyId: z.string().optional(),
+  secretAccessKey: z.string().optional(),
 })
 
 export const cdnConfigSchema = z.object({
@@ -24,21 +30,21 @@ export const mailConfigSchema = z.object({
 })
 
 export const aiConfigSchema = z.object({
-  provider: z.enum(['anthropic', 'openai', 'gemini']).optional(),
   model: z.string().optional(),
   compactionModel: z.string().optional(),
   apiKey: z.string().optional(),
-  apiUrl: z.string().optional(),
   requestTimeoutMs: z.coerce.number().optional(),
   budgetUsd: z.coerce.number().optional(),
-  fallbackProvider: z.enum(['anthropic', 'openai', 'gemini']).nullable().optional(),
+  budgetDowngradeThresholdPct: z.coerce.number().optional(),
+  citationGateMode: z.enum(['off', 'warn', 'block']).optional(),
+  hybridRrfK: z.coerce.number().optional(),
+  maxOutputTokensRetryCap: z.coerce.number().optional(),
+  vectorSimilarityThreshold: z.coerce.number().optional(),
 })
 
 export const embeddingConfigSchema = z.object({
-  provider: z.string().optional(),
   model: z.string().optional(),
   apiKey: z.string().optional(),
-  apiUrl: z.string().optional(),
   dimensions: z.coerce.number().optional(),
 })
 
@@ -47,18 +53,45 @@ export const langfuseConfigSchema = z.object({
   publicKey: z.string().optional(),
   secretKey: z.string().optional(),
   baseUrl: z.string().optional(),
+  environment: z.string().optional(),
+  promptManagementEnabled: z.boolean().optional(),
+  promptLabel: z.string().optional(),
+  promptCacheTtlMs: z.coerce.number().optional(),
 })
 
 export const triggerConfigSchema = z.object({
   projectRef: z.string().optional(),
   secretKey: z.string().optional(),
+  workerEnabled: z.boolean().optional(),
 })
 
 export const limitsConfigSchema = z.object({
   maxStorageMb: z.coerce.number().optional(),
   maxFileSizeMb: z.coerce.number().optional(),
+  supportedFormats: z.array(z.string()).optional(),
+  chunkMaxChars: z.coerce.number().optional(),
+  chunkOverlapChars: z.coerce.number().optional(),
+  embeddingBatchSize: z.coerce.number().optional(),
   historyTokenBudget: z.coerce.number().optional(),
   compactionTriggerTokens: z.coerce.number().optional(),
+  searchDefaultLimit: z.coerce.number().optional(),
+  batchMaxFiles: z.coerce.number().optional(),
+  batchMaxTotalSizeMb: z.coerce.number().optional(),
+  singleFileMaxSizeMb: z.coerce.number().optional(),
+  maxTagsPerDocument: z.coerce.number().optional(),
+  maxTagLength: z.coerce.number().optional(),
+  approvalTimeoutMinutes: z.coerce.number().optional(),
+  queueConcurrencyExtract: z.coerce.number().optional(),
+  queueConcurrencyIngest: z.coerce.number().optional(),
+  queueConcurrencyAutoTag: z.coerce.number().optional(),
+})
+
+export const documentProcessingConfigSchema = z.object({
+  textractEndpoint: z.string().optional(),
+  supportedSourceKinds: z.array(z.string()).optional(),
+  maxAttempts: z.coerce.number().optional(),
+  syncTextractMaxSizeMb: z.coerce.number().optional(),
+  workersEnabled: z.boolean().optional(),
 })
 
 export const pricingConfigSchema = z.object({
@@ -76,6 +109,7 @@ export const configBlockSchemas = {
   langfuseConfig: langfuseConfigSchema,
   triggerConfig: triggerConfigSchema,
   limitsConfig: limitsConfigSchema,
+  documentProcessingConfig: documentProcessingConfigSchema,
   pricingConfig: pricingConfigSchema,
 } as const
 

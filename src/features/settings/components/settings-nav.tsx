@@ -9,13 +9,14 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { key: 'pricingConfig', label: 'Pricing', icon: '💰' },
   { key: 'aiConfig', label: 'AI Config', icon: '🤖' },
+  { key: 'embeddingConfig', label: 'Embedding', icon: '🧬' },
+  { key: 'langfuseConfig', label: 'Langfuse', icon: '📊' },
   { key: 's3Config', label: 'S3 Config', icon: '📦' },
   { key: 'cdnConfig', label: 'CDN Config', icon: '🌐' },
   { key: 'mailConfig', label: 'Mail Config', icon: '✉️' },
-  { key: 'embeddingConfig', label: 'Embedding', icon: '🧬' },
-  { key: 'langfuseConfig', label: 'Langfuse', icon: '📊' },
   { key: 'triggerConfig', label: 'Trigger', icon: '⚡' },
   { key: 'limitsConfig', label: 'Limits', icon: '🚧' },
+  { key: 'documentProcessingConfig', label: 'Doc Processing', icon: '📄' },
 ]
 
 interface SettingsNavProps {

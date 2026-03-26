@@ -13,21 +13,48 @@ const configBlocks: {
   key: ConfigBlockKey
   label: string
   icon: string
-  fields: { key: string; label: string; type?: 'text' | 'number' | 'select'; options?: string[]; placeholder?: string }[]
+  fields: { key: string; label: string; type?: 'text' | 'number' | 'select' | 'boolean'; options?: string[]; placeholder?: string }[]
 }[] = [
   {
     key: 'aiConfig',
     label: 'AI Config',
     icon: '🤖',
     fields: [
-      { key: 'provider', label: 'Provider', type: 'select', options: ['anthropic', 'openai', 'gemini'] },
-      { key: 'model', label: 'Model' },
-      { key: 'compactionModel', label: 'Compaction Model' },
-      { key: 'apiKey', label: 'API Key' },
-      { key: 'apiUrl', label: 'API URL' },
+      { key: 'model', label: 'Model', placeholder: 'anthropic/claude-sonnet-4-6' },
+      { key: 'compactionModel', label: 'Compaction Model', placeholder: 'anthropic/claude-haiku-4-5-20251001' },
+      { key: 'apiKey', label: 'OpenRouter API Key' },
       { key: 'requestTimeoutMs', label: 'Timeout (ms)', type: 'number' },
       { key: 'budgetUsd', label: 'Budget (USD)', type: 'number' },
-      { key: 'fallbackProvider', label: 'Fallback Provider', type: 'select', options: ['anthropic', 'openai', 'gemini'] },
+      { key: 'budgetDowngradeThresholdPct', label: 'Downgrade Threshold (%)', type: 'number' },
+      { key: 'citationGateMode', label: 'Citation Gate', type: 'select', options: ['off', 'warn', 'block'] },
+      { key: 'hybridRrfK', label: 'Hybrid RRF K', type: 'number' },
+      { key: 'maxOutputTokensRetryCap', label: 'Max Output Tokens Retry Cap', type: 'number' },
+      { key: 'vectorSimilarityThreshold', label: 'Vector Similarity Threshold', type: 'number' },
+    ],
+  },
+  {
+    key: 'embeddingConfig',
+    label: 'Embedding Config',
+    icon: '🧬',
+    fields: [
+      { key: 'model', label: 'Model', placeholder: 'openai/text-embedding-3-small' },
+      { key: 'apiKey', label: 'API Key' },
+      { key: 'dimensions', label: 'Dimensions', type: 'number' },
+    ],
+  },
+  {
+    key: 'langfuseConfig',
+    label: 'Langfuse Config',
+    icon: '📊',
+    fields: [
+      { key: 'enabled', label: 'Tracing Enabled', type: 'boolean' },
+      { key: 'publicKey', label: 'Public Key' },
+      { key: 'secretKey', label: 'Secret Key' },
+      { key: 'baseUrl', label: 'Base URL', placeholder: 'https://cloud.langfuse.com' },
+      { key: 'environment', label: 'Environment', placeholder: 'production' },
+      { key: 'promptManagementEnabled', label: 'Prompt Management', type: 'boolean' },
+      { key: 'promptLabel', label: 'Prompt Label', placeholder: 'default' },
+      { key: 'promptCacheTtlMs', label: 'Prompt Cache TTL (ms)', type: 'number' },
     ],
   },
   {
@@ -38,7 +65,14 @@ const configBlocks: {
       { key: 'bucket', label: 'Bucket' },
       { key: 'region', label: 'Region' },
       { key: 'endpoint', label: 'Endpoint' },
+      { key: 'forcePathStyle', label: 'Force Path Style', type: 'boolean' },
       { key: 'keyPrefix', label: 'Key Prefix' },
+      { key: 'putTtlSec', label: 'PUT TTL (sn)', type: 'number' },
+      { key: 'getTtlSec', label: 'GET TTL (sn)', type: 'number' },
+      { key: 'deleteTtlSec', label: 'DELETE TTL (sn)', type: 'number' },
+      { key: 'configCacheTtlMs', label: 'Config Cache TTL (ms)', type: 'number' },
+      { key: 'accessKeyId', label: 'Access Key ID' },
+      { key: 'secretAccessKey', label: 'Secret Access Key' },
     ],
   },
   {
@@ -46,6 +80,7 @@ const configBlocks: {
     label: 'CDN Config',
     icon: '🌐',
     fields: [
+      { key: 'enabled', label: 'CDN Enabled', type: 'boolean' },
       { key: 'domain', label: 'Domain' },
       { key: 'keyPairId', label: 'Key Pair ID' },
       { key: 'privateKey', label: 'Private Key' },
@@ -64,34 +99,13 @@ const configBlocks: {
     ],
   },
   {
-    key: 'embeddingConfig',
-    label: 'Embedding Config',
-    icon: '🧬',
-    fields: [
-      { key: 'provider', label: 'Provider' },
-      { key: 'model', label: 'Model' },
-      { key: 'apiKey', label: 'API Key' },
-      { key: 'apiUrl', label: 'API URL' },
-      { key: 'dimensions', label: 'Dimensions', type: 'number' },
-    ],
-  },
-  {
-    key: 'langfuseConfig',
-    label: 'Langfuse Config',
-    icon: '📊',
-    fields: [
-      { key: 'publicKey', label: 'Public Key' },
-      { key: 'secretKey', label: 'Secret Key' },
-      { key: 'baseUrl', label: 'Base URL' },
-    ],
-  },
-  {
     key: 'triggerConfig',
     label: 'Trigger Config',
     icon: '⚡',
     fields: [
       { key: 'projectRef', label: 'Project Ref' },
       { key: 'secretKey', label: 'Secret Key' },
+      { key: 'workerEnabled', label: 'Worker Enabled', type: 'boolean' },
     ],
   },
   {
@@ -101,8 +115,32 @@ const configBlocks: {
     fields: [
       { key: 'maxStorageMb', label: 'Max Storage (MB)', type: 'number' },
       { key: 'maxFileSizeMb', label: 'Max File Size (MB)', type: 'number' },
+      { key: 'chunkMaxChars', label: 'Chunk Max Chars', type: 'number' },
+      { key: 'chunkOverlapChars', label: 'Chunk Overlap Chars', type: 'number' },
+      { key: 'embeddingBatchSize', label: 'Embedding Batch Size', type: 'number' },
       { key: 'historyTokenBudget', label: 'History Token Budget', type: 'number' },
       { key: 'compactionTriggerTokens', label: 'Compaction Trigger Tokens', type: 'number' },
+      { key: 'searchDefaultLimit', label: 'Search Default Limit', type: 'number' },
+      { key: 'batchMaxFiles', label: 'Batch Max Files', type: 'number' },
+      { key: 'batchMaxTotalSizeMb', label: 'Batch Max Total Size (MB)', type: 'number' },
+      { key: 'singleFileMaxSizeMb', label: 'Single File Max Size (MB)', type: 'number' },
+      { key: 'maxTagsPerDocument', label: 'Max Tags / Document', type: 'number' },
+      { key: 'maxTagLength', label: 'Max Tag Length', type: 'number' },
+      { key: 'approvalTimeoutMinutes', label: 'Approval Timeout (dk)', type: 'number' },
+      { key: 'queueConcurrencyExtract', label: 'Queue: Extract', type: 'number' },
+      { key: 'queueConcurrencyIngest', label: 'Queue: Ingest', type: 'number' },
+      { key: 'queueConcurrencyAutoTag', label: 'Queue: AutoTag', type: 'number' },
+    ],
+  },
+  {
+    key: 'documentProcessingConfig',
+    label: 'Document Processing',
+    icon: '📄',
+    fields: [
+      { key: 'textractEndpoint', label: 'Textract Endpoint' },
+      { key: 'maxAttempts', label: 'Max Attempts', type: 'number' },
+      { key: 'syncTextractMaxSizeMb', label: 'Sync Textract Max Size (MB)', type: 'number' },
+      { key: 'workersEnabled', label: 'Workers Enabled', type: 'boolean' },
     ],
   },
   {

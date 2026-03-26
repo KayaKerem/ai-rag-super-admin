@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { configBlockSchemas, type ConfigBlockKey } from '@/lib/validations'
 import type { ZodTypeAny } from 'zod'
@@ -66,6 +67,19 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
             {fields.map((field) => {
               const currentVal = currentValues?.[field.key]
               const masked = isMasked(currentVal)
+
+              if (field.type === 'boolean') {
+                const watchedValue = form.watch(field.key) as boolean | undefined
+                return (
+                  <div key={field.key} className="flex items-center justify-between rounded-md border px-3 py-2">
+                    <Label className="text-xs text-muted-foreground">{field.label}</Label>
+                    <Switch
+                      checked={watchedValue ?? false}
+                      onCheckedChange={(v: boolean) => form.setValue(field.key, v)}
+                    />
+                  </div>
+                )
+              }
 
               if (field.type === 'select' && field.options) {
                 const watchedValue = form.watch(field.key) as string | undefined

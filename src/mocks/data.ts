@@ -101,11 +101,11 @@ mockCompanies.slice(1).forEach((c) => {
 export const mockCompanyConfigs: Record<string, any> = {
   [mockCompanies[0].id]: {
     aiConfig: {
-      provider: 'anthropic',
-      model: 'claude-sonnet-4-5-20250514',
-      apiKey: 'sk-a****wxyz',
+      model: 'anthropic/claude-sonnet-4-6',
+      compactionModel: 'anthropic/claude-haiku-4-5-20251001',
+      apiKey: 'sk-or-a****wxyz',
       budgetUsd: 100,
-      fallbackProvider: 'openai',
+      budgetDowngradeThresholdPct: 80,
     },
     s3Config: {
       bucket: 'firma-alpha-docs',
@@ -116,6 +116,10 @@ export const mockCompanyConfigs: Record<string, any> = {
       fromAddress: 'noreply@firma-alpha.com',
       fromName: 'Firma Alpha',
     },
+    langfuseConfig: {
+      enabled: true,
+      promptLabel: 'firma-alpha',
+    },
     limitsConfig: {
       maxStorageMb: 10240,
       maxFileSizeMb: 50,
@@ -123,9 +127,8 @@ export const mockCompanyConfigs: Record<string, any> = {
   },
   [mockCompanies[1].id]: {
     aiConfig: {
-      provider: 'openai',
-      model: 'gpt-4o',
-      apiKey: 'sk-o****mnop',
+      model: 'openai/gpt-4o',
+      apiKey: 'sk-or-o****mnop',
       budgetUsd: 50,
     },
   },
@@ -134,15 +137,26 @@ export const mockCompanyConfigs: Record<string, any> = {
 // Platform defaults
 export const mockPlatformDefaults: any = {
   aiConfig: {
-    provider: 'anthropic',
-    model: 'claude-sonnet-4-5-20250514',
-    apiKey: 'sk-p****efgh',
+    model: 'anthropic/claude-sonnet-4-6',
+    compactionModel: 'anthropic/claude-haiku-4-5-20251001',
+    apiKey: 'sk-or-p****efgh',
     requestTimeoutMs: 30000,
     budgetUsd: 200,
+    budgetDowngradeThresholdPct: 80,
+    citationGateMode: 'warn',
+    hybridRrfK: 60,
+    maxOutputTokensRetryCap: 4096,
+    vectorSimilarityThreshold: 0.5,
   },
   s3Config: {
     bucket: 'platform-default-bucket',
     region: 'eu-central-1',
+    putTtlSec: 3600,
+    getTtlSec: 3600,
+    deleteTtlSec: 300,
+    configCacheTtlMs: 300000,
+    accessKeyId: 'AKIA****WXYZ',
+    secretAccessKey: 'sk-s3-****abcd',
   },
   cdnConfig: {
     enabled: true,
@@ -157,23 +171,51 @@ export const mockPlatformDefaults: any = {
     fromName: 'Platform',
   },
   embeddingConfig: {
-    provider: 'openai',
-    model: 'text-embedding-3-small',
-    apiKey: 'sk-e****ijkl',
+    model: 'openai/text-embedding-3-small',
+    apiKey: 'sk-or-e****ijkl',
     dimensions: 1536,
   },
   langfuseConfig: {
     enabled: false,
+    publicKey: 'pk-lf-****abcd',
+    secretKey: 'sk-lf-****efgh',
+    baseUrl: 'https://cloud.langfuse.com',
+    environment: 'production',
+    promptManagementEnabled: true,
+    promptLabel: 'default',
+    promptCacheTtlMs: 300000,
   },
   triggerConfig: {
     projectRef: 'proj_default',
     secretKey: 'tr-****abcd',
+    workerEnabled: true,
   },
   limitsConfig: {
     maxStorageMb: 5120,
     maxFileSizeMb: 25,
+    supportedFormats: ['pdf', 'docx', 'txt', 'md', 'csv', 'xlsx'],
+    chunkMaxChars: 1500,
+    chunkOverlapChars: 200,
+    embeddingBatchSize: 100,
     historyTokenBudget: 100000,
     compactionTriggerTokens: 80000,
+    searchDefaultLimit: 10,
+    batchMaxFiles: 50,
+    batchMaxTotalSizeMb: 500,
+    singleFileMaxSizeMb: 25,
+    maxTagsPerDocument: 20,
+    maxTagLength: 50,
+    approvalTimeoutMinutes: 1440,
+    queueConcurrencyExtract: 5,
+    queueConcurrencyIngest: 3,
+    queueConcurrencyAutoTag: 2,
+  },
+  documentProcessingConfig: {
+    textractEndpoint: 'https://textract.eu-central-1.amazonaws.com',
+    supportedSourceKinds: ['upload', 'url', 's3'],
+    maxAttempts: 3,
+    syncTextractMaxSizeMb: 5,
+    workersEnabled: true,
   },
   pricingConfig: {
     s3PerGbMonthUsd: 0.0245,
