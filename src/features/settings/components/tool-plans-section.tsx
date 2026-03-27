@@ -101,7 +101,7 @@ export function ToolPlansSection() {
 
   const editPlan = editingPlan ? plans[editingPlan] : null
 
-  const CATEGORY_LABELS: Record<string, string> = { search: 'Arama', template: 'Şablon' }
+  const CATEGORY_LABELS: Record<string, string> = { search: 'Arama', template: 'Şablon', notes: 'Notlar' }
   const grouped = registeredTools.reduce<Record<string, RegisteredTool[]>>((acc, t) => {
     if (!acc[t.category]) acc[t.category] = []
     acc[t.category].push(t)

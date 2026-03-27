@@ -129,6 +129,10 @@ export const mockRegisteredTools = [
   { id: 'search_templates', label: 'Şablon Arama', description: 'Şablon kütüphanesinde arama yapar', category: 'template', requiresApproval: false },
   { id: 'retrieve_template', label: 'Şablon Öner', description: 'Göreve uygun şablon önerir', category: 'template', requiresApproval: false },
   { id: 'fill_template', label: 'Şablon Doldur', description: 'Şablonu doldurarak belge üretir', category: 'template', requiresApproval: true },
+  { id: 'create_note', label: 'Not Oluştur', description: 'Kişisel not oluşturur', category: 'notes', requiresApproval: false },
+  { id: 'search_notes', label: 'Not Ara', description: 'Kişisel notlarda arama yapar', category: 'notes', requiresApproval: false },
+  { id: 'update_note', label: 'Not Güncelle', description: 'Mevcut notu günceller', category: 'notes', requiresApproval: false },
+  { id: 'delete_note', label: 'Not Sil', description: 'Notu siler', category: 'notes', requiresApproval: false },
 ]
 
 export const mockToolPlans: any = {
@@ -142,7 +146,7 @@ export const mockToolPlans: any = {
     pro: {
       label: 'Profesyonel',
       description: 'Tüm arama ve şablon özellikleri',
-      tools: ['search_knowledge_base', 'list_knowledge_categories', 'search_drive_documents', 'search_templates', 'retrieve_template'],
+      tools: ['search_knowledge_base', 'list_knowledge_categories', 'search_drive_documents', 'search_templates', 'retrieve_template', 'create_note', 'search_notes', 'update_note', 'delete_note'],
     },
     enterprise: {
       label: 'Kurumsal',

@@ -71,6 +71,7 @@ export function ToolConfigAccordion({ companyId }: ToolConfigAccordionProps) {
   const CATEGORY_LABELS: Record<string, string> = {
     search: 'Arama',
     template: 'Şablon',
+    notes: 'Notlar',
   }
 
   return (
