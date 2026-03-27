@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { FieldLabel } from '@/components/ui/field-label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
@@ -50,19 +50,19 @@ export function AiConfigAccordion({ currentValues, models, modelOptions, onSave,
     return typeof value === 'string' && value.includes('****')
   }
 
-  const modelFields: { key: string; label: string }[] = [
-    { key: 'model', label: 'Model' },
-    { key: 'compactionModel', label: 'Compaction Model' },
-    { key: 'titleModel', label: 'Title Model' },
+  const modelFields: { key: string; label: string; hint: string }[] = [
+    { key: 'model', label: 'Model', hint: 'Ana AI modeli. OpenRouter model ID formatinda' },
+    { key: 'compactionModel', label: 'Compaction Model', hint: 'Uzun sohbet gecmisini ozetlemek icin kullanilan model' },
+    { key: 'titleModel', label: 'Title Model', hint: 'Sohbet basligi otomatik uretimi icin kullanilan hafif model' },
   ]
 
-  const numberFields: { key: string; label: string }[] = [
-    { key: 'requestTimeoutMs', label: 'Timeout (ms)' },
-    { key: 'budgetUsd', label: 'Budget (USD)' },
-    { key: 'budgetDowngradeThresholdPct', label: 'Downgrade Threshold (%)' },
-    { key: 'hybridRrfK', label: 'Hybrid RRF K' },
-    { key: 'maxOutputTokensRetryCap', label: 'Max Output Tokens Retry Cap' },
-    { key: 'vectorSimilarityThreshold', label: 'Vector Similarity Threshold' },
+  const numberFields: { key: string; label: string; hint: string }[] = [
+    { key: 'requestTimeoutMs', label: 'Timeout (ms)', hint: 'AI istegi icin maksimum bekleme suresi (milisaniye)' },
+    { key: 'budgetUsd', label: 'Budget (USD)', hint: 'Aylik AI harcama limiti ($). Asilirsa model downgrade edilir' },
+    { key: 'budgetDowngradeThresholdPct', label: 'Downgrade Threshold (%)', hint: 'Butcenin bu yuzdesine ulasilinca daha ucuz modele gecilir (varsayilan: %80)' },
+    { key: 'hybridRrfK', label: 'Hybrid RRF K', hint: 'Hibrit arama icin RRF parametresi. Yuksek deger = daha dengeli siralama' },
+    { key: 'maxOutputTokensRetryCap', label: 'Max Output Tokens Retry Cap', hint: 'Token limiti asildiginda retry yapilacak maksimum token sayisi' },
+    { key: 'vectorSimilarityThreshold', label: 'Vector Similarity Threshold', hint: 'Vektor benzerlik esigi (0-1). Dusuk = daha siki eslestirme' },
   ]
 
   return (
@@ -84,7 +84,7 @@ export function AiConfigAccordion({ currentValues, models, modelOptions, onSave,
               const watchedValue = form.watch(field.key) as string | undefined
               return (
                 <div key={field.key}>
-                  <Label className="text-xs text-muted-foreground">{field.label}</Label>
+                  <FieldLabel label={field.label} hint={field.hint} />
                   <Select
                     value={watchedValue ?? ''}
                     onValueChange={(v: string | null) => form.setValue(field.key, v ?? '')}
@@ -104,7 +104,7 @@ export function AiConfigAccordion({ currentValues, models, modelOptions, onSave,
 
             {/* API Key */}
             <div>
-              <Label className="text-xs text-muted-foreground">OpenRouter API Key</Label>
+              <FieldLabel label="OpenRouter API Key" hint="OpenRouter API anahtari. Tum AI istekleri bu key uzerinden yonlendirilir" />
               <Input
                 {...form.register('apiKey')}
                 type="text"
@@ -115,7 +115,7 @@ export function AiConfigAccordion({ currentValues, models, modelOptions, onSave,
 
             {/* Citation Gate Mode */}
             <div>
-              <Label className="text-xs text-muted-foreground">Citation Gate</Label>
+              <FieldLabel label="Citation Gate" hint="Kaynak gosterimi kontrolu. off: kapali, warn: uyar, block: kaynak yoksa cevap verme" />
               <Select
                 value={(form.watch('citationGateMode') as string) ?? ''}
                 onValueChange={(v: string | null) => form.setValue('citationGateMode', v ?? '')}
@@ -134,7 +134,7 @@ export function AiConfigAccordion({ currentValues, models, modelOptions, onSave,
             {/* Number fields */}
             {numberFields.map((field) => (
               <div key={field.key}>
-                <Label className="text-xs text-muted-foreground">{field.label}</Label>
+                <FieldLabel label={field.label} hint={field.hint} />
                 <Input
                   {...form.register(field.key)}
                   type="number"

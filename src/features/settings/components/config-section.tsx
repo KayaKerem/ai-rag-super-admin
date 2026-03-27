@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { FieldLabel } from '@/components/ui/field-label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { configBlockSchemas, type ConfigBlockKey } from '@/lib/validations'
@@ -11,6 +11,7 @@ import type { ZodTypeAny } from 'zod'
 interface FieldConfig {
   key: string
   label: string
+  hint?: string
   type?: 'text' | 'number' | 'password' | 'select' | 'boolean'
   options?: string[]
   placeholder?: string
@@ -72,7 +73,7 @@ export function ConfigSection({
               const watchedValue = form.watch(field.key) as boolean | undefined
               return (
                 <div key={field.key} className="flex items-center justify-between rounded-md border px-3 py-2">
-                  <Label className="text-xs text-muted-foreground">{field.label}</Label>
+                  <FieldLabel label={field.label} hint={field.hint} />
                   <Switch
                     checked={watchedValue ?? false}
                     onCheckedChange={(v: boolean) => form.setValue(field.key, v)}
@@ -85,7 +86,7 @@ export function ConfigSection({
               const watchedValue = form.watch(field.key) as string | undefined
               return (
                 <div key={field.key}>
-                  <Label className="text-xs text-muted-foreground">{field.label}</Label>
+                  <FieldLabel label={field.label} hint={field.hint} />
                   <Select
                     value={watchedValue ?? ''}
                     onValueChange={(v: string | null) => form.setValue(field.key, v ?? '')}
@@ -105,7 +106,7 @@ export function ConfigSection({
 
             return (
               <div key={field.key}>
-                <Label className="text-xs text-muted-foreground">{field.label}</Label>
+                <FieldLabel label={field.label} hint={field.hint} />
                 <Input
                   {...form.register(field.key)}
                   type={field.type === 'number' ? 'number' : field.type === 'password' ? 'password' : 'text'}
