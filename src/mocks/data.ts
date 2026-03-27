@@ -97,16 +97,28 @@ mockCompanies.slice(1).forEach((c) => {
   }))
 })
 
-// Available OpenRouter models
+// Available OpenRouter models (mock — production returns 300+ from OpenRouter API, 1h cache)
 export const mockPlatformModels = [
-  { id: 'anthropic/claude-sonnet-4.6', label: 'Claude Sonnet 4.6', tier: 'premium', pricing: { inputPerMtok: 3.0, outputPerMtok: 15.0 }, isDefaultForTier: true },
-  { id: 'anthropic/claude-opus-4.6', label: 'Claude Opus 4.6', tier: 'premium', pricing: { inputPerMtok: 5.0, outputPerMtok: 25.0 }, isDefaultForTier: false },
-  { id: 'openai/gpt-4.1', label: 'GPT 4.1', tier: 'premium', pricing: { inputPerMtok: 2.0, outputPerMtok: 8.0 }, isDefaultForTier: false },
-  { id: 'google/gemini-2.5-pro', label: 'Gemini 2.5 Pro', tier: 'premium', pricing: { inputPerMtok: 1.25, outputPerMtok: 10.0 }, isDefaultForTier: false },
-  { id: 'anthropic/claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5', tier: 'standard', pricing: { inputPerMtok: 1.0, outputPerMtok: 5.0 }, isDefaultForTier: true },
-  { id: 'openai/gpt-4.1-mini', label: 'GPT 4.1 Mini', tier: 'standard', pricing: { inputPerMtok: 0.4, outputPerMtok: 1.6 }, isDefaultForTier: false },
-  { id: 'google/gemini-2.5-flash', label: 'Gemini 2.5 Flash', tier: 'standard', pricing: { inputPerMtok: 0.3, outputPerMtok: 2.5 }, isDefaultForTier: false },
-  { id: 'openai/gpt-4o-mini', label: 'GPT 4o Mini', tier: 'economy', pricing: { inputPerMtok: 0.15, outputPerMtok: 0.6 }, isDefaultForTier: true },
+  // Premium (inputPerMtok >= $2.00)
+  { id: 'anthropic/claude-sonnet-4.6', label: 'Claude Sonnet 4.6', tier: 'premium', pricing: { inputPerMtok: 3.0, outputPerMtok: 15.0 } },
+  { id: 'anthropic/claude-opus-4.6', label: 'Claude Opus 4.6', tier: 'premium', pricing: { inputPerMtok: 5.0, outputPerMtok: 25.0 } },
+  { id: 'openai/gpt-4.1', label: 'GPT 4.1', tier: 'premium', pricing: { inputPerMtok: 2.0, outputPerMtok: 8.0 } },
+  { id: 'google/gemini-2.5-pro', label: 'Gemini 2.5 Pro', tier: 'premium', pricing: { inputPerMtok: 2.5, outputPerMtok: 15.0 } },
+  { id: 'meta-llama/llama-4-maverick', label: 'Llama 4 Maverick', tier: 'premium', pricing: { inputPerMtok: 2.0, outputPerMtok: 6.0 } },
+  { id: 'deepseek/deepseek-r1', label: 'DeepSeek R1', tier: 'premium', pricing: { inputPerMtok: 3.0, outputPerMtok: 8.0 } },
+  // Standard ($0.50 <= inputPerMtok < $2.00)
+  { id: 'anthropic/claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5', tier: 'standard', pricing: { inputPerMtok: 1.0, outputPerMtok: 5.0 } },
+  { id: 'openai/gpt-4.1-mini', label: 'GPT 4.1 Mini', tier: 'standard', pricing: { inputPerMtok: 0.5, outputPerMtok: 1.6 } },
+  { id: 'google/gemini-2.5-flash', label: 'Gemini 2.5 Flash', tier: 'standard', pricing: { inputPerMtok: 0.5, outputPerMtok: 2.5 } },
+  { id: 'mistralai/mistral-large', label: 'Mistral Large', tier: 'standard', pricing: { inputPerMtok: 0.8, outputPerMtok: 2.4 } },
+  { id: 'cohere/command-r-plus', label: 'Command R+', tier: 'standard', pricing: { inputPerMtok: 0.5, outputPerMtok: 1.5 } },
+  // Economy (inputPerMtok < $0.50)
+  { id: 'openai/gpt-4o-mini', label: 'GPT 4o Mini', tier: 'economy', pricing: { inputPerMtok: 0.15, outputPerMtok: 0.6 } },
+  { id: 'google/gemini-2.0-flash', label: 'Gemini 2.0 Flash', tier: 'economy', pricing: { inputPerMtok: 0.1, outputPerMtok: 0.4 } },
+  { id: 'mistralai/mistral-small', label: 'Mistral Small', tier: 'economy', pricing: { inputPerMtok: 0.2, outputPerMtok: 0.6 } },
+  { id: 'meta-llama/llama-4-scout', label: 'Llama 4 Scout', tier: 'economy', pricing: { inputPerMtok: 0.15, outputPerMtok: 0.4 } },
+  { id: 'deepseek/deepseek-chat', label: 'DeepSeek Chat', tier: 'economy', pricing: { inputPerMtok: 0.07, outputPerMtok: 0.28 } },
+  { id: 'qwen/qwen3-235b-a22b', label: 'Qwen 3 235B', tier: 'economy', pricing: { inputPerMtok: 0.12, outputPerMtok: 0.5 } },
 ]
 
 // Tool governance

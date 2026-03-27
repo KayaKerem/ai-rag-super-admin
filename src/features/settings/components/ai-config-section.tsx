@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { FieldLabel } from '@/components/ui/field-label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { ModelSelect } from '@/components/ui/model-select'
 import { Switch } from '@/components/ui/switch'
 import { Separator } from '@/components/ui/separator'
 import { configBlockSchemas, type ConfigBlockKey } from '@/lib/validations'
@@ -77,19 +78,11 @@ export function AiConfigSection({ currentValues, models, modelOptions, onSave, i
             return (
               <div key={field.key}>
                 <FieldLabel label={field.label} hint={field.hint} />
-                <Select
+                <ModelSelect
+                  models={models}
                   value={watchedValue ?? ''}
-                  onValueChange={(v: string | null) => form.setValue(field.key, v ?? '')}
-                >
-                  <SelectTrigger className="mt-1 w-full">
-                    <SelectValue placeholder="Model seçin" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {modelOptions.map((opt) => (
-                      <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  onChange={(v) => form.setValue(field.key, v)}
+                />
               </div>
             )
           })}
@@ -144,19 +137,11 @@ export function AiConfigSection({ currentValues, models, modelOptions, onSave, i
 
           <div>
             <FieldLabel label="Quality Eval Model" hint="Degerlendirme icin kullanilan model. Ucuz model onerilir" />
-            <Select
+            <ModelSelect
+              models={models}
               value={(form.watch('qualityEvalModel') as string) ?? ''}
-              onValueChange={(v: string | null) => form.setValue('qualityEvalModel', v ?? '')}
-            >
-              <SelectTrigger className="mt-1 w-full">
-                <SelectValue placeholder="Model seçin" />
-              </SelectTrigger>
-              <SelectContent>
-                {modelOptions.map((opt) => (
-                  <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              onChange={(v) => form.setValue('qualityEvalModel', v)}
+            />
           </div>
         </div>
 

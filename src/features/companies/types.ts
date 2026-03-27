@@ -36,7 +36,6 @@ export interface PlatformModel {
   label: string
   tier: 'premium' | 'standard' | 'economy'
   pricing: { inputPerMtok: number; outputPerMtok: number }
-  isDefaultForTier: boolean
 }
 
 export interface AllowedModel {
