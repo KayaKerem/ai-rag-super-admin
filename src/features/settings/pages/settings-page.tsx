@@ -125,6 +125,19 @@ const sectionMeta: Record<string, SectionMeta> = {
       { key: 'queueConcurrencyExtract', label: 'Queue: Extract', type: 'number', hint: 'Es zamanli calisacak metin cikarma worker sayisi' },
       { key: 'queueConcurrencyIngest', label: 'Queue: Ingest', type: 'number', hint: 'Es zamanli calisacak indeksleme worker sayisi' },
       { key: 'queueConcurrencyAutoTag', label: 'Queue: AutoTag', type: 'number', hint: 'Es zamanli calisacak otomatik etiketleme worker sayisi' },
+      { key: 'crawlMaxPages', label: 'Crawl Max Pages', type: 'number', hint: 'Firma basina toplam max taranan sayfa sayisi' },
+      { key: 'crawlMaxSources', label: 'Crawl Max Sources', type: 'number', hint: 'Maksimum data source sayisi' },
+      { key: 'crawlMinIntervalHours', label: 'Crawl Min Interval (saat)', type: 'number', hint: 'Minimum re-sync araliği (saat)' },
+      { key: 'crawlConcurrency', label: 'Crawl Concurrency', type: 'number', hint: 'Paralel sync sayisi' },
+    ],
+  },
+  crawlerConfig: {
+    title: 'Crawler Config',
+    description: 'Website crawler ve Cloudflare Browser Rendering ayarları',
+    fields: [
+      { key: 'cloudflareAccountId', label: 'Cloudflare Account ID', type: 'text', hint: 'Cloudflare Browser Rendering hesap ID' },
+      { key: 'cloudflareApiToken', label: 'Cloudflare API Token', type: 'password', hint: 'Cloudflare API token (Browser Rendering erisimi icin)' },
+      { key: 'maxGlobalConcurrentCrawls', label: 'Max Global Concurrent Crawls', type: 'number', hint: 'Platform genelinde es zamanli crawler sayisi' },
     ],
   },
   documentProcessingConfig: {

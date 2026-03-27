@@ -12,6 +12,8 @@ import {
   mockCompanyToolConfigs,
   getCompanyToolConfig,
   getPlatformSummary,
+  mockDataSourceTypes,
+  mockDataSources,
 } from './data'
 
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -290,6 +292,32 @@ export const handlers = [
       companyName: company?.name ?? 'Unknown',
       months: allMonths.slice(0, numMonths),
     })
+  }),
+
+  // ─── Data Sources ─────────────────────────────────
+  http.get(`${BASE}/platform/data-source-types`, async () => {
+    await delay(150)
+    return HttpResponse.json(mockDataSourceTypes)
+  }),
+
+  http.get(`${BASE}/platform/data-sources`, async ({ request }) => {
+    await delay(200)
+    const url = new URL(request.url)
+    const type = url.searchParams.get('type')
+    const status = url.searchParams.get('status')
+    const companyId = url.searchParams.get('companyId')
+    let filtered = mockDataSources
+    if (type) filtered = filtered.filter((d) => d.type === type)
+    if (status) filtered = filtered.filter((d) => d.status === status)
+    if (companyId) filtered = filtered.filter((d) => d.companyId === companyId)
+    return HttpResponse.json({ items: filtered, total: filtered.length })
+  }),
+
+  http.get(`${BASE}/platform/companies/:id/data-sources`, async ({ params }) => {
+    await delay(150)
+    const id = params.id as string
+    const filtered = mockDataSources.filter((d) => d.companyId === id)
+    return HttpResponse.json({ items: filtered, total: filtered.length })
   }),
 
   // ─── Platform Models ───────────────────────────────

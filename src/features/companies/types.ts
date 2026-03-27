@@ -113,3 +113,34 @@ export interface CompanyAnalytics {
   companyName: string
   months: AnalyticsMonth[]
 }
+
+// ─── Data Sources / Connectors ──────────────────────
+
+export interface DataSourceType {
+  type: string
+  label: string
+  description: string
+  enabled: boolean
+  addedCount: number
+  maxSources: number
+}
+
+export interface DataSource {
+  id: string
+  companyId: string
+  companyName: string
+  type: string
+  name: string
+  config: Record<string, unknown>
+  status: 'active' | 'syncing' | 'paused' | 'error'
+  errorMessage: string | null
+  itemCount: number
+  lastSyncAt: string | null
+  nextSyncAt: string | null
+  createdAt: string
+}
+
+export interface DataSourceList {
+  items: DataSource[]
+  total: number
+}

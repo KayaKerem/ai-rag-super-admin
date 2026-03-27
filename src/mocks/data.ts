@@ -234,6 +234,19 @@ mockCompanies.forEach((c, i) => {
   mockCompanyAnalytics[c.id] = months.map((m) => generateAnalyticsMonth(m, scales[i] ?? 0.5))
 })
 
+// Data source types
+export const mockDataSourceTypes = [
+  { type: 'website_crawler', label: 'Website Crawler', description: 'Web sitenizi tarayarak bilgi tabanına ekler', enabled: true, addedCount: 4, maxSources: 5 },
+]
+
+// Data sources (platform-wide)
+export const mockDataSources = [
+  { id: 'ds-1', companyId: mockCompanies[0].id, companyName: mockCompanies[0].name, type: 'website_crawler', name: 'Firma Alpha Websitesi', config: { url: 'https://firma-alpha.com' }, status: 'active', errorMessage: null, itemCount: 147, lastSyncAt: '2026-03-27T08:00:00Z', nextSyncAt: '2026-03-28T08:00:00Z', createdAt: '2026-03-20T10:00:00Z' },
+  { id: 'ds-2', companyId: mockCompanies[0].id, companyName: mockCompanies[0].name, type: 'website_crawler', name: 'Firma Alpha Blog', config: { url: 'https://blog.firma-alpha.com' }, status: 'active', errorMessage: null, itemCount: 42, lastSyncAt: '2026-03-27T06:00:00Z', nextSyncAt: '2026-03-28T06:00:00Z', createdAt: '2026-03-22T14:00:00Z' },
+  { id: 'ds-3', companyId: mockCompanies[1].id, companyName: mockCompanies[1].name, type: 'website_crawler', name: 'Tech Beta Docs', config: { url: 'https://docs.tech-beta.com' }, status: 'syncing', errorMessage: null, itemCount: 89, lastSyncAt: '2026-03-27T10:00:00Z', nextSyncAt: null, createdAt: '2026-03-18T09:00:00Z' },
+  { id: 'ds-4', companyId: mockCompanies[4].id, companyName: mockCompanies[4].name, type: 'website_crawler', name: 'CloudNine Help Center', config: { url: 'https://help.cloudnine.ai' }, status: 'error', errorMessage: 'DNS resolution failed for help.cloudnine.ai', itemCount: 0, lastSyncAt: null, nextSyncAt: null, createdAt: '2026-03-25T11:00:00Z' },
+]
+
 // Config per company (some configured, some defaults)
 export const mockCompanyConfigs: Record<string, any> = {
   [mockCompanies[0].id]: {
@@ -349,6 +362,15 @@ export const mockPlatformDefaults: any = {
     queueConcurrencyExtract: 5,
     queueConcurrencyIngest: 3,
     queueConcurrencyAutoTag: 2,
+    crawlMaxPages: 500,
+    crawlMaxSources: 5,
+    crawlMinIntervalHours: 24,
+    crawlConcurrency: 3,
+  },
+  crawlerConfig: {
+    cloudflareAccountId: 'cf-****abcd',
+    cloudflareApiToken: 'cf-tok-****efgh',
+    maxGlobalConcurrentCrawls: 3,
   },
   documentProcessingConfig: {
     textractEndpoint: 'https://textract.eu-central-1.amazonaws.com',

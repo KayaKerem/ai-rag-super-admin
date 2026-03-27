@@ -87,6 +87,10 @@ export const limitsConfigSchema = z.object({
   queueConcurrencyExtract: z.coerce.number().optional(),
   queueConcurrencyIngest: z.coerce.number().optional(),
   queueConcurrencyAutoTag: z.coerce.number().optional(),
+  crawlMaxPages: z.coerce.number().optional(),
+  crawlMaxSources: z.coerce.number().optional(),
+  crawlMinIntervalHours: z.coerce.number().optional(),
+  crawlConcurrency: z.coerce.number().optional(),
 })
 
 export const documentProcessingConfigSchema = z.object({
@@ -95,6 +99,12 @@ export const documentProcessingConfigSchema = z.object({
   maxAttempts: z.coerce.number().optional(),
   syncTextractMaxSizeMb: z.coerce.number().optional(),
   workersEnabled: z.boolean().optional(),
+})
+
+export const crawlerConfigSchema = z.object({
+  cloudflareAccountId: z.string().optional(),
+  cloudflareApiToken: z.string().optional(),
+  maxGlobalConcurrentCrawls: z.coerce.number().optional(),
 })
 
 export const pricingConfigSchema = z.object({
@@ -113,6 +123,7 @@ export const configBlockSchemas = {
   triggerConfig: triggerConfigSchema,
   limitsConfig: limitsConfigSchema,
   documentProcessingConfig: documentProcessingConfigSchema,
+  crawlerConfig: crawlerConfigSchema,
   pricingConfig: pricingConfigSchema,
 } as const
 

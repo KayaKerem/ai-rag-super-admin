@@ -17,6 +17,7 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'mailConfig', label: 'Mail Config', icon: '✉️' },
   { key: 'triggerConfig', label: 'Trigger', icon: '⚡' },
   { key: 'limitsConfig', label: 'Limits', icon: '🚧' },
+  { key: 'crawlerConfig', label: 'Crawler', icon: '🕷️' },
   { key: 'documentProcessingConfig', label: 'Doc Processing', icon: '📄' },
 ]
 
