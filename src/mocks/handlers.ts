@@ -2,6 +2,7 @@ import { http, HttpResponse, delay } from 'msw'
 import {
   mockCompanies,
   mockCompanyUsage,
+  mockCompanyAnalytics,
   mockCompanyConfigs,
   mockUsers,
   mockPlatformDefaults,
@@ -274,6 +275,21 @@ export const handlers = [
     const id = params.id as string
     mockCompanyToolConfigs[id] = { plan: body.plan, overrides: body.overrides ?? {} }
     return HttpResponse.json(getCompanyToolConfig(id))
+  }),
+
+  // ─── Analytics ────────────────────────────────────
+  http.get(`${BASE}/platform/companies/:id/analytics`, async ({ params, request }) => {
+    await delay(200)
+    const url = new URL(request.url)
+    const numMonths = parseInt(url.searchParams.get('months') ?? '1')
+    const id = params.id as string
+    const allMonths = mockCompanyAnalytics[id] ?? []
+    const company = mockCompanies.find((c) => c.id === id)
+    return HttpResponse.json({
+      companyId: id,
+      companyName: company?.name ?? 'Unknown',
+      months: allMonths.slice(0, numMonths),
+    })
   }),
 
   // ─── Platform Models ───────────────────────────────

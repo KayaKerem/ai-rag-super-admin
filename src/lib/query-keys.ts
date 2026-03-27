@@ -7,6 +7,7 @@ export const queryKeys = {
     users: (id: string) => ['companies', id, 'users'] as const,
     usage: (id: string, months: number) => ['companies', id, 'usage', months] as const,
     usageCurrent: (id: string) => ['companies', id, 'usage', 'current'] as const,
+    analytics: (id: string, months: number) => ['companies', id, 'analytics', months] as const,
   },
   platform: {
     summary: (months: number) => ['platform', 'summary', months] as const,

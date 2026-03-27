@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useCompany } from '../hooks/use-company'
 import { CompanyHeader } from '../components/company-header'
 import { UsageTab } from '../components/usage-tab'
+import { AnalyticsTab } from '../components/analytics-tab'
 import { ConfigTab } from '../components/config-tab'
 import { ToolConfigTab } from '../components/tool-config-tab'
 import { UsersTab } from '../components/users-tab'
@@ -21,12 +22,16 @@ export function CompanyDetailPage() {
       <Tabs defaultValue="usage">
         <TabsList>
           <TabsTrigger value="usage">Kullanım</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="config">Konfigürasyon</TabsTrigger>
           <TabsTrigger value="tools">Tool&apos;lar</TabsTrigger>
           <TabsTrigger value="users">Kullanıcılar</TabsTrigger>
         </TabsList>
         <TabsContent value="usage" className="mt-4">
           <UsageTab companyId={id!} />
+        </TabsContent>
+        <TabsContent value="analytics" className="mt-4">
+          <AnalyticsTab companyId={id!} />
         </TabsContent>
         <TabsContent value="config" className="mt-4">
           <ConfigTab companyId={id!} />

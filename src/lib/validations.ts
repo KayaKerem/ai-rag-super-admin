@@ -41,6 +41,8 @@ export const aiConfigSchema = z.object({
   hybridRrfK: z.coerce.number().optional(),
   maxOutputTokensRetryCap: z.coerce.number().optional(),
   vectorSimilarityThreshold: z.coerce.number().optional(),
+  qualityEvalEnabled: z.boolean().optional(),
+  qualityEvalModel: z.string().optional(),
 })
 
 export const embeddingConfigSchema = z.object({

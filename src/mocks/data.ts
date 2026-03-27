@@ -171,6 +171,57 @@ export function getCompanyToolConfig(companyId: string) {
   return { plan: cfg.plan, overrides: cfg.overrides, resolvedTools: resolveTools(cfg.plan, cfg.overrides) }
 }
 
+// Analytics per company
+function generateAnalyticsMonth(month: string, scale: number) {
+  const convos = Math.floor((50 + Math.random() * 150) * scale)
+  const activeUsers = Math.floor((2 + Math.random() * 8) * scale) || 1
+  const turns = Math.floor(convos * (3 + Math.random() * 5))
+  const totalRatings = Math.floor(turns * 0.15)
+  const positiveCount = Math.floor(totalRatings * (0.75 + Math.random() * 0.15))
+  const negativeCount = totalRatings - positiveCount
+  const toolCalls = Math.floor(turns * 0.35)
+  const noResultCount = Math.floor(turns * (0.02 + Math.random() * 0.04))
+  return {
+    month,
+    conversations: { total: convos, activeUsers },
+    turns: { total: turns, avgPerConversation: +(turns / convos).toFixed(1) },
+    feedback: {
+      totalRatings,
+      positiveCount,
+      negativeCount,
+      satisfactionRate: totalRatings > 0 ? +(positiveCount / totalRatings).toFixed(2) : 0,
+      topReasons: [
+        { code: 'incomplete', count: Math.floor(negativeCount * 0.4) },
+        { code: 'hallucination', count: Math.floor(negativeCount * 0.25) },
+        { code: 'wrong_source', count: Math.floor(negativeCount * 0.2) },
+        { code: 'irrelevant', count: Math.floor(negativeCount * 0.15) },
+      ],
+    },
+    quality: {
+      avgGroundedness: +(0.8 + Math.random() * 0.15).toFixed(2),
+      avgRelevance: +(0.82 + Math.random() * 0.14).toFixed(2),
+      lowQualityCount: Math.floor(turns * (0.01 + Math.random() * 0.03)),
+      evaluatedCount: turns,
+    },
+    tools: {
+      totalCalls: toolCalls,
+      byTool: [
+        { name: 'search_knowledge_base', count: Math.floor(toolCalls * 0.5) },
+        { name: 'search_drive_documents', count: Math.floor(toolCalls * 0.25) },
+        { name: 'list_knowledge_categories', count: Math.floor(toolCalls * 0.1) },
+        { name: 'search_templates', count: Math.floor(toolCalls * 0.08) },
+        { name: 'fill_template', count: Math.floor(toolCalls * 0.07) },
+      ],
+    },
+    search: { noResultCount, noResultRate: +(noResultCount / turns).toFixed(3) },
+  }
+}
+
+export const mockCompanyAnalytics: Record<string, ReturnType<typeof generateAnalyticsMonth>[]> = {}
+mockCompanies.forEach((c, i) => {
+  mockCompanyAnalytics[c.id] = months.map((m) => generateAnalyticsMonth(m, scales[i] ?? 0.5))
+})
+
 // Config per company (some configured, some defaults)
 export const mockCompanyConfigs: Record<string, any> = {
   [mockCompanies[0].id]: {
@@ -222,6 +273,8 @@ export const mockPlatformDefaults: any = {
     hybridRrfK: 60,
     maxOutputTokensRetryCap: 4096,
     vectorSimilarityThreshold: 0.5,
+    qualityEvalEnabled: true,
+    qualityEvalModel: 'openai/gpt-4o-mini',
   },
   s3Config: {
     bucket: 'platform-default-bucket',

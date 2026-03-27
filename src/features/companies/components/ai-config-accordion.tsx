@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { FieldLabel } from '@/components/ui/field-label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { configBlockSchemas, type ConfigBlockKey } from '@/lib/validations'
@@ -143,6 +144,32 @@ export function AiConfigAccordion({ currentValues, models, modelOptions, onSave,
                 />
               </div>
             ))}
+
+            {/* Quality Eval */}
+            <div className="flex items-center justify-between rounded-md border px-3 py-2">
+              <FieldLabel label="Quality Eval" hint="Otomatik kalite degerlendirme. Her AI cevabi sonrasi groundedness ve relevance olculur" />
+              <Switch
+                checked={(form.watch('qualityEvalEnabled') as boolean) ?? false}
+                onCheckedChange={(v: boolean) => form.setValue('qualityEvalEnabled', v)}
+              />
+            </div>
+
+            <div>
+              <FieldLabel label="Quality Eval Model" hint="Degerlendirme icin kullanilan model. Ucuz model onerilir" />
+              <Select
+                value={(form.watch('qualityEvalModel') as string) ?? ''}
+                onValueChange={(v: string | null) => form.setValue('qualityEvalModel', v ?? '')}
+              >
+                <SelectTrigger className="mt-1 w-full">
+                  <SelectValue placeholder="Model seçin" />
+                </SelectTrigger>
+                <SelectContent>
+                  {modelOptions.map((opt) => (
+                    <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Allowed Models Section */}

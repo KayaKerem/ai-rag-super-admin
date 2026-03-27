@@ -82,3 +82,35 @@ export interface CompanyToolConfig {
   overrides: Record<string, boolean>
   resolvedTools: ResolvedTool[]
 }
+
+// ─── Analytics ─────────────────────────────────────
+
+export interface AnalyticsMonth {
+  month: string
+  conversations: { total: number; activeUsers: number }
+  turns: { total: number; avgPerConversation: number }
+  feedback: {
+    totalRatings: number
+    positiveCount: number
+    negativeCount: number
+    satisfactionRate: number
+    topReasons: Array<{ code: string; count: number }>
+  }
+  quality: {
+    avgGroundedness: number
+    avgRelevance: number
+    lowQualityCount: number
+    evaluatedCount: number
+  }
+  tools: {
+    totalCalls: number
+    byTool: Array<{ name: string; count: number }>
+  }
+  search: { noResultCount: number; noResultRate: number }
+}
+
+export interface CompanyAnalytics {
+  companyId: string
+  companyName: string
+  months: AnalyticsMonth[]
+}
