@@ -1,8 +1,15 @@
 export interface User {
   id: string
+  companyId: string
+  role: 'owner' | 'admin' | 'member'
+  isActive: boolean
   email: string
   name: string
-  isPlatformAdmin: boolean
+  avatarUrl?: string | null
+  bio?: string | null
+  phoneNumber?: string | null
+  expertiseAreas?: string[]
+  isPlatformAdmin?: boolean
 }
 
 export interface LoginRequest {
@@ -11,6 +18,7 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  token: string
+  accessToken: string
+  refreshToken: string
   user: User
 }

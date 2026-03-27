@@ -50,6 +50,7 @@ export function AiConfigSection({ currentValues, models, modelOptions, onSave, i
   const modelFields = [
     { key: 'model', label: 'Model' },
     { key: 'compactionModel', label: 'Compaction Model' },
+    { key: 'titleModel', label: 'Title Model' },
   ]
 
   const numberFields = [

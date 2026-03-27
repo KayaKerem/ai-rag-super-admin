@@ -53,6 +53,7 @@ export function AiConfigAccordion({ currentValues, models, modelOptions, onSave,
   const modelFields: { key: string; label: string }[] = [
     { key: 'model', label: 'Model' },
     { key: 'compactionModel', label: 'Compaction Model' },
+    { key: 'titleModel', label: 'Title Model' },
   ]
 
   const numberFields: { key: string; label: string }[] = [

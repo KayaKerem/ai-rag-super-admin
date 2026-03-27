@@ -99,48 +99,14 @@ mockCompanies.slice(1).forEach((c) => {
 
 // Available OpenRouter models
 export const mockPlatformModels = [
-  {
-    id: 'anthropic/claude-sonnet-4-6',
-    label: 'Claude Sonnet 4.6',
-    tier: 'premium',
-    pricing: { inputPerMtok: 3.0, outputPerMtok: 15.0 },
-    isDefaultForTier: true,
-  },
-  {
-    id: 'anthropic/claude-haiku-4-5-20251001',
-    label: 'Claude Haiku 4.5',
-    tier: 'standard',
-    pricing: { inputPerMtok: 1.0, outputPerMtok: 5.0 },
-    isDefaultForTier: true,
-  },
-  {
-    id: 'openai/gpt-4o',
-    label: 'GPT-4o',
-    tier: 'premium',
-    pricing: { inputPerMtok: 2.5, outputPerMtok: 10.0 },
-    isDefaultForTier: false,
-  },
-  {
-    id: 'openai/gpt-4o-mini',
-    label: 'GPT-4o Mini',
-    tier: 'economy',
-    pricing: { inputPerMtok: 0.15, outputPerMtok: 0.6 },
-    isDefaultForTier: true,
-  },
-  {
-    id: 'google/gemini-2.5-pro',
-    label: 'Gemini 2.5 Pro',
-    tier: 'premium',
-    pricing: { inputPerMtok: 2.5, outputPerMtok: 15.0 },
-    isDefaultForTier: false,
-  },
-  {
-    id: 'google/gemini-2.5-flash',
-    label: 'Gemini 2.5 Flash',
-    tier: 'standard',
-    pricing: { inputPerMtok: 0.5, outputPerMtok: 2.0 },
-    isDefaultForTier: false,
-  },
+  { id: 'anthropic/claude-sonnet-4.6', label: 'Claude Sonnet 4.6', tier: 'premium', pricing: { inputPerMtok: 3.0, outputPerMtok: 15.0 }, isDefaultForTier: true },
+  { id: 'anthropic/claude-opus-4.6', label: 'Claude Opus 4.6', tier: 'premium', pricing: { inputPerMtok: 5.0, outputPerMtok: 25.0 }, isDefaultForTier: false },
+  { id: 'openai/gpt-4.1', label: 'GPT 4.1', tier: 'premium', pricing: { inputPerMtok: 2.0, outputPerMtok: 8.0 }, isDefaultForTier: false },
+  { id: 'google/gemini-2.5-pro', label: 'Gemini 2.5 Pro', tier: 'premium', pricing: { inputPerMtok: 1.25, outputPerMtok: 10.0 }, isDefaultForTier: false },
+  { id: 'anthropic/claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5', tier: 'standard', pricing: { inputPerMtok: 1.0, outputPerMtok: 5.0 }, isDefaultForTier: true },
+  { id: 'openai/gpt-4.1-mini', label: 'GPT 4.1 Mini', tier: 'standard', pricing: { inputPerMtok: 0.4, outputPerMtok: 1.6 }, isDefaultForTier: false },
+  { id: 'google/gemini-2.5-flash', label: 'Gemini 2.5 Flash', tier: 'standard', pricing: { inputPerMtok: 0.3, outputPerMtok: 2.5 }, isDefaultForTier: false },
+  { id: 'openai/gpt-4o-mini', label: 'GPT 4o Mini', tier: 'economy', pricing: { inputPerMtok: 0.15, outputPerMtok: 0.6 }, isDefaultForTier: true },
 ]
 
 // Tool governance
@@ -209,7 +175,7 @@ export function getCompanyToolConfig(companyId: string) {
 export const mockCompanyConfigs: Record<string, any> = {
   [mockCompanies[0].id]: {
     aiConfig: {
-      model: 'anthropic/claude-sonnet-4-6',
+      model: 'anthropic/claude-sonnet-4.6',
       compactionModel: 'anthropic/claude-haiku-4-5-20251001',
       apiKey: 'sk-or-a****wxyz',
       budgetUsd: 100,
@@ -245,8 +211,9 @@ export const mockCompanyConfigs: Record<string, any> = {
 // Platform defaults
 export const mockPlatformDefaults: any = {
   aiConfig: {
-    model: 'anthropic/claude-sonnet-4-6',
+    model: 'anthropic/claude-sonnet-4.6',
     compactionModel: 'anthropic/claude-haiku-4-5-20251001',
+    titleModel: 'openai/gpt-4o-mini',
     apiKey: 'sk-or-p****efgh',
     requestTimeoutMs: 30000,
     budgetUsd: 200,

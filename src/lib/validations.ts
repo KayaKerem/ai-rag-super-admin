@@ -32,6 +32,7 @@ export const mailConfigSchema = z.object({
 export const aiConfigSchema = z.object({
   model: z.string().optional(),
   compactionModel: z.string().optional(),
+  titleModel: z.string().optional(),
   apiKey: z.string().optional(),
   requestTimeoutMs: z.coerce.number().optional(),
   budgetUsd: z.coerce.number().optional(),

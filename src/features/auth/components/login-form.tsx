@@ -32,11 +32,11 @@ export function LoginForm() {
     setError(null)
     loginMutation.mutate(values, {
       onSuccess: (data) => {
-        if (!data.user.isPlatformAdmin) {
+        if (data.user.isPlatformAdmin === false) {
           setError('Bu hesap platform admin yetkisine sahip değil.')
           return
         }
-        login(data.token, data.user)
+        login(data.accessToken, data.refreshToken, data.user)
         navigate('/')
       },
       onError: () => {

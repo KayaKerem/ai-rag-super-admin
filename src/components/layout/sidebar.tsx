@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { LayoutDashboard, Building2, Settings, LogOut } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useAuth } from '@/features/auth/hooks/use-auth'
+import { apiClient } from '@/lib/api-client'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -15,6 +16,8 @@ export function Sidebar() {
   const navigate = useNavigate()
 
   function handleLogout() {
+    // Fire-and-forget: notify backend about logout
+    apiClient.post('/auth/logout').catch(() => {})
     logout()
     navigate('/login')
   }

@@ -22,9 +22,13 @@ export const handlers = [
     const body = (await request.json()) as any
     if (body.email && body.password) {
       return HttpResponse.json({
-        token: 'mock-jwt-token-' + Date.now(),
+        accessToken: 'mock-access-token-' + Date.now(),
+        refreshToken: 'mock-refresh-token-' + Date.now(),
         user: {
           id: 'admin-001',
+          companyId: 'c-platform',
+          role: 'owner' as const,
+          isActive: true,
           email: body.email,
           name: 'Platform Admin',
           isPlatformAdmin: true,
@@ -32,6 +36,37 @@ export const handlers = [
       })
     }
     return HttpResponse.json({ message: 'Invalid credentials' }, { status: 401 })
+  }),
+
+  http.post(`${BASE}/auth/refresh`, async ({ request }) => {
+    await delay(200)
+    const body = (await request.json()) as any
+    if (body.refreshToken) {
+      return HttpResponse.json({
+        accessToken: 'mock-access-token-' + Date.now(),
+        refreshToken: 'mock-refresh-token-' + Date.now(),
+        user: {
+          id: 'admin-001',
+          companyId: 'c-platform',
+          role: 'owner' as const,
+          isActive: true,
+          email: 'admin@firma.com',
+          name: 'Platform Admin',
+          isPlatformAdmin: true,
+        },
+      })
+    }
+    return HttpResponse.json({ message: 'Invalid refresh token' }, { status: 401 })
+  }),
+
+  http.post(`${BASE}/auth/logout`, async () => {
+    await delay(100)
+    return HttpResponse.json({ success: true })
+  }),
+
+  http.post(`${BASE}/auth/logout-all`, async () => {
+    await delay(100)
+    return HttpResponse.json({ success: true })
   }),
 
   // ─── Companies CRUD ─────────────────────────────────

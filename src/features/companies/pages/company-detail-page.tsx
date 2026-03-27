@@ -4,6 +4,7 @@ import { useCompany } from '../hooks/use-company'
 import { CompanyHeader } from '../components/company-header'
 import { UsageTab } from '../components/usage-tab'
 import { ConfigTab } from '../components/config-tab'
+import { ToolConfigTab } from '../components/tool-config-tab'
 import { UsersTab } from '../components/users-tab'
 
 export function CompanyDetailPage() {
@@ -21,6 +22,7 @@ export function CompanyDetailPage() {
         <TabsList>
           <TabsTrigger value="usage">Kullanım</TabsTrigger>
           <TabsTrigger value="config">Konfigürasyon</TabsTrigger>
+          <TabsTrigger value="tools">Tool&apos;lar</TabsTrigger>
           <TabsTrigger value="users">Kullanıcılar</TabsTrigger>
         </TabsList>
         <TabsContent value="usage" className="mt-4">
@@ -28,6 +30,9 @@ export function CompanyDetailPage() {
         </TabsContent>
         <TabsContent value="config" className="mt-4">
           <ConfigTab companyId={id!} />
+        </TabsContent>
+        <TabsContent value="tools" className="mt-4">
+          <ToolConfigTab companyId={id!} />
         </TabsContent>
         <TabsContent value="users" className="mt-4">
           <UsersTab companyId={id!} />
