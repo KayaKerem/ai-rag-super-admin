@@ -20,7 +20,9 @@ const reasonLabels: Record<string, string> = {
   incomplete: 'Eksik Cevap',
   hallucination: 'Halusinasyon',
   wrong_source: 'Yanlis Kaynak',
+  wrong_template: 'Yanlis Sablon',
   irrelevant: 'Alakasiz',
+  other: 'Diger',
 }
 
 export function AnalyticsTab({ companyId }: AnalyticsTabProps) {

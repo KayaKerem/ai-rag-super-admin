@@ -240,7 +240,7 @@ mockCompanies.forEach((c, i) => {
 
 // Data source types
 export const mockDataSourceTypes = [
-  { type: 'website_crawler', label: 'Website Crawler', description: 'Web sitenizi tarayarak bilgi tabanına ekler', enabled: true, addedCount: 4, maxSources: 5 },
+  { type: 'website_crawler', label: 'Website Crawler', description: 'Web sitenizi tarayarak bilgi tabanına ekler' },
 ]
 
 // Data sources (platform-wide)
@@ -366,10 +366,6 @@ export const mockPlatformDefaults: any = {
     queueConcurrencyExtract: 5,
     queueConcurrencyIngest: 3,
     queueConcurrencyAutoTag: 2,
-    crawlMaxPages: 500,
-    crawlMaxSources: 5,
-    crawlMinIntervalHours: 24,
-    crawlConcurrency: 3,
   },
   crawlerConfig: {
     cloudflareAccountId: 'cf-****abcd',

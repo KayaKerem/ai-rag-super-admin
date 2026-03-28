@@ -120,9 +120,6 @@ export interface DataSourceType {
   type: string
   label: string
   description: string
-  enabled: boolean
-  addedCount: number
-  maxSources: number
 }
 
 export interface DataSource {
