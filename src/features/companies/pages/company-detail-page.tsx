@@ -7,6 +7,7 @@ import { AnalyticsTab } from '../components/analytics-tab'
 import { ConfigTab } from '../components/config-tab'
 import { ToolConfigTab } from '../components/tool-config-tab'
 import { UsersTab } from '../components/users-tab'
+import { DataSourcesTab } from '../components/data-sources-tab'
 
 export function CompanyDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -26,6 +27,7 @@ export function CompanyDetailPage() {
           <TabsTrigger value="config">Konfigürasyon</TabsTrigger>
           <TabsTrigger value="tools">Tool&apos;lar</TabsTrigger>
           <TabsTrigger value="users">Kullanıcılar</TabsTrigger>
+          <TabsTrigger value="data-sources">Veri Kaynaklari</TabsTrigger>
         </TabsList>
         <TabsContent value="usage" className="mt-4">
           <UsageTab companyId={id!} />
@@ -41,6 +43,9 @@ export function CompanyDetailPage() {
         </TabsContent>
         <TabsContent value="users" className="mt-4">
           <UsersTab companyId={id!} />
+        </TabsContent>
+        <TabsContent value="data-sources" className="mt-4">
+          <DataSourcesTab companyId={id!} />
         </TabsContent>
       </Tabs>
     </div>
