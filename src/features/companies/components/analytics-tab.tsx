@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Bar, BarChart, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
+import { AlertTriangle, AlertCircle } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useCompanyAnalytics } from '../hooks/use-company-analytics'
+import { useAgentMetrics } from '../hooks/use-agent-metrics'
 import { KpiCard } from '@/features/dashboard/components/kpi-card'
 
 interface AnalyticsTabProps {
@@ -25,9 +27,18 @@ const reasonLabels: Record<string, string> = {
   other: 'Diger',
 }
 
+const windowDaysOptions = [
+  { value: '7', label: 'Son 7 Gun' },
+  { value: '30', label: 'Son 30 Gun' },
+  { value: '90', label: 'Son 90 Gun' },
+  { value: '365', label: 'Son 1 Yil' },
+]
+
 export function AnalyticsTab({ companyId }: AnalyticsTabProps) {
   const [months, setMonths] = useState(3)
+  const [windowDays, setWindowDays] = useState(30)
   const { data, isLoading } = useCompanyAnalytics(companyId, months)
+  const { data: agentData } = useAgentMetrics(companyId, windowDays)
 
   const current = data?.months?.[0]
 
@@ -220,6 +231,141 @@ export function AnalyticsTab({ companyId }: AnalyticsTabProps) {
             </ul>
           </CardContent>
         </Card>
+      </div>
+
+      {/* ─── Agent Performansi ─────────────────────────── */}
+      <div className="mt-8">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-sm font-semibold">Agent Performansi</h3>
+          <Select value={String(windowDays)} onValueChange={(v) => setWindowDays(Number(v))}>
+            <SelectTrigger className="w-36">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {windowDaysOptions.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {agentData ? (
+          <>
+            {/* Alerts */}
+            {agentData.alerts.length > 0 && (
+              <div className="mb-4 space-y-2">
+                {agentData.alerts.map((alert) => (
+                  <div
+                    key={alert.code}
+                    className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm ${
+                      alert.severity === 'critical'
+                        ? 'bg-red-500/10 text-red-400'
+                        : 'bg-yellow-500/10 text-yellow-400'
+                    }`}
+                  >
+                    {alert.severity === 'critical' ? (
+                      <AlertCircle className="h-4 w-4 shrink-0" />
+                    ) : (
+                      <AlertTriangle className="h-4 w-4 shrink-0" />
+                    )}
+                    <span>{alert.message}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* KPI Cards */}
+            <div className="mb-4 grid grid-cols-4 gap-3">
+              <KpiCard
+                label="Citation Coverage"
+                value={`%${Math.round(agentData.citationCoverage.rate * 100)}`}
+                subtitle={`${agentData.citationCoverage.outputsAnalyzed} cikti analiz edildi`}
+                subtitleColor="text-blue-400"
+              />
+              <KpiCard
+                label="Onay Orani"
+                value={`%${Math.round(agentData.humanWorkflow.approvalRate * 100)}`}
+                subtitle={`${agentData.humanWorkflow.pendingActions} bekleyen onay`}
+                subtitleColor={agentData.humanWorkflow.pendingActions > 0 ? 'text-yellow-400' : 'text-emerald-400'}
+              />
+              <KpiCard
+                label="Kalite Skoru"
+                value={`${agentData.feedback.qualityScore}/100`}
+                subtitle={`${agentData.feedback.total} degerlendirme`}
+                subtitleColor="text-violet-400"
+              />
+              <KpiCard
+                label="Asistan Turn"
+                value={String(agentData.conversations.assistantTurnsTotal)}
+                subtitle={`${agentData.conversations.total} sohbet`}
+                subtitleColor="text-muted-foreground"
+              />
+            </div>
+
+            {/* Citation Breakdown + Human Workflow */}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-semibold">Citation Dagilimi</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2">
+                    {[
+                      { label: 'Herhangi Citation', value: agentData.citationCoverage.outputsWithAnyCitation },
+                      { label: 'Dokuman Citation', value: agentData.citationCoverage.outputsWithDocumentCitation },
+                      { label: 'Bilgi Bankasi Citation', value: agentData.citationCoverage.outputsWithKnowledgeCitation },
+                    ].map((item) => {
+                      const total = agentData.citationCoverage.outputsAnalyzed
+                      const pct = total > 0 ? (item.value / total) * 100 : 0
+                      return (
+                        <li key={item.label}>
+                          <div className="mb-0.5 flex items-center justify-between text-sm">
+                            <span>{item.label}</span>
+                            <span className="font-mono text-xs text-muted-foreground">
+                              {item.value} / {total} (%{Math.round(pct)})
+                            </span>
+                          </div>
+                          <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+                            <div
+                              className="h-full rounded-full bg-blue-500 transition-all"
+                              style={{ width: `${pct}%` }}
+                            />
+                          </div>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-semibold">Human Workflow</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-emerald-400">{agentData.humanWorkflow.approvedActions}</p>
+                      <p className="text-xs text-muted-foreground">Onaylanan</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-red-400">{agentData.humanWorkflow.rejectedActions}</p>
+                      <p className="text-xs text-muted-foreground">Reddedilen</p>
+                    </div>
+                    <div className="text-center">
+                      <p className={`text-2xl font-bold ${agentData.humanWorkflow.pendingActions > 0 ? 'text-yellow-400' : 'text-muted-foreground'}`}>
+                        {agentData.humanWorkflow.pendingActions}
+                      </p>
+                      <p className="text-xs text-muted-foreground">Bekleyen</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </>
+        ) : (
+          <div className="text-sm text-muted-foreground">Agent metrikleri yukleniyor...</div>
+        )}
       </div>
     </div>
   )
