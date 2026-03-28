@@ -238,6 +238,67 @@ mockCompanies.forEach((c, i) => {
   mockCompanyAnalytics[c.id] = months.map((m) => generateAnalyticsMonth(m, scales[i] ?? 0.5))
 })
 
+// Agent metrics per company
+function generateAgentMetrics(_companyId: string, scale: number) {
+  const total = Math.floor((80 + Math.random() * 120) * scale)
+  const assistantTurnsTotal = Math.floor(total * (4 + Math.random() * 3))
+  const outputsAnalyzed = assistantTurnsTotal
+  const outputsWithAnyCitation = Math.floor(outputsAnalyzed * (0.75 + Math.random() * 0.15))
+  const outputsWithDocumentCitation = Math.floor(outputsWithAnyCitation * 0.45)
+  const outputsWithKnowledgeCitation = Math.floor(outputsWithAnyCitation * 0.8)
+  const rate = +(outputsWithAnyCitation / outputsAnalyzed).toFixed(4)
+  const approved = Math.floor((20 + Math.random() * 40) * scale)
+  const rejected = Math.floor((1 + Math.random() * 5) * scale)
+  const pending = Math.floor(Math.random() * 4 * scale)
+  const approvalRate = approved + rejected > 0 ? +((approved / (approved + rejected)).toFixed(4)) : 1
+  const fbTotal = Math.floor((60 + Math.random() * 100) * scale)
+  const fbPositive = Math.floor(fbTotal * (0.75 + Math.random() * 0.15))
+  const qualityScore = +(fbTotal > 0 ? (fbPositive / fbTotal) * 100 : 0).toFixed(2)
+
+  const alerts: Array<{ code: string; severity: 'warning' | 'critical'; message: string; value: number }> = []
+  if (rate < 0.6) {
+    alerts.push({ code: 'low_citation_coverage', severity: 'warning', message: 'Citation coverage is below 60%', value: rate })
+  }
+  if (qualityScore < 70) {
+    alerts.push({ code: 'low_feedback_quality_score', severity: 'warning', message: 'Quality score is below 70/100', value: qualityScore })
+  }
+  if (pending >= 10) {
+    alerts.push({ code: 'pending_approval_backlog', severity: 'critical', message: '10+ pending approvals', value: pending })
+  }
+
+  return {
+    windowDays: 30,
+    conversations: { total, assistantTurnsTotal },
+    citationCoverage: {
+      outputsAnalyzed,
+      outputsWithAnyCitation,
+      outputsWithDocumentCitation,
+      outputsWithKnowledgeCitation,
+      rate,
+      warningReasonCounts: {},
+      blockingReasonCounts: {},
+    },
+    humanWorkflow: { pendingActions: pending, approvedActions: approved, rejectedActions: rejected, approvalRate },
+    feedback: { total: fbTotal, positive: fbPositive, negative: fbTotal - fbPositive, qualityScore },
+    alerts,
+  }
+}
+
+export const mockAgentMetrics: Record<string, ReturnType<typeof generateAgentMetrics>> = {}
+mockCompanies.forEach((c, i) => {
+  mockAgentMetrics[c.id] = generateAgentMetrics(c.id, scales[i] ?? 0.5)
+})
+// Force one company to have alerts for testing
+mockAgentMetrics[mockCompanies[4].id] = {
+  ...mockAgentMetrics[mockCompanies[4].id],
+  citationCoverage: { ...mockAgentMetrics[mockCompanies[4].id].citationCoverage, rate: 0.45 },
+  humanWorkflow: { ...mockAgentMetrics[mockCompanies[4].id].humanWorkflow, pendingActions: 12 },
+  alerts: [
+    { code: 'low_citation_coverage', severity: 'warning', message: 'Citation coverage is below 60%', value: 0.45 },
+    { code: 'pending_approval_backlog', severity: 'critical', message: '10+ pending approvals', value: 12 },
+  ],
+}
+
 // Data source types
 export const mockDataSourceTypes = [
   { type: 'website_crawler', label: 'Website Crawler', description: 'Web sitenizi tarayarak bilgi tabanına ekler' },

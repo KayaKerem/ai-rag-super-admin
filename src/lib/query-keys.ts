@@ -9,6 +9,7 @@ export const queryKeys = {
     usageCurrent: (id: string) => ['companies', id, 'usage', 'current'] as const,
     analytics: (id: string, months: number) => ['companies', id, 'analytics', months] as const,
     dataSources: (id: string) => ['companies', id, 'data-sources'] as const,
+    agentMetrics: (id: string, windowDays: number) => ['companies', id, 'agent-metrics', windowDays] as const,
   },
   platform: {
     summary: (months: number) => ['platform', 'summary', months] as const,

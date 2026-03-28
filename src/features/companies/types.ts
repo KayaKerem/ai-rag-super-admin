@@ -141,3 +141,39 @@ export interface DataSourceList {
   items: DataSource[]
   total: number
 }
+
+// ─── Agent Metrics ────────────────────────────────
+
+export interface AgentMetrics {
+  windowDays: number
+  conversations: { total: number; assistantTurnsTotal: number }
+  citationCoverage: {
+    outputsAnalyzed: number
+    outputsWithAnyCitation: number
+    outputsWithDocumentCitation: number
+    outputsWithKnowledgeCitation: number
+    rate: number
+    warningReasonCounts: Record<string, number>
+    blockingReasonCounts: Record<string, number>
+  }
+  humanWorkflow: {
+    pendingActions: number
+    approvedActions: number
+    rejectedActions: number
+    approvalRate: number
+  }
+  feedback: {
+    total: number
+    positive: number
+    negative: number
+    qualityScore: number
+  }
+  alerts: AgentAlert[]
+}
+
+export interface AgentAlert {
+  code: string
+  severity: 'warning' | 'critical'
+  message: string
+  value: number
+}

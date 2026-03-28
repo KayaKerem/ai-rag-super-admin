@@ -14,6 +14,7 @@ import {
   getPlatformSummary,
   mockDataSourceTypes,
   mockDataSources,
+  mockAgentMetrics,
 } from './data'
 
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -292,6 +293,17 @@ export const handlers = [
       companyName: company?.name ?? 'Unknown',
       months: allMonths.slice(0, numMonths),
     })
+  }),
+
+  // ─── Agent Metrics ────────────────────────────────
+  http.get(`${BASE}/platform/companies/:id/agent-metrics`, async ({ params, request }) => {
+    await delay(200)
+    const id = params.id as string
+    const url = new URL(request.url)
+    const windowDays = parseInt(url.searchParams.get('windowDays') ?? '30')
+    const metrics = mockAgentMetrics[id]
+    if (!metrics) return HttpResponse.json({ code: 'company_not_found' }, { status: 404 })
+    return HttpResponse.json({ ...metrics, windowDays })
   }),
 
   // ─── Data Sources ─────────────────────────────────
