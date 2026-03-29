@@ -10,6 +10,8 @@ interface UsageMonth {
   cdn: { transferBytes: number; costUsd: number }
   trigger: { taskCount: number; costUsd: number }
   totalCostUsd: number
+  satisfactionRate?: number
+  totalActiveUsers?: number
 }
 
 interface PlatformSummary {

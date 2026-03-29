@@ -16,8 +16,8 @@ export function useCompanies() {
 export function useCreateCompany() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (name: string): Promise<Company> => {
-      const { data } = await apiClient.post('/platform/companies', { name })
+    mutationFn: async (body: { name: string; planId?: string }): Promise<Company> => {
+      const { data } = await apiClient.post('/platform/companies', body)
       return data
     },
     onSuccess: () => {
