@@ -1,14 +1,14 @@
 // Dummy data for all API endpoints
 
-export const mockCompanies = [
-  { id: 'c1a2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6', name: 'Firma Alpha', createdAt: '2026-01-15T10:00:00Z', updatedAt: '2026-03-20T14:30:00Z' },
-  { id: 'c2b3c4d5-e6f7-a8b9-c0d1-e2f3a4b5c6d7', name: 'Tech Beta', createdAt: '2026-02-22T09:15:00Z', updatedAt: '2026-03-18T11:20:00Z' },
-  { id: 'c3c4d5e6-f7a8-b9c0-d1e2-f3a4b5c6d7e8', name: 'Green Corp', createdAt: '2026-03-01T08:00:00Z', updatedAt: '2026-03-25T16:45:00Z' },
-  { id: 'c4d5e6f7-a8b9-c0d1-e2f3-a4b5c6d7e8f9', name: 'Data Dynamics', createdAt: '2025-11-10T12:00:00Z', updatedAt: '2026-03-22T09:10:00Z' },
-  { id: 'c5e6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0', name: 'CloudNine AI', createdAt: '2025-12-05T15:30:00Z', updatedAt: '2026-03-24T13:00:00Z' },
-  { id: 'c6f7a8b9-c0d1-e2f3-a4b5-c6d7e8f9a0b1', name: 'Stellar Systems', createdAt: '2026-01-28T11:00:00Z', updatedAt: '2026-03-19T10:20:00Z' },
-  { id: 'c7a8b9c0-d1e2-f3a4-b5c6-d7e8f9a0b1c2', name: 'Nexus Labs', createdAt: '2026-02-14T08:45:00Z', updatedAt: '2026-03-23T17:00:00Z' },
-  { id: 'c8b9c0d1-e2f3-a4b5-c6d7-e8f9a0b1c2d3', name: 'Apex Digital', createdAt: '2026-03-05T14:00:00Z', updatedAt: '2026-03-25T08:30:00Z' },
+export const mockCompanies: any[] = [
+  { id: 'c1a2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6', name: 'Firma Alpha', logoUrl: null, planId: 'plan-pro', plan: { id: 'plan-pro', name: 'Pro', slug: 'pro', monthlyPriceTry: 2990, includedUsers: 5, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, createdAt: '2026-01-15T10:00:00Z', updatedAt: '2026-03-20T14:30:00Z' },
+  { id: 'c2b3c4d5-e6f7-a8b9-c0d1-e2f3a4b5c6d7', name: 'Tech Beta', logoUrl: null, planId: 'plan-starter', plan: { id: 'plan-starter', name: 'Starter', slug: 'starter', monthlyPriceTry: 599, includedUsers: 3, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, createdAt: '2026-02-22T09:15:00Z', updatedAt: '2026-03-18T11:20:00Z' },
+  { id: 'c3c4d5e6-f7a8-b9c0-d1e2-f3a4b5c6d7e8', name: 'Green Corp', logoUrl: null, planId: 'plan-starter', plan: { id: 'plan-starter', name: 'Starter', slug: 'starter', monthlyPriceTry: 599, includedUsers: 3, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, createdAt: '2026-03-01T08:00:00Z', updatedAt: '2026-03-25T16:45:00Z' },
+  { id: 'c4d5e6f7-a8b9-c0d1-e2f3-a4b5c6d7e8f9', name: 'Data Dynamics', logoUrl: null, planId: 'plan-pro', plan: { id: 'plan-pro', name: 'Pro', slug: 'pro', monthlyPriceTry: 2990, includedUsers: 5, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, createdAt: '2025-11-10T12:00:00Z', updatedAt: '2026-03-22T09:10:00Z' },
+  { id: 'c5e6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0', name: 'CloudNine AI', logoUrl: null, planId: 'plan-pro', plan: { id: 'plan-pro', name: 'Pro', slug: 'pro', monthlyPriceTry: 2990, includedUsers: 5, isActive: true }, pendingPlanId: 'plan-starter', pendingPlan: { id: 'plan-starter', name: 'Starter', slug: 'starter', monthlyPriceTry: 599, includedUsers: 3, isActive: true }, downgradeScheduledAt: '2026-04-14T00:00:00Z', createdAt: '2025-12-05T15:30:00Z', updatedAt: '2026-03-24T13:00:00Z' },
+  { id: 'c6f7a8b9-c0d1-e2f3-a4b5-c6d7e8f9a0b1', name: 'Stellar Systems', logoUrl: null, planId: 'plan-starter', plan: { id: 'plan-starter', name: 'Starter', slug: 'starter', monthlyPriceTry: 599, includedUsers: 3, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, createdAt: '2026-01-28T11:00:00Z', updatedAt: '2026-03-19T10:20:00Z' },
+  { id: 'c7a8b9c0-d1e2-f3a4-b5c6-d7e8f9a0b1c2', name: 'Nexus Labs', logoUrl: null, planId: 'plan-enterprise', plan: { id: 'plan-enterprise', name: 'Enterprise', slug: 'enterprise', monthlyPriceTry: null, includedUsers: 50, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, createdAt: '2026-02-14T08:45:00Z', updatedAt: '2026-03-23T17:00:00Z' },
+  { id: 'c8b9c0d1-e2f3-a4b5-c6d7-e8f9a0b1c2d3', name: 'Apex Digital', logoUrl: null, planId: null, plan: null, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, createdAt: '2026-03-05T14:00:00Z', updatedAt: '2026-03-25T08:30:00Z' },
 ]
 
 function generateUsageMonth(month: string, scale: number) {
@@ -66,6 +66,8 @@ export function getPlatformSummary(numMonths: number) {
         costUsd: +allCompanyMonths.reduce((s, u) => s + u.trigger.costUsd, 0).toFixed(4),
       },
       totalCostUsd: +allCompanyMonths.reduce((s, u) => s + u.totalCostUsd, 0).toFixed(2),
+      satisfactionRate: +(0.78 + Math.random() * 0.12).toFixed(2),
+      totalActiveUsers: 52,
     }
   })
   return { months: result }
@@ -445,4 +447,99 @@ export const mockPlatformDefaults: any = {
     cdnPerGbTransferUsd: 0.085,
     triggerPerTaskUsd: 0.0001,
   },
+}
+
+// Pricing plans
+export const mockPricingPlans: any[] = [
+  {
+    id: 'plan-starter',
+    name: 'Starter',
+    slug: 'starter',
+    description: 'Başlangıç paketi',
+    monthlyPriceTry: 599.00,
+    includedUsers: 3,
+    extraUserPriceTry: 99.00,
+    budgetUsd: 10,
+    budgetDowngradeThresholdPct: 80,
+    maxStorageGb: 5,
+    maxFileSizeMb: 25,
+    allowedModels: [{ id: 'openai/gpt-4o-mini', label: 'GPT 4o Mini' }],
+    allowedTools: ['search_knowledge_base', 'list_knowledge_categories'],
+    allowedConnectors: ['website_crawler'],
+    crawlMaxPages: 50,
+    crawlMaxSources: 2,
+    isActive: true,
+    sortOrder: 0,
+    companyCount: 4,
+    createdAt: '2026-01-01T00:00:00Z',
+    updatedAt: '2026-03-28T00:00:00Z',
+  },
+  {
+    id: 'plan-pro',
+    name: 'Pro',
+    slug: 'pro',
+    description: 'Profesyonel özellikler',
+    monthlyPriceTry: 2990.00,
+    includedUsers: 5,
+    extraUserPriceTry: 49.00,
+    budgetUsd: 25,
+    budgetDowngradeThresholdPct: 80,
+    maxStorageGb: 20,
+    maxFileSizeMb: 50,
+    allowedModels: [
+      { id: 'openai/gpt-4o-mini', label: 'GPT 4o Mini' },
+      { id: 'anthropic/claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5' },
+      { id: 'anthropic/claude-sonnet-4.6', label: 'Claude Sonnet 4.6' },
+    ],
+    allowedTools: ['search_knowledge_base', 'list_knowledge_categories', 'search_drive_documents', 'search_templates', 'retrieve_template'],
+    allowedConnectors: ['website_crawler'],
+    crawlMaxPages: 100,
+    crawlMaxSources: 5,
+    isActive: true,
+    sortOrder: 1,
+    companyCount: 3,
+    createdAt: '2026-01-01T00:00:00Z',
+    updatedAt: '2026-03-28T00:00:00Z',
+  },
+  {
+    id: 'plan-enterprise',
+    name: 'Enterprise',
+    slug: 'enterprise',
+    description: 'Kurumsal — iletişime geçin',
+    monthlyPriceTry: null,
+    includedUsers: 50,
+    extraUserPriceTry: null,
+    budgetUsd: 200,
+    budgetDowngradeThresholdPct: 80,
+    maxStorageGb: 100,
+    maxFileSizeMb: 100,
+    allowedModels: [],
+    allowedTools: ['*'],
+    allowedConnectors: ['website_crawler'],
+    crawlMaxPages: 1000,
+    crawlMaxSources: 20,
+    isActive: true,
+    sortOrder: 2,
+    companyCount: 1,
+    createdAt: '2026-01-01T00:00:00Z',
+    updatedAt: '2026-03-28T00:00:00Z',
+  },
+]
+
+// Revenue analytics
+export const mockRevenue = {
+  mrrTry: 15640.00,
+  mrrUsd: 481.23,
+  exchangeRate: 32.50,
+  exchangeRateSource: 'tcmb' as const,
+  totalActiveCompanies: 6,
+  totalCompanies: 8,
+  totalActiveUsers: 52,
+  byPlan: [
+    { planId: 'plan-pro', planName: 'Pro', planSlug: 'pro', companyCount: 3, userCount: 38, planMrrTry: 8970.00, extraUserMrrTry: 1127.00, totalMrrTry: 10097.00 },
+    { planId: 'plan-starter', planName: 'Starter', planSlug: 'starter', companyCount: 4, userCount: 14, planMrrTry: 2396.00, extraUserMrrTry: 1089.00, totalMrrTry: 3485.00 },
+    { planId: 'plan-enterprise', planName: 'Enterprise', planSlug: 'enterprise', companyCount: 1, userCount: 12, planMrrTry: 0, extraUserMrrTry: 0, totalMrrTry: 0 },
+  ],
+  totalAiCostUsd: 134.75,
+  marginTry: 11261.56,
 }
