@@ -15,6 +15,8 @@ import {
   mockDataSourceTypes,
   mockDataSources,
   mockAgentMetrics,
+  mockPricingPlans,
+  mockRevenue,
 } from './data'
 
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -82,9 +84,16 @@ export const handlers = [
   http.post(`${BASE}/platform/companies`, async ({ request }) => {
     await delay(300)
     const body = (await request.json()) as any
+    const plan = body.planId ? mockPricingPlans.find((p: any) => p.id === body.planId) : null
     const newCompany = {
       id: 'c-new-' + Date.now(),
       name: body.name,
+      logoUrl: null,
+      planId: plan?.id ?? null,
+      plan: plan ? { id: plan.id, name: plan.name, slug: plan.slug, monthlyPriceTry: plan.monthlyPriceTry, includedUsers: plan.includedUsers, isActive: plan.isActive } : null,
+      pendingPlanId: null,
+      pendingPlan: null,
+      downgradeScheduledAt: null,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }
@@ -349,5 +358,138 @@ export const handlers = [
     const body = (await request.json()) as any
     Object.assign(mockPlatformDefaults, body)
     return HttpResponse.json(mockPlatformDefaults)
+  }),
+
+  // ─── Pricing Plans ───────────────────────────────
+  http.get(`${BASE}/platform/plans`, async ({ request }) => {
+    await delay(200)
+    const url = new URL(request.url)
+    const includeInactive = url.searchParams.get('includeInactive') === 'true'
+    const plans = includeInactive ? mockPricingPlans : mockPricingPlans.filter((p: any) => p.isActive)
+    return HttpResponse.json(plans)
+  }),
+
+  http.post(`${BASE}/platform/plans`, async ({ request }) => {
+    await delay(300)
+    const body = (await request.json()) as any
+    const existing = mockPricingPlans.find((p: any) => p.slug === body.slug)
+    if (existing) return HttpResponse.json({ code: 'slug_already_exists' }, { status: 400 })
+    const newPlan = {
+      id: 'plan-' + Date.now(),
+      name: body.name,
+      slug: body.slug,
+      description: body.description ?? null,
+      monthlyPriceTry: body.monthlyPriceTry ?? null,
+      includedUsers: body.includedUsers ?? 1,
+      extraUserPriceTry: body.extraUserPriceTry ?? null,
+      budgetUsd: body.budgetUsd ?? 10,
+      budgetDowngradeThresholdPct: body.budgetDowngradeThresholdPct ?? 80,
+      maxStorageGb: body.maxStorageGb ?? 5,
+      maxFileSizeMb: body.maxFileSizeMb ?? 25,
+      allowedModels: body.allowedModels ?? [],
+      allowedTools: body.allowedTools ?? [],
+      allowedConnectors: body.allowedConnectors ?? [],
+      crawlMaxPages: body.crawlMaxPages ?? 50,
+      crawlMaxSources: body.crawlMaxSources ?? 2,
+      isActive: body.isActive ?? true,
+      sortOrder: body.sortOrder ?? mockPricingPlans.length,
+      companyCount: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    mockPricingPlans.push(newPlan)
+    return HttpResponse.json(newPlan, { status: 201 })
+  }),
+
+  http.get(`${BASE}/platform/plans/:id`, async ({ params }) => {
+    await delay(150)
+    const plan = mockPricingPlans.find((p: any) => p.id === params.id)
+    if (!plan) return HttpResponse.json({ code: 'plan_not_found' }, { status: 404 })
+    return HttpResponse.json(plan)
+  }),
+
+  http.patch(`${BASE}/platform/plans/:id`, async ({ params, request }) => {
+    await delay(300)
+    const body = (await request.json()) as any
+    const plan = mockPricingPlans.find((p: any) => p.id === params.id)
+    if (!plan) return HttpResponse.json({ code: 'plan_not_found' }, { status: 404 })
+    if (body.slug !== undefined) return HttpResponse.json({ code: 'slug_is_immutable' }, { status: 422 })
+    Object.assign(plan, body, { updatedAt: new Date().toISOString() })
+    return HttpResponse.json(plan)
+  }),
+
+  http.delete(`${BASE}/platform/plans/:id`, async ({ params }) => {
+    await delay(200)
+    const plan = mockPricingPlans.find((p: any) => p.id === params.id)
+    if (!plan) return HttpResponse.json({ code: 'plan_not_found' }, { status: 404 })
+    plan.isActive = false
+    const affected = mockCompanies.filter((c: any) => c.planId === plan.id).length
+    return HttpResponse.json({ deactivated: true, affectedCompanies: affected, warning: affected > 0 ? `${affected} companies are still on this plan. They will continue to use its limits until reassigned.` : undefined })
+  }),
+
+  // ─── Company Plan Assignment ─────────────────────
+  http.put(`${BASE}/platform/companies/:id/plan`, async ({ params, request }) => {
+    await delay(300)
+    const body = (await request.json()) as any
+    const company = mockCompanies.find((c: any) => c.id === params.id)
+    if (!company) return HttpResponse.json({ code: 'company_not_found' }, { status: 404 })
+
+    if (body.planId === null) {
+      company.planId = null
+      company.plan = null
+      company.pendingPlanId = null
+      company.pendingPlan = null
+      company.downgradeScheduledAt = null
+      return HttpResponse.json({ companyId: company.id, planId: null, planName: null, action: 'removed' })
+    }
+
+    const newPlan = mockPricingPlans.find((p: any) => p.id === body.planId)
+    if (!newPlan) return HttpResponse.json({ code: 'plan_not_found' }, { status: 404 })
+    if (!newPlan.isActive) return HttpResponse.json({ code: 'plan_is_inactive' }, { status: 400 })
+
+    const currentPrice = company.plan?.monthlyPriceTry ?? 0
+    const newPrice = newPlan.monthlyPriceTry ?? Infinity
+
+    if (newPrice > currentPrice) {
+      company.planId = newPlan.id
+      company.plan = { id: newPlan.id, name: newPlan.name, slug: newPlan.slug, monthlyPriceTry: newPlan.monthlyPriceTry, includedUsers: newPlan.includedUsers, isActive: newPlan.isActive }
+      company.pendingPlanId = null
+      company.pendingPlan = null
+      company.downgradeScheduledAt = null
+      return HttpResponse.json({
+        companyId: company.id, planId: newPlan.id, planName: newPlan.name,
+        action: 'upgraded', effective: 'immediate',
+        prorate: { prorateTry: +(((newPrice - currentPrice) / 30) * 15).toFixed(2) },
+      })
+    } else if (newPrice < currentPrice) {
+      const effectiveDate = new Date()
+      effectiveDate.setDate(effectiveDate.getDate() + 30)
+      company.pendingPlanId = newPlan.id
+      company.pendingPlan = { id: newPlan.id, name: newPlan.name, slug: newPlan.slug, monthlyPriceTry: newPlan.monthlyPriceTry, includedUsers: newPlan.includedUsers, isActive: newPlan.isActive }
+      company.downgradeScheduledAt = effectiveDate.toISOString()
+      return HttpResponse.json({
+        companyId: company.id, planId: company.planId, planName: company.plan?.name,
+        pendingPlanId: newPlan.id, pendingPlanName: newPlan.name,
+        action: 'downgrade_scheduled', effective: 'next_cycle', effectiveDate: effectiveDate.toISOString(),
+      })
+    }
+    return HttpResponse.json({ companyId: company.id, planId: company.planId, planName: company.plan?.name, action: 'no_change' })
+  }),
+
+  http.delete(`${BASE}/platform/companies/:id/pending-plan`, async ({ params }) => {
+    await delay(200)
+    const company = mockCompanies.find((c: any) => c.id === params.id)
+    if (!company) return HttpResponse.json({ code: 'company_not_found' }, { status: 404 })
+    if (!company.pendingPlanId) return HttpResponse.json({ code: 'no_pending_downgrade' }, { status: 400 })
+    company.pendingPlanId = null
+    company.pendingPlan = null
+    company.downgradeScheduledAt = null
+    return HttpResponse.json({ companyId: company.id, pendingPlanId: null, action: 'downgrade_cancelled' })
+  }),
+
+  // ─── Revenue ─────────────────────────────────────
+  http.get(`${BASE}/platform/revenue`, async () => {
+    await delay(200)
+    return HttpResponse.json(mockRevenue)
   }),
 ]
