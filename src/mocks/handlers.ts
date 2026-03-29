@@ -17,6 +17,7 @@ import {
   mockAgentMetrics,
   mockPricingPlans,
   mockRevenue,
+  mockEmailTemplates,
 } from './data'
 
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -491,5 +492,50 @@ export const handlers = [
   http.get(`${BASE}/platform/revenue`, async () => {
     await delay(200)
     return HttpResponse.json(mockRevenue)
+  }),
+
+  // ─── Email Templates ─────────────────────────────
+  http.get(`${BASE}/platform/email-templates`, async () => {
+    await delay(200)
+    const sorted = [...mockEmailTemplates].sort((a, b) => a.slug.localeCompare(b.slug))
+    return HttpResponse.json(sorted)
+  }),
+
+  http.get(`${BASE}/platform/email-templates/:slug`, async ({ params }) => {
+    await delay(150)
+    const template = mockEmailTemplates.find((t: any) => t.slug === params.slug)
+    if (!template) return HttpResponse.json({ message: 'Template not found' }, { status: 404 })
+    return HttpResponse.json(template)
+  }),
+
+  http.patch(`${BASE}/platform/email-templates/:slug`, async ({ params, request }) => {
+    await delay(300)
+    const body = (await request.json()) as any
+    const template = mockEmailTemplates.find((t: any) => t.slug === params.slug)
+    if (!template) return HttpResponse.json({ message: 'Template not found' }, { status: 404 })
+    if (body.subject !== undefined) template.subject = body.subject
+    if (body.bodyHtml !== undefined) template.bodyHtml = body.bodyHtml
+    if (body.isActive !== undefined) template.isActive = body.isActive
+    template.updatedAt = new Date().toISOString()
+    return HttpResponse.json(template)
+  }),
+
+  http.post(`${BASE}/platform/email-templates/:slug/preview`, async ({ params, request }) => {
+    await delay(200)
+    const body = (await request.json()) as any
+    const template = mockEmailTemplates.find((t: any) => t.slug === params.slug)
+    if (!template) return HttpResponse.json({ message: 'Template not found' }, { status: 404 })
+    const vars = body.variables ?? {}
+    let subject = template.subject as string
+    let html = template.bodyHtml as string
+    for (const [key, value] of Object.entries(vars)) {
+      const re = new RegExp(`\\{\\{${key}\\}\\}`, 'g')
+      subject = subject.replace(re, value as string)
+      html = html.replace(re, value as string)
+    }
+    html = html.replace(/\{\{#(?:if|unless)\s+\w+\}\}/g, '').replace(/\{\{\/(?:if|unless)\}\}/g, '')
+    subject = subject.replace(/\{\{[^}]+\}\}/g, '')
+    html = html.replace(/\{\{[^}]+\}\}/g, '')
+    return HttpResponse.json({ subject, html })
   }),
 ]
