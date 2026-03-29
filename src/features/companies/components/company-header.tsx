@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
@@ -61,6 +62,14 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
             />
           ) : (
             <h1 className="text-xl font-bold">{company.name}</h1>
+          )}
+          {company.plan && (
+            <Badge variant="secondary">{company.plan.name}</Badge>
+          )}
+          {company.pendingPlan && (
+            <Badge variant="outline" className="border-yellow-500/50 text-yellow-500">
+              {company.pendingPlan.name}&apos;a geçiyor
+            </Badge>
           )}
           <span className="rounded border bg-muted px-2 py-0.5 text-xs text-muted-foreground">
             ID: {company.id.slice(0, 6)}...
