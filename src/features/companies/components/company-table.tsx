@@ -13,7 +13,8 @@ import { useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { ArrowUpDown } from 'lucide-react'
+import { ArrowUpDown, AlertTriangle } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 import { formatCurrency, formatDate, getInitials } from '@/lib/utils'
 import type { Company } from '../types'
 
@@ -42,51 +43,31 @@ const columns: ColumnDef<CompanyWithUsage>[] = [
     },
   },
   {
+    id: 'plan',
+    header: 'Plan',
+    cell: ({ row }) => {
+      const company = row.original as any
+      if (!company.plan) return <span className="text-muted-foreground">—</span>
+      return (
+        <div className="flex items-center gap-1.5">
+          <Badge variant="secondary">{company.plan.name}</Badge>
+          {company.pendingPlanId && (
+            <AlertTriangle className="h-3.5 w-3.5 text-yellow-500" />
+          )}
+        </div>
+      )
+    },
+  },
+  {
     accessorKey: 'createdAt',
     header: 'Oluşturulma',
     cell: ({ row }) => <span className="text-muted-foreground">{formatDate(row.getValue('createdAt'))}</span>,
   },
   {
-    accessorKey: 'aiCost',
-    header: ({ column }) => (
-      <Button variant="ghost" size="sm" className="text-violet-400" onClick={() => column.toggleSorting()}>
-        AI <ArrowUpDown className="ml-1 h-3 w-3" />
-      </Button>
-    ),
-    cell: ({ row }) => <span className="text-violet-400">{formatCurrency(row.getValue('aiCost') ?? 0)}</span>,
-  },
-  {
-    accessorKey: 'cdnCost',
-    header: ({ column }) => (
-      <Button variant="ghost" size="sm" className="text-blue-400" onClick={() => column.toggleSorting()}>
-        CDN <ArrowUpDown className="ml-1 h-3 w-3" />
-      </Button>
-    ),
-    cell: ({ row }) => <span className="text-blue-400">{formatCurrency(row.getValue('cdnCost') ?? 0)}</span>,
-  },
-  {
-    accessorKey: 'storageCost',
-    header: ({ column }) => (
-      <Button variant="ghost" size="sm" className="text-green-400" onClick={() => column.toggleSorting()}>
-        Storage <ArrowUpDown className="ml-1 h-3 w-3" />
-      </Button>
-    ),
-    cell: ({ row }) => <span className="text-green-400">{formatCurrency(row.getValue('storageCost') ?? 0)}</span>,
-  },
-  {
-    accessorKey: 'triggerCost',
-    header: ({ column }) => (
-      <Button variant="ghost" size="sm" className="text-yellow-400" onClick={() => column.toggleSorting()}>
-        Trigger <ArrowUpDown className="ml-1 h-3 w-3" />
-      </Button>
-    ),
-    cell: ({ row }) => <span className="text-yellow-400">{formatCurrency(row.getValue('triggerCost') ?? 0)}</span>,
-  },
-  {
     accessorKey: 'totalCost',
     header: ({ column }) => (
       <Button variant="ghost" size="sm" className="font-semibold" onClick={() => column.toggleSorting()}>
-        Toplam <ArrowUpDown className="ml-1 h-3 w-3" />
+        Bu Ay Maliyet <ArrowUpDown className="ml-1 h-3 w-3" />
       </Button>
     ),
     cell: ({ row }) => <span className="font-semibold">{formatCurrency(row.getValue('totalCost') ?? 0)}</span>,
