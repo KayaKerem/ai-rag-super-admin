@@ -263,6 +263,35 @@ export interface CancelDowngradeResponse {
   action: 'downgrade_cancelled'
 }
 
+// ─── Email Templates ──────────────────────────────
+
+export interface EmailTemplate {
+  id: string
+  slug: string
+  name: string
+  subject: string
+  bodyHtml: string
+  availableVariables: string[]
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface UpdateEmailTemplateRequest {
+  subject?: string
+  bodyHtml?: string
+  isActive?: boolean
+}
+
+export interface EmailPreviewRequest {
+  variables: Record<string, string>
+}
+
+export interface EmailPreviewResponse {
+  subject: string
+  html: string
+}
+
 // ─── Revenue ──────────────────────────────────────
 
 export interface RevenueByPlan {

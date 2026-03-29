@@ -22,5 +22,7 @@ export const queryKeys = {
     plans: ['platform', 'plans'] as const,
     planDetail: (id: string) => ['platform', 'plans', id] as const,
     revenue: ['platform', 'revenue'] as const,
+    emailTemplates: ['platform', 'email-templates'] as const,
+    emailTemplate: (slug: string) => ['platform', 'email-templates', slug] as const,
   },
 }
