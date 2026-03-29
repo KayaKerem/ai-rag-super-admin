@@ -4,6 +4,7 @@ import { SettingsNav } from '../components/settings-nav'
 import { ConfigSection } from '../components/config-section'
 import { AiConfigSection } from '../components/ai-config-section'
 import { ToolPlansSection } from '../components/tool-plans-section'
+import { PricingPlansSection } from '../components/pricing-plans-section'
 import { usePlatformDefaults, useUpdatePlatformDefaults } from '../hooks/use-platform-defaults'
 import { usePlatformModels } from '@/features/companies/hooks/use-platform-models'
 import type { ConfigBlockKey } from '@/lib/validations'
@@ -149,7 +150,7 @@ const sectionMeta: Record<string, SectionMeta> = {
 }
 
 export function SettingsPage() {
-  const [activeSection, setActiveSection] = useState<string>('pricingConfig')
+  const [activeSection, setActiveSection] = useState<string>('pricingPlans')
 
   const { data: defaults } = usePlatformDefaults()
   const { mutate: updateDefaults, isPending } = useUpdatePlatformDefaults()
@@ -183,7 +184,9 @@ export function SettingsPage() {
       </aside>
 
       <main className="flex-1 min-w-0">
-        {activeSection === 'aiConfig' ? (
+        {activeSection === 'pricingPlans' ? (
+          <PricingPlansSection key="pricingPlans" />
+        ) : activeSection === 'aiConfig' ? (
           <AiConfigSection
             key="aiConfig"
             currentValues={defaults?.aiConfig as Record<string, unknown> | undefined}
