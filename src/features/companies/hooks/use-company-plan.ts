@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api-client'
 import { queryKeys } from '@/lib/query-keys'
-import type { AssignPlanResponse } from '../types'
+import type { AssignPlanResponse, CancelDowngradeResponse } from '../types'
 
 export function useAssignCompanyPlan(companyId: string) {
   const qc = useQueryClient()
@@ -21,7 +21,7 @@ export function useAssignCompanyPlan(companyId: string) {
 export function useCancelDowngrade(companyId: string) {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async (): Promise<CancelDowngradeResponse> => {
       const { data } = await apiClient.delete(`/platform/companies/${companyId}/pending-plan`)
       return data
     },

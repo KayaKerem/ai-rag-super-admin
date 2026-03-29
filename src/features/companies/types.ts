@@ -257,6 +257,12 @@ export interface DeletePlanResponse {
   warning?: string
 }
 
+export interface CancelDowngradeResponse {
+  companyId: string
+  pendingPlanId: null
+  action: 'downgrade_cancelled'
+}
+
 // ─── Revenue ──────────────────────────────────────
 
 export interface RevenueByPlan {
