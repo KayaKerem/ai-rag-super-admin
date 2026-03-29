@@ -1,14 +1,14 @@
 // Dummy data for all API endpoints
 
 export const mockCompanies: any[] = [
-  { id: 'c1a2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6', name: 'Firma Alpha', logoUrl: null, planId: 'plan-pro', plan: { id: 'plan-pro', name: 'Pro', slug: 'pro', monthlyPriceTry: 2990, includedUsers: 5, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, createdAt: '2026-01-15T10:00:00Z', updatedAt: '2026-03-20T14:30:00Z' },
-  { id: 'c2b3c4d5-e6f7-a8b9-c0d1-e2f3a4b5c6d7', name: 'Tech Beta', logoUrl: null, planId: 'plan-starter', plan: { id: 'plan-starter', name: 'Starter', slug: 'starter', monthlyPriceTry: 599, includedUsers: 3, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, createdAt: '2026-02-22T09:15:00Z', updatedAt: '2026-03-18T11:20:00Z' },
-  { id: 'c3c4d5e6-f7a8-b9c0-d1e2-f3a4b5c6d7e8', name: 'Green Corp', logoUrl: null, planId: 'plan-starter', plan: { id: 'plan-starter', name: 'Starter', slug: 'starter', monthlyPriceTry: 599, includedUsers: 3, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, createdAt: '2026-03-01T08:00:00Z', updatedAt: '2026-03-25T16:45:00Z' },
-  { id: 'c4d5e6f7-a8b9-c0d1-e2f3-a4b5c6d7e8f9', name: 'Data Dynamics', logoUrl: null, planId: 'plan-pro', plan: { id: 'plan-pro', name: 'Pro', slug: 'pro', monthlyPriceTry: 2990, includedUsers: 5, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, createdAt: '2025-11-10T12:00:00Z', updatedAt: '2026-03-22T09:10:00Z' },
-  { id: 'c5e6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0', name: 'CloudNine AI', logoUrl: null, planId: 'plan-pro', plan: { id: 'plan-pro', name: 'Pro', slug: 'pro', monthlyPriceTry: 2990, includedUsers: 5, isActive: true }, pendingPlanId: 'plan-starter', pendingPlan: { id: 'plan-starter', name: 'Starter', slug: 'starter', monthlyPriceTry: 599, includedUsers: 3, isActive: true }, downgradeScheduledAt: '2026-04-14T00:00:00Z', createdAt: '2025-12-05T15:30:00Z', updatedAt: '2026-03-24T13:00:00Z' },
-  { id: 'c6f7a8b9-c0d1-e2f3-a4b5-c6d7e8f9a0b1', name: 'Stellar Systems', logoUrl: null, planId: 'plan-starter', plan: { id: 'plan-starter', name: 'Starter', slug: 'starter', monthlyPriceTry: 599, includedUsers: 3, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, createdAt: '2026-01-28T11:00:00Z', updatedAt: '2026-03-19T10:20:00Z' },
-  { id: 'c7a8b9c0-d1e2-f3a4-b5c6-d7e8f9a0b1c2', name: 'Nexus Labs', logoUrl: null, planId: 'plan-enterprise', plan: { id: 'plan-enterprise', name: 'Enterprise', slug: 'enterprise', monthlyPriceTry: null, includedUsers: 50, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, createdAt: '2026-02-14T08:45:00Z', updatedAt: '2026-03-23T17:00:00Z' },
-  { id: 'c8b9c0d1-e2f3-a4b5-c6d7-e8f9a0b1c2d3', name: 'Apex Digital', logoUrl: null, planId: null, plan: null, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, createdAt: '2026-03-05T14:00:00Z', updatedAt: '2026-03-25T08:30:00Z' },
+  { id: 'c1a2b3c4-d5e6-f7a8-b9c0-d1e2f3a4b5c6', name: 'Firma Alpha', logoUrl: null, planId: 'plan-pro', plan: { id: 'plan-pro', name: 'Pro', slug: 'pro', monthlyPriceTry: 2990, includedUsers: 5, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, subscriptionStatus: 'active', statusChangedAt: '2026-02-15T10:00:00Z', createdAt: '2026-01-15T10:00:00Z', updatedAt: '2026-03-20T14:30:00Z' },
+  { id: 'c2b3c4d5-e6f7-a8b9-c0d1-e2f3a4b5c6d7', name: 'Tech Beta', logoUrl: null, planId: 'plan-starter', plan: { id: 'plan-starter', name: 'Starter', slug: 'starter', monthlyPriceTry: 599, includedUsers: 3, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, subscriptionStatus: 'active', statusChangedAt: '2026-03-10T09:00:00Z', createdAt: '2026-02-22T09:15:00Z', updatedAt: '2026-03-18T11:20:00Z' },
+  { id: 'c3c4d5e6-f7a8-b9c0-d1e2-f3a4b5c6d7e8', name: 'Green Corp', logoUrl: null, planId: 'plan-starter', plan: { id: 'plan-starter', name: 'Starter', slug: 'starter', monthlyPriceTry: 599, includedUsers: 3, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, subscriptionStatus: 'trialing', statusChangedAt: null, createdAt: '2026-03-01T08:00:00Z', updatedAt: '2026-03-25T16:45:00Z' },
+  { id: 'c4d5e6f7-a8b9-c0d1-e2f3-a4b5c6d7e8f9', name: 'Data Dynamics', logoUrl: null, planId: 'plan-pro', plan: { id: 'plan-pro', name: 'Pro', slug: 'pro', monthlyPriceTry: 2990, includedUsers: 5, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, subscriptionStatus: 'active', statusChangedAt: '2026-01-20T12:00:00Z', createdAt: '2025-11-10T12:00:00Z', updatedAt: '2026-03-22T09:10:00Z' },
+  { id: 'c5e6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0', name: 'CloudNine AI', logoUrl: null, planId: 'plan-pro', plan: { id: 'plan-pro', name: 'Pro', slug: 'pro', monthlyPriceTry: 2990, includedUsers: 5, isActive: true }, pendingPlanId: 'plan-starter', pendingPlan: { id: 'plan-starter', name: 'Starter', slug: 'starter', monthlyPriceTry: 599, includedUsers: 3, isActive: true }, downgradeScheduledAt: '2026-04-14T00:00:00Z', subscriptionStatus: 'active', statusChangedAt: '2026-02-01T08:00:00Z', createdAt: '2025-12-05T15:30:00Z', updatedAt: '2026-03-24T13:00:00Z' },
+  { id: 'c6f7a8b9-c0d1-e2f3-a4b5-c6d7e8f9a0b1', name: 'Stellar Systems', logoUrl: null, planId: 'plan-starter', plan: { id: 'plan-starter', name: 'Starter', slug: 'starter', monthlyPriceTry: 599, includedUsers: 3, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, subscriptionStatus: 'suspended', statusChangedAt: '2026-03-25T14:00:00Z', createdAt: '2026-01-28T11:00:00Z', updatedAt: '2026-03-19T10:20:00Z' },
+  { id: 'c7a8b9c0-d1e2-f3a4-b5c6-d7e8f9a0b1c2', name: 'Nexus Labs', logoUrl: null, planId: 'plan-enterprise', plan: { id: 'plan-enterprise', name: 'Enterprise', slug: 'enterprise', monthlyPriceTry: null, includedUsers: 50, isActive: true }, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, subscriptionStatus: 'active', statusChangedAt: '2026-03-01T10:00:00Z', createdAt: '2026-02-14T08:45:00Z', updatedAt: '2026-03-23T17:00:00Z' },
+  { id: 'c8b9c0d1-e2f3-a4b5-c6d7-e8f9a0b1c2d3', name: 'Apex Digital', logoUrl: null, planId: null, plan: null, pendingPlanId: null, pendingPlan: null, downgradeScheduledAt: null, subscriptionStatus: 'cancelled', statusChangedAt: '2026-03-20T16:00:00Z', createdAt: '2026-03-05T14:00:00Z', updatedAt: '2026-03-25T08:30:00Z' },
 ]
 
 function generateUsageMonth(month: string, scale: number) {
@@ -652,3 +652,24 @@ export const mockEmailTemplates: any[] = [
     isActive: false, createdAt: '2026-01-01T00:00:00Z', updatedAt: '2026-01-01T00:00:00Z',
   },
 ]
+
+// Billing events per company
+export const mockBillingEvents: Record<string, any[]> = {}
+mockCompanies.forEach((c: any) => {
+  const events: any[] = [
+    { id: `be-${c.id.slice(0,4)}-1`, companyId: c.id, eventType: 'status_change', metadata: { from: 'trialing', to: 'active', reason: 'plan_assigned' }, actorId: 'system', createdAt: c.statusChangedAt ?? c.createdAt },
+  ]
+  if (c.planId) {
+    events.push({ id: `be-${c.id.slice(0,4)}-2`, companyId: c.id, eventType: 'plan_upgrade', metadata: { planName: c.plan?.name ?? 'Unknown' }, actorId: 'platform-admin', createdAt: c.updatedAt })
+  }
+  if (c.subscriptionStatus === 'suspended') {
+    events.push({ id: `be-${c.id.slice(0,4)}-3`, companyId: c.id, eventType: 'status_change', metadata: { from: 'active', to: 'suspended', reason: 'admin_action' }, actorId: 'platform-admin', createdAt: c.statusChangedAt })
+  }
+  if (c.subscriptionStatus === 'cancelled') {
+    events.push({ id: `be-${c.id.slice(0,4)}-3`, companyId: c.id, eventType: 'status_change', metadata: { from: 'active', to: 'cancelled', reason: 'admin_action' }, actorId: 'platform-admin', createdAt: c.statusChangedAt })
+  }
+  if (c.pendingPlanId) {
+    events.push({ id: `be-${c.id.slice(0,4)}-4`, companyId: c.id, eventType: 'plan_downgrade_scheduled', metadata: { currentPlan: c.plan?.name, newPlan: c.pendingPlan?.name }, actorId: 'platform-admin', createdAt: c.updatedAt })
+  }
+  mockBillingEvents[c.id] = events.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+})

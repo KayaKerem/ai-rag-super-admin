@@ -18,6 +18,7 @@ import {
   mockPricingPlans,
   mockRevenue,
   mockEmailTemplates,
+  mockBillingEvents,
 } from './data'
 
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -537,5 +538,37 @@ export const handlers = [
     subject = subject.replace(/\{\{[^}]+\}\}/g, '')
     html = html.replace(/\{\{[^}]+\}\}/g, '')
     return HttpResponse.json({ subject, html })
+  }),
+
+  // ─── Company Status & Billing Events ─────────────
+  http.patch(`${BASE}/platform/companies/:id/status`, async ({ params, request }) => {
+    await delay(300)
+    const body = (await request.json()) as any
+    const company = mockCompanies.find((c: any) => c.id === params.id)
+    if (!company) return HttpResponse.json({ code: 'company_not_found' }, { status: 404 })
+    const validStatuses = ['active', 'suspended', 'cancelled']
+    if (!validStatuses.includes(body.status)) return HttpResponse.json({ message: 'Invalid status' }, { status: 400 })
+    const oldStatus = company.subscriptionStatus
+    company.subscriptionStatus = body.status
+    company.statusChangedAt = new Date().toISOString()
+    if (!mockBillingEvents[company.id]) mockBillingEvents[company.id] = []
+    mockBillingEvents[company.id].unshift({
+      id: 'be-' + Date.now(),
+      companyId: company.id,
+      eventType: 'status_change',
+      metadata: { from: oldStatus, to: body.status, reason: 'admin_action' },
+      actorId: 'platform-admin',
+      createdAt: company.statusChangedAt,
+    })
+    return HttpResponse.json({ id: company.id, subscriptionStatus: company.subscriptionStatus, statusChangedAt: company.statusChangedAt })
+  }),
+
+  http.get(`${BASE}/platform/companies/:id/billing-events`, async ({ params, request }) => {
+    await delay(200)
+    const url = new URL(request.url)
+    const limit = parseInt(url.searchParams.get('limit') ?? '50')
+    const id = params.id as string
+    const events = mockBillingEvents[id] ?? []
+    return HttpResponse.json(events.slice(0, limit))
   }),
 ]
