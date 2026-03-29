@@ -11,6 +11,7 @@ export const queryKeys = {
     dataSources: (id: string) => ['companies', id, 'data-sources'] as const,
     agentMetrics: (id: string, windowDays: number) => ['companies', id, 'agent-metrics', windowDays] as const,
     plan: (id: string) => ['companies', id, 'plan'] as const,
+    billingEvents: (id: string) => ['companies', id, 'billing-events'] as const,
   },
   platform: {
     summary: (months: number) => ['platform', 'summary', months] as const,

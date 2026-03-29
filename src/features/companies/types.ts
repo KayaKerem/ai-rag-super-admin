@@ -7,6 +7,8 @@ export interface CompanyPlanSummary {
   isActive: boolean
 }
 
+export type SubscriptionStatus = 'trialing' | 'active' | 'suspended' | 'cancelled' | 'past_due'
+
 export interface Company {
   id: string
   name: string
@@ -16,6 +18,8 @@ export interface Company {
   pendingPlanId: string | null
   pendingPlan: CompanyPlanSummary | null
   downgradeScheduledAt: string | null
+  subscriptionStatus: SubscriptionStatus
+  statusChangedAt: string | null
   createdAt: string
   updatedAt: string
 }
@@ -290,6 +294,27 @@ export interface EmailPreviewRequest {
 export interface EmailPreviewResponse {
   subject: string
   html: string
+}
+
+// ─── Subscription & Billing ───────────────────────
+
+export interface UpdateCompanyStatusRequest {
+  status: 'active' | 'suspended' | 'cancelled'
+}
+
+export interface UpdateCompanyStatusResponse {
+  id: string
+  subscriptionStatus: SubscriptionStatus
+  statusChangedAt: string
+}
+
+export interface BillingEvent {
+  id: string
+  companyId: string
+  eventType: 'status_change' | 'plan_upgrade' | 'plan_downgrade_scheduled' | 'plan_downgrade_executed' | 'plan_removed' | 'plan_downgrade_cancelled' | 'admin_override'
+  metadata: Record<string, string>
+  actorId: string
+  createdAt: string
 }
 
 // ─── Revenue ──────────────────────────────────────
