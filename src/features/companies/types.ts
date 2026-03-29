@@ -1,6 +1,21 @@
+export interface CompanyPlanSummary {
+  id: string
+  name: string
+  slug: string
+  monthlyPriceTry: number | null
+  includedUsers: number
+  isActive: boolean
+}
+
 export interface Company {
   id: string
   name: string
+  logoUrl: string | null
+  planId: string | null
+  plan: CompanyPlanSummary | null
+  pendingPlanId: string | null
+  pendingPlan: CompanyPlanSummary | null
+  downgradeScheduledAt: string | null
   createdAt: string
   updatedAt: string
 }
@@ -176,4 +191,94 @@ export interface AgentAlert {
   severity: 'warning' | 'critical'
   message: string
   value: number
+}
+
+// ─── Pricing Plans ────────────────────────────────
+
+export interface PricingPlan {
+  id: string
+  name: string
+  slug: string
+  description: string | null
+  monthlyPriceTry: number | null
+  includedUsers: number
+  extraUserPriceTry: number | null
+  budgetUsd: number
+  budgetDowngradeThresholdPct: number
+  maxStorageGb: number
+  maxFileSizeMb: number
+  allowedModels: Array<{ id: string; label: string }>
+  allowedTools: string[]
+  allowedConnectors: string[]
+  crawlMaxPages: number
+  crawlMaxSources: number
+  isActive: boolean
+  sortOrder: number
+  companyCount: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CreatePlanRequest {
+  name: string
+  slug: string
+  description?: string
+  monthlyPriceTry?: number | null
+  includedUsers?: number
+  extraUserPriceTry?: number | null
+  budgetUsd?: number
+  budgetDowngradeThresholdPct?: number
+  maxStorageGb?: number
+  maxFileSizeMb?: number
+  allowedModels?: Array<{ id: string; label: string }>
+  allowedTools?: string[]
+  allowedConnectors?: string[]
+  crawlMaxPages?: number
+  crawlMaxSources?: number
+  isActive?: boolean
+  sortOrder?: number
+}
+
+export interface AssignPlanResponse {
+  companyId: string
+  planId: string | null
+  planName: string | null
+  pendingPlanId?: string | null
+  pendingPlanName?: string | null
+  action: 'upgraded' | 'downgrade_scheduled' | 'no_change' | 'removed'
+  effective?: 'immediate' | 'next_cycle'
+  effectiveDate?: string
+  prorate?: { prorateTry: number | null }
+}
+
+export interface DeletePlanResponse {
+  deactivated: boolean
+  affectedCompanies: number
+  warning?: string
+}
+
+// ─── Revenue ──────────────────────────────────────
+
+export interface RevenueByPlan {
+  planId: string
+  planName: string
+  planSlug: string
+  companyCount: number
+  userCount: number
+  planMrrTry: number
+  extraUserMrrTry: number
+  totalMrrTry: number
+}
+
+export interface RevenueData {
+  mrrTry: number
+  mrrUsd: number
+  exchangeRate: number
+  exchangeRateSource: 'tcmb' | 'fallback'
+  totalActiveCompanies: number
+  totalCompanies: number
+  totalActiveUsers: number
+  byPlan: RevenueByPlan[]
+  totalAiCostUsd: number
+  marginTry: number
 }

@@ -10,6 +10,7 @@ export const queryKeys = {
     analytics: (id: string, months: number) => ['companies', id, 'analytics', months] as const,
     dataSources: (id: string) => ['companies', id, 'data-sources'] as const,
     agentMetrics: (id: string, windowDays: number) => ['companies', id, 'agent-metrics', windowDays] as const,
+    plan: (id: string) => ['companies', id, 'plan'] as const,
   },
   platform: {
     summary: (months: number) => ['platform', 'summary', months] as const,
@@ -18,5 +19,8 @@ export const queryKeys = {
     toolPlans: ['platform', 'tool-plans'] as const,
     dataSources: (params?: string) => ['platform', 'data-sources', params ?? ''] as const,
     dataSourceTypes: ['platform', 'data-source-types'] as const,
+    plans: ['platform', 'plans'] as const,
+    planDetail: (id: string) => ['platform', 'plans', id] as const,
+    revenue: ['platform', 'revenue'] as const,
   },
 }
