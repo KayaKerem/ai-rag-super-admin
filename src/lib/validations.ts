@@ -1,15 +1,21 @@
 import { z } from 'zod'
 
+// Coerce non-empty strings to number, treat empty/blank as undefined
+const optNum = z.preprocess(
+  (v) => (v === '' || v === undefined || v === null ? undefined : Number(v)),
+  z.number().optional(),
+)
+
 export const s3ConfigSchema = z.object({
   bucket: z.string().optional(),
   region: z.string().optional(),
   endpoint: z.string().optional(),
   forcePathStyle: z.boolean().optional(),
   keyPrefix: z.string().optional(),
-  putTtlSec: z.coerce.number().optional(),
-  getTtlSec: z.coerce.number().optional(),
-  deleteTtlSec: z.coerce.number().optional(),
-  configCacheTtlMs: z.coerce.number().optional(),
+  putTtlSec: optNum,
+  getTtlSec: optNum,
+  deleteTtlSec: optNum,
+  configCacheTtlMs: optNum,
   accessKeyId: z.string().optional(),
   secretAccessKey: z.string().optional(),
 })
@@ -19,7 +25,7 @@ export const cdnConfigSchema = z.object({
   domain: z.string().optional(),
   keyPairId: z.string().optional(),
   privateKey: z.string().optional(),
-  ttlSec: z.coerce.number().optional(),
+  ttlSec: optNum,
 })
 
 export const mailConfigSchema = z.object({
@@ -36,13 +42,13 @@ export const aiConfigSchema = z.object({
   apiKey: z.string().optional(),
   language: z.enum(['tr', 'en']).optional(),
   summaryModel: z.string().optional(),
-  requestTimeoutMs: z.coerce.number().optional(),
-  budgetUsd: z.coerce.number().optional(),
-  budgetDowngradeThresholdPct: z.coerce.number().optional(),
+  requestTimeoutMs: optNum,
+  budgetUsd: optNum,
+  budgetDowngradeThresholdPct: optNum,
   citationGateMode: z.enum(['off', 'warn', 'block']).optional(),
-  hybridRrfK: z.coerce.number().optional(),
-  maxOutputTokensRetryCap: z.coerce.number().optional(),
-  vectorSimilarityThreshold: z.coerce.number().optional(),
+  hybridRrfK: optNum,
+  maxOutputTokensRetryCap: optNum,
+  vectorSimilarityThreshold: optNum,
   qualityEvalEnabled: z.boolean().optional(),
   qualityEvalModel: z.string().optional(),
 })
@@ -50,7 +56,7 @@ export const aiConfigSchema = z.object({
 export const embeddingConfigSchema = z.object({
   model: z.string().optional(),
   apiKey: z.string().optional(),
-  dimensions: z.coerce.number().optional(),
+  dimensions: optNum,
 })
 
 export const langfuseConfigSchema = z.object({
@@ -61,7 +67,7 @@ export const langfuseConfigSchema = z.object({
   environment: z.string().optional(),
   promptManagementEnabled: z.boolean().optional(),
   promptLabel: z.string().optional(),
-  promptCacheTtlMs: z.coerce.number().optional(),
+  promptCacheTtlMs: optNum,
 })
 
 export const triggerConfigSchema = z.object({
@@ -71,28 +77,28 @@ export const triggerConfigSchema = z.object({
 })
 
 export const limitsConfigSchema = z.object({
-  maxStorageMb: z.coerce.number().optional(),
-  maxFileSizeMb: z.coerce.number().optional(),
+  maxStorageMb: optNum,
+  maxFileSizeMb: optNum,
   supportedFormats: z.array(z.string()).optional(),
-  chunkMaxChars: z.coerce.number().optional(),
-  chunkOverlapChars: z.coerce.number().optional(),
-  embeddingBatchSize: z.coerce.number().optional(),
-  historyTokenBudget: z.coerce.number().optional(),
-  compactionTriggerTokens: z.coerce.number().optional(),
-  searchDefaultLimit: z.coerce.number().optional(),
-  batchMaxFiles: z.coerce.number().optional(),
-  batchMaxTotalSizeMb: z.coerce.number().optional(),
-  singleFileMaxSizeMb: z.coerce.number().optional(),
-  maxTagsPerDocument: z.coerce.number().optional(),
-  maxTagLength: z.coerce.number().optional(),
-  approvalTimeoutMinutes: z.coerce.number().optional(),
-  queueConcurrencyExtract: z.coerce.number().optional(),
-  queueConcurrencyIngest: z.coerce.number().optional(),
-  queueConcurrencyAutoTag: z.coerce.number().optional(),
-  crawlMaxPages: z.coerce.number().optional(),
-  crawlMaxSources: z.coerce.number().optional(),
-  crawlMinIntervalHours: z.coerce.number().optional(),
-  crawlConcurrency: z.coerce.number().optional(),
+  chunkMaxChars: optNum,
+  chunkOverlapChars: optNum,
+  embeddingBatchSize: optNum,
+  historyTokenBudget: optNum,
+  compactionTriggerTokens: optNum,
+  searchDefaultLimit: optNum,
+  batchMaxFiles: optNum,
+  batchMaxTotalSizeMb: optNum,
+  singleFileMaxSizeMb: optNum,
+  maxTagsPerDocument: optNum,
+  maxTagLength: optNum,
+  approvalTimeoutMinutes: optNum,
+  queueConcurrencyExtract: optNum,
+  queueConcurrencyIngest: optNum,
+  queueConcurrencyAutoTag: optNum,
+  crawlMaxPages: optNum,
+  crawlMaxSources: optNum,
+  crawlMinIntervalHours: optNum,
+  crawlConcurrency: optNum,
   allowedConnectors: z.array(z.string()).optional(),
   autoSummarizeEnabled: z.boolean().optional(),
 })
@@ -100,20 +106,20 @@ export const limitsConfigSchema = z.object({
 export const documentProcessingConfigSchema = z.object({
   textractEndpoint: z.string().optional(),
   supportedSourceKinds: z.array(z.string()).optional(),
-  maxAttempts: z.coerce.number().optional(),
-  syncTextractMaxSizeMb: z.coerce.number().optional(),
+  maxAttempts: optNum,
+  syncTextractMaxSizeMb: optNum,
   workersEnabled: z.boolean().optional(),
 })
 
 export const crawlerConfigSchema = z.object({
   cloudflareAccountId: z.string().optional(),
   cloudflareApiToken: z.string().optional(),
-  maxGlobalConcurrentCrawls: z.coerce.number().optional(),
+  maxGlobalConcurrentCrawls: optNum,
 })
 
 export const pricingConfigSchema = z.object({
-  s3PerGbMonthUsd: z.coerce.number().optional(),
-  triggerPerTaskUsd: z.coerce.number().optional(),
+  s3PerGbMonthUsd: optNum,
+  triggerPerTaskUsd: optNum,
 })
 
 export const configBlockSchemas = {
