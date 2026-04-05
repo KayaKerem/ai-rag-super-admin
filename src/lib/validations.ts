@@ -93,7 +93,7 @@ export const limitsConfigSchema = z.object({
   crawlMaxSources: z.coerce.number().optional(),
   crawlMinIntervalHours: z.coerce.number().optional(),
   crawlConcurrency: z.coerce.number().optional(),
-  allowedConnectors: z.string().optional(),
+  allowedConnectors: z.array(z.string()).optional(),
   autoSummarizeEnabled: z.boolean().optional(),
 })
 
@@ -113,7 +113,6 @@ export const crawlerConfigSchema = z.object({
 
 export const pricingConfigSchema = z.object({
   s3PerGbMonthUsd: z.coerce.number().optional(),
-  cdnPerGbTransferUsd: z.coerce.number().optional(),
   triggerPerTaskUsd: z.coerce.number().optional(),
 })
 

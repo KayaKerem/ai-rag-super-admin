@@ -37,7 +37,12 @@ export function AiConfigSection({ currentValues, models, modelOptions: _modelOpt
 
   function handleSubmit(values: Record<string, unknown>) {
     const cleaned = Object.fromEntries(
-      Object.entries(values).filter(([, v]) => v !== '' && v !== undefined && !(typeof v === 'string' && v.includes('****')))
+      Object.entries(values).filter(([, v]) => {
+        if (v === '' || v === undefined || v === null) return false
+        if (typeof v === 'string' && v.includes('****')) return false
+        if (typeof v === 'number' && isNaN(v)) return false
+        return true
+      })
     )
     if (allowedModels.length > 0) {
       cleaned.allowedModels = allowedModels
