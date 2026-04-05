@@ -9,6 +9,7 @@ import { ToolConfigTab } from '../components/tool-config-tab'
 import { UsersTab } from '../components/users-tab'
 import { DataSourcesTab } from '../components/data-sources-tab'
 import { PlanTab } from '../components/plan-tab'
+import { ActivityLogTab } from '../components/activity-log-tab'
 
 export function CompanyDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -30,6 +31,7 @@ export function CompanyDetailPage() {
           <TabsTrigger value="tools">Tool&apos;lar</TabsTrigger>
           <TabsTrigger value="users">Kullanıcılar</TabsTrigger>
           <TabsTrigger value="data-sources">Veri Kaynaklari</TabsTrigger>
+          <TabsTrigger value="activity">Aktivite</TabsTrigger>
         </TabsList>
         <TabsContent value="usage" className="mt-4">
           <UsageTab companyId={id!} />
@@ -51,6 +53,9 @@ export function CompanyDetailPage() {
         </TabsContent>
         <TabsContent value="data-sources" className="mt-4">
           <DataSourcesTab companyId={id!} />
+        </TabsContent>
+        <TabsContent value="activity" className="mt-4">
+          <ActivityLogTab companyId={id!} />
         </TabsContent>
       </Tabs>
     </div>

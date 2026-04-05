@@ -19,6 +19,7 @@ import {
   mockRevenue,
   mockEmailTemplates,
   mockBillingEvents,
+  mockActivityLog,
 } from './data'
 
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -570,5 +571,22 @@ export const handlers = [
     const id = params.id as string
     const events = mockBillingEvents[id] ?? []
     return HttpResponse.json(events.slice(0, limit))
+  }),
+
+  // ─── Activity Log ─────────────────────────────────
+  http.get(`${BASE}/platform/companies/:id/activity-log`, async ({ params, request }) => {
+    await delay(200)
+    const { id } = params
+    const url = new URL(request.url)
+    const category = url.searchParams.get('category')
+    const limit = Number(url.searchParams.get('limit') ?? '20')
+    const offset = Number(url.searchParams.get('offset') ?? '0')
+
+    let items = mockActivityLog[id as string] ?? []
+    if (category) items = items.filter((i: any) => i.category === category)
+    const total = items.length
+    items = items.slice(offset, offset + limit)
+
+    return HttpResponse.json({ items, total })
   }),
 ]

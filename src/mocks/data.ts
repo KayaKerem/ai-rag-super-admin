@@ -689,3 +689,49 @@ mockCompanies.forEach((c: any) => {
   }
   mockBillingEvents[c.id] = events.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 })
+
+// Activity log per company
+const activityActions: Record<string, string[]> = {
+  auth: ['auth.login', 'auth.logout', 'auth.register', 'auth.email_verified', 'auth.invite_accepted', 'auth.password_reset', 'auth.logout_all'],
+  user: ['user.profile_updated', 'user.password_changed'],
+  document: ['document.uploaded', 'document.renamed', 'document.deleted', 'document.permanently_deleted', 'document.restored', 'document.moved', 'document.starred', 'document.content_updated', 'document.tags_updated'],
+  folder: ['folder.created', 'folder.renamed', 'folder.deleted', 'folder.permanently_deleted', 'folder.restored', 'folder.moved'],
+  knowledge: ['knowledge.created', 'knowledge.created_batch', 'knowledge.deleted', 'knowledge.tags_updated'],
+  conversation: ['conversation.created', 'conversation.updated', 'conversation.deleted', 'conversation.message_sent', 'conversation.tool_approved', 'conversation.tool_rejected'],
+  company: ['company.updated', 'company.invite_sent', 'company.invite_revoked', 'company.user_role_changed', 'company.user_deactivated'],
+  connector: ['connector.created', 'connector.updated', 'connector.deleted', 'connector.sync_started'],
+  note: ['note.created', 'note.updated', 'note.deleted'],
+}
+const activityCategories = Object.keys(activityActions)
+
+function generateActivityLog(companyId: string) {
+  const users = mockUsers[companyId] ?? []
+  const userIds = users.map((u: any) => u.id)
+  const count = 80 + Math.floor(Math.random() * 21)
+  const now = Date.now()
+  const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000
+
+  return Array.from({ length: count }, (_, i) => {
+    const category = activityCategories[i % activityCategories.length]
+    const actions = activityActions[category]
+    const action = actions[Math.floor(Math.random() * actions.length)]
+    const userId = userIds.length > 0 ? userIds[Math.floor(Math.random() * userIds.length)] : null
+    const createdAt = new Date(now - Math.floor(Math.random() * thirtyDaysMs)).toISOString()
+    return {
+      id: `al-${companyId.slice(0, 4)}-${i}`,
+      companyId,
+      userId,
+      action,
+      category,
+      resourceId: ['auth', 'user', 'company'].includes(category) ? null : `res-${Math.floor(Math.random() * 999)}`,
+      resourceType: ['auth', 'user', 'company'].includes(category) ? null : category,
+      metadata: null,
+      createdAt,
+    }
+  }).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+}
+
+export const mockActivityLog: Record<string, any[]> = {}
+mockCompanies.forEach((c: any) => {
+  mockActivityLog[c.id] = generateActivityLog(c.id)
+})

@@ -317,6 +317,27 @@ export interface BillingEvent {
   createdAt: string
 }
 
+// ─── Activity Log ────────────────────────────────
+
+export type ActivityCategory = 'auth' | 'user' | 'document' | 'folder' | 'knowledge' | 'conversation' | 'company' | 'connector' | 'note'
+
+export interface ActivityLogItem {
+  id: string
+  companyId: string
+  userId: string | null
+  action: string
+  category: ActivityCategory
+  resourceId: string | null
+  resourceType: string | null
+  metadata: Record<string, unknown> | null
+  createdAt: string
+}
+
+export interface ActivityLogResponse {
+  items: ActivityLogItem[]
+  total: number
+}
+
 // ─── Revenue ──────────────────────────────────────
 
 export interface RevenueByPlan {
