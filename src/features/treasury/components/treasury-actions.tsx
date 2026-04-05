@@ -175,7 +175,7 @@ export function TreasuryActions() {
         <CardContent>
           <div className="flex items-end gap-3">
             <div className="space-y-1">
-              <FieldLabel label="Tip" />
+              <FieldLabel label="Tip" required />
               <Select value={manualType} onValueChange={(v) => setManualType(v ?? 'stake_aave')}>
                 <SelectTrigger className="w-44">
                   <SelectValue />
@@ -190,7 +190,7 @@ export function TreasuryActions() {
               </Select>
             </div>
             <div className="space-y-1">
-              <FieldLabel label="Miktar (USD)" />
+              <FieldLabel label="Miktar (USD)" required />
               <Input
                 type="number"
                 value={manualAmount}

@@ -16,6 +16,7 @@ interface FieldConfig {
   options?: string[]
   placeholder?: string
   hint?: string
+  required?: boolean
 }
 
 interface SectionMeta {
@@ -39,8 +40,8 @@ const sectionMeta: Record<string, SectionMeta> = {
     title: 'Embedding Config',
     description: 'Varsayılan embedding model ayarları',
     fields: [
-      { key: 'model', label: 'Model', type: 'text', placeholder: 'openai/text-embedding-3-small', hint: 'Metin gomme (embedding) modeli. Dokumanlari vektore cevirir' },
-      { key: 'apiKey', label: 'API Key', type: 'password', hint: 'Embedding API anahtari' },
+      { key: 'model', label: 'Model', type: 'text', placeholder: 'openai/text-embedding-3-small', hint: 'Metin gomme (embedding) modeli. Dokumanlari vektore cevirir', required: true },
+      { key: 'apiKey', label: 'API Key', type: 'password', hint: 'Embedding API anahtari', required: true },
       { key: 'dimensions', label: 'Dimensions', type: 'number', hint: 'Embedding vektor boyutu. Model ile uyumlu olmali (or: 1536)' },
     ],
   },
@@ -62,8 +63,8 @@ const sectionMeta: Record<string, SectionMeta> = {
     title: 'S3 Config',
     description: 'Varsayılan S3 depolama ayarları',
     fields: [
-      { key: 'bucket', label: 'Bucket', type: 'text', hint: 'Varsayilan S3 bucket adi' },
-      { key: 'region', label: 'Region', type: 'text', hint: 'AWS bolgesi (or: eu-central-1)' },
+      { key: 'bucket', label: 'Bucket', type: 'text', hint: 'Varsayilan S3 bucket adi', required: true },
+      { key: 'region', label: 'Region', type: 'text', hint: 'AWS bolgesi (or: eu-central-1)', required: true },
       { key: 'endpoint', label: 'Endpoint', type: 'text', hint: 'Ozel S3 uyumlu endpoint (MinIO vb. icin)' },
       { key: 'forcePathStyle', label: 'Force Path Style', type: 'boolean', hint: 'Path-style URL kullanimi. MinIO gibi S3 uyumlu servisler icin gerekli' },
       { key: 'keyPrefix', label: 'Key Prefix', type: 'text', hint: 'Tum dosya yollarina eklenecek onek (or: uploads/)' },
@@ -90,9 +91,9 @@ const sectionMeta: Record<string, SectionMeta> = {
     title: 'Mail Config',
     description: 'Varsayılan email ayarları',
     fields: [
-      { key: 'apiKey', label: 'API Key', type: 'password', hint: 'Email servisi API anahtari (or: SendGrid)' },
-      { key: 'fromAddress', label: 'From Address', type: 'text', hint: 'Gonderici email adresi' },
-      { key: 'fromName', label: 'From Name', type: 'text', hint: 'Gonderici gorunen ad' },
+      { key: 'apiKey', label: 'API Key', type: 'password', hint: 'Email servisi API anahtari (or: SendGrid)', required: true },
+      { key: 'fromAddress', label: 'From Address', type: 'text', hint: 'Gonderici email adresi', required: true },
+      { key: 'fromName', label: 'From Name', type: 'text', hint: 'Gonderici gorunen ad', required: true },
       { key: 'replyTo', label: 'Reply To', type: 'text', hint: 'Yanit adresi (opsiyonel)' },
     ],
   },
@@ -100,8 +101,8 @@ const sectionMeta: Record<string, SectionMeta> = {
     title: 'Trigger Config',
     description: 'Varsayılan Trigger.dev ayarları',
     fields: [
-      { key: 'projectRef', label: 'Project Ref', type: 'text', hint: 'Trigger.dev proje referans ID' },
-      { key: 'secretKey', label: 'Secret Key', type: 'password', hint: 'Trigger.dev API anahtari' },
+      { key: 'projectRef', label: 'Project Ref', type: 'text', hint: 'Trigger.dev proje referans ID', required: true },
+      { key: 'secretKey', label: 'Secret Key', type: 'password', hint: 'Trigger.dev API anahtari', required: true },
       { key: 'workerEnabled', label: 'Worker Enabled', type: 'boolean', hint: 'Trigger.dev worker\'lari aktif/pasif' },
     ],
   },

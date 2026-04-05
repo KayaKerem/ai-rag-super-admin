@@ -19,6 +19,7 @@ interface FieldDef {
   options?: string[]
   placeholder?: string
   hint?: string
+  required?: boolean
 }
 
 interface BlockDef {
@@ -34,8 +35,8 @@ const configBlocks: BlockDef[] = [
     label: 'Embedding Config',
     icon: '🧬',
     fields: [
-      { key: 'model', label: 'Model', placeholder: 'openai/text-embedding-3-small', hint: 'Metin gomme (embedding) modeli. Dokumanlari vektore cevirir' },
-      { key: 'apiKey', label: 'API Key', hint: 'Embedding API anahtari' },
+      { key: 'model', label: 'Model', placeholder: 'openai/text-embedding-3-small', hint: 'Metin gomme (embedding) modeli. Dokumanlari vektore cevirir', required: true },
+      { key: 'apiKey', label: 'API Key', hint: 'Embedding API anahtari', required: true },
       { key: 'dimensions', label: 'Dimensions', type: 'number', hint: 'Embedding vektor boyutu. Model ile uyumlu olmali (or: 1536)' },
     ],
   },
@@ -59,8 +60,8 @@ const configBlocks: BlockDef[] = [
     label: 'S3 Config',
     icon: '📦',
     fields: [
-      { key: 'bucket', label: 'Bucket', hint: 'S3 bucket adi. Dokumanlarin depolandigi alan' },
-      { key: 'region', label: 'Region', hint: 'AWS bolgesi (or: eu-central-1)' },
+      { key: 'bucket', label: 'Bucket', hint: 'S3 bucket adi. Dokumanlarin depolandigi alan', required: true },
+      { key: 'region', label: 'Region', hint: 'AWS bolgesi (or: eu-central-1)', required: true },
       { key: 'endpoint', label: 'Endpoint', hint: 'Ozel S3 uyumlu endpoint (MinIO vb. icin)' },
       { key: 'forcePathStyle', label: 'Force Path Style', type: 'boolean', hint: 'Path-style URL kullanimi. MinIO gibi S3 uyumlu servisler icin gerekli' },
       { key: 'keyPrefix', label: 'Key Prefix', hint: 'Tum dosya yollarina eklenecek onek (or: uploads/)' },
@@ -89,9 +90,9 @@ const configBlocks: BlockDef[] = [
     label: 'Mail Config',
     icon: '✉️',
     fields: [
-      { key: 'apiKey', label: 'API Key', hint: 'Email servisi API anahtari (or: SendGrid)' },
-      { key: 'fromAddress', label: 'From Address', hint: 'Gonderici email adresi' },
-      { key: 'fromName', label: 'From Name', hint: 'Gonderici gorunen ad' },
+      { key: 'apiKey', label: 'API Key', hint: 'Email servisi API anahtari (or: SendGrid)', required: true },
+      { key: 'fromAddress', label: 'From Address', hint: 'Gonderici email adresi', required: true },
+      { key: 'fromName', label: 'From Name', hint: 'Gonderici gorunen ad', required: true },
       { key: 'replyTo', label: 'Reply To', hint: 'Yanit adresi (opsiyonel)' },
     ],
   },
@@ -100,8 +101,8 @@ const configBlocks: BlockDef[] = [
     label: 'Trigger Config',
     icon: '⚡',
     fields: [
-      { key: 'projectRef', label: 'Project Ref', hint: 'Trigger.dev proje referans ID' },
-      { key: 'secretKey', label: 'Secret Key', hint: 'Trigger.dev API anahtari' },
+      { key: 'projectRef', label: 'Project Ref', hint: 'Trigger.dev proje referans ID', required: true },
+      { key: 'secretKey', label: 'Secret Key', hint: 'Trigger.dev API anahtari', required: true },
       { key: 'workerEnabled', label: 'Worker Enabled', type: 'boolean', hint: 'Trigger.dev worker\'lari aktif/pasif' },
     ],
   },

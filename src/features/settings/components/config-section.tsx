@@ -15,6 +15,7 @@ interface FieldConfig {
   type?: 'text' | 'number' | 'password' | 'select' | 'boolean'
   options?: string[]
   placeholder?: string
+  required?: boolean
 }
 
 interface ConfigSectionProps {
@@ -73,7 +74,7 @@ export function ConfigSection({
               const watchedValue = form.watch(field.key) as boolean | undefined
               return (
                 <div key={field.key} className="flex items-center justify-between rounded-md border px-3 py-2">
-                  <FieldLabel label={field.label} hint={field.hint} />
+                  <FieldLabel label={field.label} hint={field.hint} required={field.required} />
                   <Switch
                     checked={watchedValue ?? false}
                     onCheckedChange={(v: boolean) => form.setValue(field.key, v)}
@@ -86,7 +87,7 @@ export function ConfigSection({
               const watchedValue = form.watch(field.key) as string | undefined
               return (
                 <div key={field.key}>
-                  <FieldLabel label={field.label} hint={field.hint} />
+                  <FieldLabel label={field.label} hint={field.hint} required={field.required} />
                   <Select
                     value={watchedValue ?? ''}
                     onValueChange={(v: string | null) => form.setValue(field.key, v ?? '')}
@@ -106,7 +107,7 @@ export function ConfigSection({
 
             return (
               <div key={field.key}>
-                <FieldLabel label={field.label} hint={field.hint} />
+                <FieldLabel label={field.label} hint={field.hint} required={field.required} />
                 <Input
                   {...form.register(field.key)}
                   type={field.type === 'number' ? 'number' : field.type === 'password' ? 'password' : 'text'}

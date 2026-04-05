@@ -52,15 +52,16 @@ export function AiConfigAccordion({ currentValues, models, modelOptions: _modelO
     return typeof value === 'string' && value.includes('****')
   }
 
-  const modelFields: { key: string; label: string; hint: string }[] = [
-    { key: 'model', label: 'Model', hint: 'Ana AI modeli. OpenRouter model ID formatinda' },
+  const modelFields: { key: string; label: string; hint: string; required?: boolean }[] = [
+    { key: 'model', label: 'Model', hint: 'Ana AI modeli. OpenRouter model ID formatinda', required: true },
     { key: 'compactionModel', label: 'Compaction Model', hint: 'Uzun sohbet gecmisini ozetlemek icin kullanilan model' },
     { key: 'titleModel', label: 'Title Model', hint: 'Sohbet basligi otomatik uretimi icin kullanilan hafif model' },
+    { key: 'summaryModel', label: 'Özet Modeli', hint: 'Dokuman ozetleme modeli (default: openai/gpt-4o-mini)' },
   ]
 
-  const numberFields: { key: string; label: string; hint: string }[] = [
+  const numberFields: { key: string; label: string; hint: string; required?: boolean }[] = [
     { key: 'requestTimeoutMs', label: 'Timeout (ms)', hint: 'AI istegi icin maksimum bekleme suresi (milisaniye)' },
-    { key: 'budgetUsd', label: 'Budget (USD)', hint: 'Aylik AI harcama limiti ($). Asilirsa model downgrade edilir' },
+    { key: 'budgetUsd', label: 'Budget (USD)', hint: 'Aylik AI harcama limiti ($). Asilirsa model downgrade edilir', required: true },
     { key: 'budgetDowngradeThresholdPct', label: 'Downgrade Threshold (%)', hint: 'Butcenin bu yuzdesine ulasilinca daha ucuz modele gecilir (varsayilan: %80)' },
     { key: 'hybridRrfK', label: 'Hybrid RRF K', hint: 'Hibrit arama icin RRF parametresi. Yuksek deger = daha dengeli siralama' },
     { key: 'maxOutputTokensRetryCap', label: 'Max Output Tokens Retry Cap', hint: 'Token limiti asildiginda retry yapilacak maksimum token sayisi' },
@@ -86,7 +87,7 @@ export function AiConfigAccordion({ currentValues, models, modelOptions: _modelO
               const watchedValue = form.watch(field.key) as string | undefined
               return (
                 <div key={field.key}>
-                  <FieldLabel label={field.label} hint={field.hint} />
+                  <FieldLabel label={field.label} hint={field.hint} required={field.required} />
                   <ModelSelect
                     models={models}
                     value={watchedValue ?? ''}
@@ -98,7 +99,7 @@ export function AiConfigAccordion({ currentValues, models, modelOptions: _modelO
 
             {/* API Key */}
             <div>
-              <FieldLabel label="OpenRouter API Key" hint="OpenRouter API anahtari. Tum AI istekleri bu key uzerinden yonlendirilir" />
+              <FieldLabel label="OpenRouter API Key" hint="OpenRouter API anahtari. Tum AI istekleri bu key uzerinden yonlendirilir" required />
               <Input
                 {...form.register('apiKey')}
                 type="text"
@@ -125,17 +126,6 @@ export function AiConfigAccordion({ currentValues, models, modelOptions: _modelO
               </Select>
             </div>
 
-            {/* Summary Model */}
-            <div>
-              <FieldLabel label="Özet Modeli" hint="Dokuman ozetleme modeli (default: openai/gpt-4o-mini)" />
-              <Input
-                {...form.register('summaryModel')}
-                type="text"
-                placeholder="openai/gpt-4o-mini"
-                className="mt-1"
-              />
-            </div>
-
             {/* Citation Gate Mode */}
             <div>
               <FieldLabel label="Citation Gate" hint="Kaynak gosterimi kontrolu. off: kapali, warn: uyar, block: kaynak yoksa cevap verme" />
@@ -157,7 +147,7 @@ export function AiConfigAccordion({ currentValues, models, modelOptions: _modelO
             {/* Number fields */}
             {numberFields.map((field) => (
               <div key={field.key}>
-                <FieldLabel label={field.label} hint={field.hint} />
+                <FieldLabel label={field.label} hint={field.hint} required={field.required} />
                 <Input
                   {...form.register(field.key)}
                   type="number"

@@ -104,6 +104,51 @@ export function AllowedModelsEditor({ models, value, onChange }: AllowedModelsEd
       </div>
 
       <div className="max-h-[320px] overflow-y-auto space-y-3 pr-1">
+        {/* Selected models first */}
+        {selected.size > 0 && !search.trim() && (
+          <div>
+            <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-primary sticky top-0 bg-background py-0.5">
+              Seçili ({selected.size})
+            </div>
+            <div className="space-y-1">
+              {Array.from(selected.values()).map((am) => {
+                const model = models.find((m) => m.id === am.id)
+                if (!model) return null
+                return (
+                  <div
+                    key={model.id}
+                    className="flex items-center justify-between rounded-md border border-primary/30 bg-primary/5 px-3 py-1.5 transition-colors"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Switch
+                        checked={true}
+                        onCheckedChange={() => toggleModel(model)}
+                      />
+                      <div className="min-w-0">
+                        <span className="text-xs font-medium">{model.label}</span>
+                        <span className="ml-1.5 text-[10px] text-muted-foreground truncate">{model.id}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-[10px] text-muted-foreground">
+                        ${model.pricing.inputPerMtok}/{model.pricing.outputPerMtok}
+                      </span>
+                      <Badge
+                        variant={am.isDefault ? 'default' : 'outline'}
+                        className="cursor-pointer text-[9px]"
+                        onClick={() => toggleDefault(model.id)}
+                      >
+                        {am.isDefault ? 'Default' : 'Set Default'}
+                      </Badge>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* All models by tier */}
         {grouped.map((group) => (
           <div key={group.tier}>
             <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground sticky top-0 bg-background py-0.5">

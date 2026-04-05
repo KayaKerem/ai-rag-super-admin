@@ -1,0 +1,1 @@
+- [project_config_context.md](project_config_context.md) — Companies manage their own API keys/budgets; superadmin can view/edit but it's company-owned config

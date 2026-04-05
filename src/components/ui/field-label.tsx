@@ -5,12 +5,16 @@ import { Info } from 'lucide-react'
 interface FieldLabelProps {
   label: string
   hint?: string
+  required?: boolean
 }
 
-export function FieldLabel({ label, hint }: FieldLabelProps) {
+export function FieldLabel({ label, hint, required }: FieldLabelProps) {
   return (
     <div className="flex items-center gap-1">
-      <Label className="text-xs text-muted-foreground">{label}</Label>
+      <Label className="text-xs text-muted-foreground">
+        {label}
+        {required && <span className="ml-0.5 text-destructive">*</span>}
+      </Label>
       {hint && (
         <TooltipProvider delay={150}>
           <Tooltip>
