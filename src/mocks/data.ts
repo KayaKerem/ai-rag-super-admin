@@ -690,6 +690,76 @@ mockCompanies.forEach((c: any) => {
   mockBillingEvents[c.id] = events.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 })
 
+// Search analytics generator
+export function generateSearchAnalytics(windowDays: number) {
+  const scale = windowDays / 30
+  const totalQueries = Math.round(600 * scale)
+  const emptyQueries = Math.round(15 * scale)
+  const emptyRate = +(emptyQueries / totalQueries).toFixed(4)
+
+  const topQueries = [
+    { queryText: 'is sozlesmesi feshi', count: 48, emptyRate: 0.02 },
+    { queryText: 'kidem tazminati hesaplama', count: 42, emptyRate: 0.0 },
+    { queryText: 'yillik izin haklari', count: 37, emptyRate: 0.03 },
+    { queryText: 'SGK bildirgeleri', count: 33, emptyRate: 0.06 },
+    { queryText: 'vergi muafiyeti kosullari', count: 29, emptyRate: 0.1 },
+    { queryText: 'ihbar suresi hesaplama', count: 25, emptyRate: 0.0 },
+    { queryText: 'fazla mesai ucreti', count: 22, emptyRate: 0.05 },
+    { queryText: 'ise iade davasi', count: 19, emptyRate: 0.08 },
+    { queryText: 'is kazasi bildirimi', count: 16, emptyRate: 0.12 },
+    { queryText: 'toplu is sozlesmesi', count: 14, emptyRate: 0.07 },
+  ].map((q) => ({ ...q, count: Math.round(q.count * scale) }))
+
+  const now = Date.now()
+  const dayMs = 24 * 60 * 60 * 1000
+  const unansweredQueries = [
+    { queryText: 'uzaktan calisma yonetmeligi 2026', count: 8, lastAsked: new Date(now - 1 * dayMs).toISOString() },
+    { queryText: 'esnek calisma saatleri kanun', count: 5, lastAsked: new Date(now - 3 * dayMs).toISOString() },
+    { queryText: 'yapay zeka is hukuku', count: 4, lastAsked: new Date(now - 2 * dayMs).toISOString() },
+    { queryText: 'kripto varlik vergilendirme', count: 3, lastAsked: new Date(now - 5 * dayMs).toISOString() },
+    { queryText: 'yesil enerji tesvik mevzuati', count: 2, lastAsked: new Date(now - 7 * dayMs).toISOString() },
+  ].map((q) => ({ ...q, count: Math.round(q.count * scale) || 1 }))
+
+  const byTool: Record<string, { total: number; empty: number; avgResponseTimeMs: number }> = {
+    search_knowledge_base: { total: Math.round(380 * scale), empty: Math.round(8 * scale), avgResponseTimeMs: 280 },
+    search_drive_documents: { total: Math.round(150 * scale), empty: Math.round(5 * scale), avgResponseTimeMs: 420 },
+    search_notes: { total: Math.round(70 * scale), empty: Math.round(2 * scale), avgResponseTimeMs: 190 },
+  }
+
+  const feedbackCorrelation = {
+    queriesWithNegativeFeedback: 23,
+    topNegativeQueries: [
+      { queryText: 'is kazasi bildirimi', negativeCount: 6, totalCount: 16 },
+      { queryText: 'vergi muafiyeti kosullari', negativeCount: 5, totalCount: 29 },
+      { queryText: 'SGK bildirgeleri', negativeCount: 4, totalCount: 33 },
+      { queryText: 'ise iade davasi', negativeCount: 4, totalCount: 19 },
+      { queryText: 'fazla mesai ucreti', negativeCount: 3, totalCount: 22 },
+    ],
+  }
+
+  const dailyTrend: Array<{ date: string; total: number; empty: number }> = []
+  for (let i = windowDays - 1; i >= 0; i--) {
+    const date = new Date(now - i * dayMs).toISOString().slice(0, 10)
+    const total = 15 + Math.floor(Math.random() * 12)
+    const empty = Math.random() < 0.3 ? Math.floor(Math.random() * 3) : 0
+    dailyTrend.push({ date, total, empty })
+  }
+
+  return {
+    windowDays,
+    totalQueries,
+    emptyQueries,
+    emptyRate,
+    avgResultCount: 4.2,
+    avgResponseTimeMs: 340,
+    topQueries,
+    unansweredQueries,
+    byTool,
+    feedbackCorrelation,
+    dailyTrend,
+  }
+}
+
 // Activity log per company
 const activityActions: Record<string, string[]> = {
   auth: ['auth.login', 'auth.logout', 'auth.register', 'auth.email_verified', 'auth.invite_accepted', 'auth.password_reset', 'auth.logout_all'],

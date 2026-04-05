@@ -363,3 +363,22 @@ export interface RevenueData {
   totalAiCostUsd: number
   marginTry: number
 }
+
+// ─── Search Analytics ────────────────────────────
+
+export interface SearchAnalytics {
+  windowDays: number
+  totalQueries: number
+  emptyQueries: number
+  emptyRate: number
+  avgResultCount: number
+  avgResponseTimeMs: number
+  topQueries: Array<{ queryText: string; count: number; emptyRate: number }>
+  unansweredQueries: Array<{ queryText: string; count: number; lastAsked: string }>
+  byTool: Record<string, { total: number; empty: number; avgResponseTimeMs: number }>
+  feedbackCorrelation: {
+    queriesWithNegativeFeedback: number
+    topNegativeQueries: Array<{ queryText: string; negativeCount: number; totalCount: number }>
+  }
+  dailyTrend: Array<{ date: string; total: number; empty: number }>
+}

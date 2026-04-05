@@ -20,6 +20,7 @@ import {
   mockEmailTemplates,
   mockBillingEvents,
   mockActivityLog,
+  generateSearchAnalytics,
 } from './data'
 
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -571,6 +572,14 @@ export const handlers = [
     const id = params.id as string
     const events = mockBillingEvents[id] ?? []
     return HttpResponse.json(events.slice(0, limit))
+  }),
+
+  // ─── Search Analytics ──────────────────────────────
+  http.get(`${BASE}/platform/companies/:id/search-analytics`, async ({ request }) => {
+    await delay(200)
+    const url = new URL(request.url)
+    const windowDays = Number(url.searchParams.get('windowDays') ?? '30')
+    return HttpResponse.json(generateSearchAnalytics(windowDays))
   }),
 
   // ─── Activity Log ─────────────────────────────────
