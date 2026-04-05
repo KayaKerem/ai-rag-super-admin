@@ -127,6 +127,12 @@ const configBlocks: BlockDef[] = [
       { key: 'queueConcurrencyExtract', label: 'Queue: Extract', type: 'number', hint: 'Es zamanli calisacak metin cikarma worker sayisi' },
       { key: 'queueConcurrencyIngest', label: 'Queue: Ingest', type: 'number', hint: 'Es zamanli calisacak indeksleme worker sayisi' },
       { key: 'queueConcurrencyAutoTag', label: 'Queue: AutoTag', type: 'number', hint: 'Es zamanli calisacak otomatik etiketleme worker sayisi' },
+      { key: 'crawlMaxPages', label: 'Crawler Maks Sayfa', type: 'number', hint: 'Crawler basina maksimum sayfa limiti' },
+      { key: 'crawlMaxSources', label: 'Crawler Maks Kaynak', type: 'number', hint: 'Maksimum crawler kaynak sayisi' },
+      { key: 'crawlMinIntervalHours', label: 'Crawler Min Aralık (saat)', type: 'number', hint: 'Crawler\'lar arasi minimum bekleme suresi' },
+      { key: 'crawlConcurrency', label: 'Crawler Eşzamanlılık', type: 'number', hint: 'Es zamanli calisabilecek crawler sayisi' },
+      { key: 'allowedConnectors', label: 'İzin Verilen Connector\'lar', hint: 'Virgülle ayrilmis connector listesi (or: website_crawler)' },
+      { key: 'autoSummarizeEnabled', label: 'Otomatik Özetleme', type: 'boolean', hint: 'Yuklenen dokumanlar otomatik ozetlensin mi' },
     ],
   },
   {

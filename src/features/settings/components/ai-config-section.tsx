@@ -97,6 +97,35 @@ export function AiConfigSection({ currentValues, models, modelOptions: _modelOpt
             />
           </div>
 
+          {/* Language */}
+          <div>
+            <FieldLabel label="Dil" hint="AI yanitlari ve otomatik ozetler bu dilde uretilir" />
+            <Select
+              value={(form.watch('language') as string) ?? ''}
+              onValueChange={(v: string | null) => form.setValue('language', v ?? '')}
+            >
+              <SelectTrigger className="mt-1 w-full">
+                <SelectValue placeholder="Seçin" />
+              </SelectTrigger>
+              <SelectContent>
+                {['tr', 'en'].map((opt) => (
+                  <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Summary Model */}
+          <div>
+            <FieldLabel label="Özet Modeli" hint="Dokuman ozetleme modeli (default: openai/gpt-4o-mini)" />
+            <Input
+              {...form.register('summaryModel')}
+              type="text"
+              placeholder="openai/gpt-4o-mini"
+              className="mt-1"
+            />
+          </div>
+
           <div>
             <FieldLabel label="Citation Gate" hint="Kaynak gosterimi kontrolu. off: kapali, warn: uyar, block: kaynak yoksa cevap verme" />
             <Select
