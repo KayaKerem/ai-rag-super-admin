@@ -8,6 +8,7 @@ import { Switch } from '@/components/ui/switch'
 import { toast } from 'sonner'
 import { useToolPlans } from '../hooks/use-tool-plans'
 import { useCompanyToolConfig, useUpdateCompanyToolConfig } from '../hooks/use-company-tool-config'
+import type { ResolvedTool } from '../types'
 
 interface ToolConfigAccordionProps {
   companyId: string
@@ -62,7 +63,7 @@ export function ToolConfigAccordion({ companyId }: ToolConfigAccordionProps) {
   }
 
   // Group resolved tools by category
-  const grouped = (toolConfig?.resolvedTools ?? []).reduce<Record<string, typeof toolConfig.resolvedTools>>((acc, t) => {
+  const grouped = (toolConfig?.resolvedTools ?? []).reduce<Record<string, ResolvedTool[]>>((acc, t) => {
     if (!acc[t.category]) acc[t.category] = []
     acc[t.category].push(t)
     return acc

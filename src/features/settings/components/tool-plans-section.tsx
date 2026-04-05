@@ -118,7 +118,7 @@ export function ToolPlansSection() {
       {/* Default Plan */}
       <div className="mb-4">
         <Label className="text-xs text-muted-foreground">Default Plan (yeni firmalara atanır)</Label>
-        <Select value={defaultPlan} onValueChange={setDefaultPlan}>
+        <Select value={defaultPlan} onValueChange={(v) => setDefaultPlan(v ?? '')}>
           <SelectTrigger className="mt-1 max-w-xs">
             <SelectValue />
           </SelectTrigger>

@@ -144,7 +144,7 @@ export function PlanTab({ companyId, company }: PlanTabProps) {
         <CardContent>
           <div className="flex items-end gap-3">
             <div className="flex-1">
-              <Select value={selectedPlanId} onValueChange={setSelectedPlanId}>
+              <Select value={selectedPlanId} onValueChange={(v) => setSelectedPlanId(v ?? '')}>
                 <SelectTrigger>
                   <SelectValue placeholder="Yeni plan seçin" />
                 </SelectTrigger>
@@ -193,7 +193,7 @@ export function PlanTab({ companyId, company }: PlanTabProps) {
           </div>
           <div className="flex items-end gap-3">
             <div className="flex-1">
-              <Select value={statusValue} onValueChange={setStatusValue}>
+              <Select value={statusValue} onValueChange={(v) => setStatusValue(v ?? '')}>
                 <SelectTrigger>
                   <SelectValue placeholder="Yeni durum seçin" />
                 </SelectTrigger>

@@ -48,7 +48,7 @@ export function CreateCompanyDialog() {
           </div>
           <div>
             <Label>Plan (Opsiyonel)</Label>
-            <Select value={planId} onValueChange={setPlanId}>
+            <Select value={planId} onValueChange={(v) => setPlanId(v ?? '')}>
               <SelectTrigger>
                 <SelectValue placeholder="Plan seçin" />
               </SelectTrigger>

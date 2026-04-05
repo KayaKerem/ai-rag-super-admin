@@ -23,7 +23,7 @@ interface AiConfigAccordionProps {
   isSaving: boolean
 }
 
-export function AiConfigAccordion({ currentValues, models, modelOptions, onSave, isSaving }: AiConfigAccordionProps) {
+export function AiConfigAccordion({ currentValues, models, modelOptions: _modelOptions, onSave, isSaving }: AiConfigAccordionProps) {
   const schema = configBlockSchemas.aiConfig as ZodTypeAny
   const hasConfig = currentValues && Object.keys(currentValues).length > 0
 

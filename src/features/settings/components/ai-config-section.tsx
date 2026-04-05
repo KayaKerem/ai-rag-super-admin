@@ -21,7 +21,7 @@ interface AiConfigSectionProps {
   isSaving: boolean
 }
 
-export function AiConfigSection({ currentValues, models, modelOptions, onSave, isSaving }: AiConfigSectionProps) {
+export function AiConfigSection({ currentValues, models, modelOptions: _modelOptions, onSave, isSaving }: AiConfigSectionProps) {
   const schema = configBlockSchemas.aiConfig as ZodTypeAny
 
   const [allowedModels, setAllowedModels] = useState<AllowedModel[]>(
