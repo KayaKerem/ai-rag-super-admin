@@ -40,7 +40,7 @@ export function AiConfigAccordion({ currentValues, models, modelOptions: _modelO
 
   function handleSubmit(values: Record<string, unknown>) {
     const cleaned = Object.fromEntries(
-      Object.entries(values).filter(([, v]) => v !== '' && v !== undefined)
+      Object.entries(values).filter(([, v]) => v !== '' && v !== undefined && !(typeof v === 'string' && v.includes('****')))
     )
     if (allowedModels.length > 0) {
       cleaned.allowedModels = allowedModels
