@@ -15,7 +15,7 @@ interface ConfigTabProps {
 interface FieldDef {
   key: string
   label: string
-  type?: 'text' | 'number' | 'select' | 'boolean'
+  type?: 'text' | 'number' | 'select' | 'boolean' | 'model'
   options?: string[]
   placeholder?: string
   hint?: string
@@ -35,7 +35,7 @@ const configBlocks: BlockDef[] = [
     label: 'Embedding Config',
     icon: '🧬',
     fields: [
-      { key: 'model', label: 'Model', placeholder: 'openai/text-embedding-3-small', hint: 'Metin gomme (embedding) modeli. Dokumanlari vektore cevirir', required: true },
+      { key: 'model', label: 'Model', type: 'model', hint: 'Metin gomme (embedding) modeli. Dokumanlari vektore cevirir', required: true },
       { key: 'apiKey', label: 'API Key', hint: 'Embedding API anahtari', required: true },
       { key: 'dimensions', label: 'Dimensions', type: 'number', hint: 'Embedding vektor boyutu. Model ile uyumlu olmali (or: 1536)' },
     ],
@@ -216,6 +216,7 @@ export function ConfigTab({ companyId }: ConfigTabProps) {
             currentValues={config?.[block.key]}
             onSave={handleSave}
             isSaving={updateConfig.isPending}
+            models={models ?? []}
           />
         ))}
       </Accordion>

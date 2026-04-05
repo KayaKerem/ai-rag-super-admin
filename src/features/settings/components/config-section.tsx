@@ -5,14 +5,16 @@ import { Input } from '@/components/ui/input'
 import { FieldLabel } from '@/components/ui/field-label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import { ModelSelect } from '@/components/ui/model-select'
 import { configBlockSchemas, type ConfigBlockKey } from '@/lib/validations'
+import type { PlatformModel } from '@/features/companies/types'
 import type { ZodTypeAny } from 'zod'
 
 interface FieldConfig {
   key: string
   label: string
   hint?: string
-  type?: 'text' | 'number' | 'password' | 'select' | 'boolean'
+  type?: 'text' | 'number' | 'password' | 'select' | 'boolean' | 'model'
   options?: string[]
   placeholder?: string
   required?: boolean
@@ -26,6 +28,7 @@ interface ConfigSectionProps {
   currentValues: Record<string, unknown> | undefined
   onSave: (blockKey: ConfigBlockKey, values: Record<string, unknown>) => void
   isSaving: boolean
+  models?: PlatformModel[]
 }
 
 export function ConfigSection({
@@ -36,6 +39,7 @@ export function ConfigSection({
   currentValues,
   onSave,
   isSaving,
+  models,
 }: ConfigSectionProps) {
   const schema = configBlockSchemas[blockKey] as ZodTypeAny
 
@@ -106,6 +110,20 @@ export function ConfigSection({
                       ))}
                     </SelectContent>
                   </Select>
+                </div>
+              )
+            }
+
+            if (field.type === 'model' && models) {
+              const watchedValue = form.watch(field.key) as string | undefined
+              return (
+                <div key={field.key}>
+                  <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                  <ModelSelect
+                    models={models}
+                    value={watchedValue ?? ''}
+                    onChange={(v) => form.setValue(field.key, v)}
+                  />
                 </div>
               )
             }

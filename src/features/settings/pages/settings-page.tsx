@@ -12,7 +12,7 @@ import type { ConfigBlockKey } from '@/lib/validations'
 interface FieldConfig {
   key: string
   label: string
-  type?: 'text' | 'number' | 'password' | 'select' | 'boolean'
+  type?: 'text' | 'number' | 'password' | 'select' | 'boolean' | 'model'
   options?: string[]
   placeholder?: string
   hint?: string
@@ -40,7 +40,7 @@ const sectionMeta: Record<string, SectionMeta> = {
     title: 'Embedding Config',
     description: 'Varsayılan embedding model ayarları',
     fields: [
-      { key: 'model', label: 'Model', type: 'text', placeholder: 'openai/text-embedding-3-small', hint: 'Metin gomme (embedding) modeli. Dokumanlari vektore cevirir', required: true },
+      { key: 'model', label: 'Model', type: 'model', hint: 'Metin gomme (embedding) modeli. Dokumanlari vektore cevirir', required: true },
       { key: 'apiKey', label: 'API Key', type: 'password', hint: 'Embedding API anahtari', required: true },
       { key: 'dimensions', label: 'Dimensions', type: 'number', hint: 'Embedding vektor boyutu. Model ile uyumlu olmali (or: 1536)' },
     ],
@@ -214,6 +214,7 @@ export function SettingsPage() {
             currentValues={currentValues}
             onSave={handleSave}
             isSaving={isPending}
+            models={models ?? []}
           />
         ) : null}
       </main>
