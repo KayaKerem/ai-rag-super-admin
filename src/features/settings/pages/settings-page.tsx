@@ -40,7 +40,7 @@ const sectionMeta: Record<string, SectionMeta> = {
     title: 'Embedding Config',
     description: 'Varsayılan embedding model ayarları',
     fields: [
-      { key: 'model', label: 'Model', type: 'model', hint: 'Metin gomme (embedding) modeli. Dokumanlari vektore cevirir', required: true },
+      { key: 'model', label: 'Model', type: 'select', options: ['openai/text-embedding-3-small', 'openai/text-embedding-3-large', 'openai/text-embedding-ada-002', 'cohere/embed-multilingual-v3.0', 'cohere/embed-english-v3.0'], hint: 'Metin gomme (embedding) modeli. Dokumanlari vektore cevirir', required: true },
       { key: 'apiKey', label: 'API Key', type: 'password', hint: 'Embedding API anahtari', required: true },
       { key: 'dimensions', label: 'Dimensions', type: 'number', hint: 'Embedding vektor boyutu. Model ile uyumlu olmali (or: 1536)' },
     ],
