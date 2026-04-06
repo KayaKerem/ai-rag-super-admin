@@ -15,7 +15,7 @@ interface ConfigTabProps {
 interface FieldDef {
   key: string
   label: string
-  type?: 'text' | 'number' | 'select' | 'boolean' | 'model'
+  type?: 'text' | 'number' | 'password' | 'select' | 'boolean' | 'model'
   options?: string[]
   placeholder?: string
   hint?: string
