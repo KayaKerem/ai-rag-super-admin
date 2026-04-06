@@ -72,10 +72,6 @@ export function ConfigSection({
 
   const errors = form.formState.errors
 
-  function isMasked(value: unknown): boolean {
-    return typeof value === 'string' && value.includes('****')
-  }
-
   function hasStoredValue(key: string): boolean {
     const v = currentValues?.[key]
     return v !== undefined && v !== null && v !== ''
@@ -91,9 +87,6 @@ export function ConfigSection({
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <div className="grid grid-cols-2 gap-4">
           {fields.map((field) => {
-            const currentVal = currentValues?.[field.key]
-            const masked = isMasked(currentVal)
-
             if (field.type === 'boolean') {
               const watchedValue = form.watch(field.key) as boolean | undefined
               return (
@@ -128,7 +121,7 @@ export function ConfigSection({
                     onValueChange={(v: string | null) => form.setValue(field.key, v ?? '')}
                   >
                     <SelectTrigger className="mt-1 w-full">
-                      <SelectValue placeholder={masked ? String(currentVal) : 'Seçin'} />
+                      <SelectValue placeholder="Seçin" />
                     </SelectTrigger>
                     <SelectContent>
                       {field.options.map((opt) => (
@@ -173,8 +166,8 @@ export function ConfigSection({
                   {...form.register(field.key)}
                   type={field.type === 'number' ? 'number' : field.type === 'password' ? 'password' : 'text'}
                   step={field.type === 'number' ? 'any' : undefined}
-                  placeholder={masked ? String(currentVal) : (field.placeholder ?? '')}
-                  className={`mt-1 ${masked ? 'italic text-muted-foreground' : ''}`}
+                  placeholder={field.placeholder ?? ''}
+                  className="mt-1"
                 />
                 {errors[field.key] && (
                   <p className="mt-1 text-xs text-destructive">{errors[field.key]?.message as string || 'Geçersiz değer'}</p>
