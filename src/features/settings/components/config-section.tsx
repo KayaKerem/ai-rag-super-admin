@@ -76,6 +76,11 @@ export function ConfigSection({
     return typeof value === 'string' && value.includes('****')
   }
 
+  function hasStoredValue(key: string): boolean {
+    const v = currentValues?.[key]
+    return v !== undefined && v !== null && v !== ''
+  }
+
   return (
     <div className="rounded-lg border bg-card p-6">
       <div className="mb-6">
@@ -94,7 +99,10 @@ export function ConfigSection({
               return (
                 <div key={field.key}>
                   <div className="flex items-center justify-between rounded-md border px-3 py-2">
-                    <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                    <div className="flex items-center gap-1.5">
+                      <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${hasStoredValue(field.key) ? 'bg-emerald-500' : 'bg-muted-foreground/30'}`} />
+                      <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                    </div>
                     <Switch
                       checked={watchedValue ?? false}
                       onCheckedChange={(v: boolean) => form.setValue(field.key, v)}
@@ -111,7 +119,10 @@ export function ConfigSection({
               const watchedValue = form.watch(field.key) as string | undefined
               return (
                 <div key={field.key}>
-                  <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                  <div className="flex items-center gap-1.5">
+                    <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${hasStoredValue(field.key) ? 'bg-emerald-500' : 'bg-muted-foreground/30'}`} />
+                    <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                  </div>
                   <Select
                     value={watchedValue ?? ''}
                     onValueChange={(v: string | null) => form.setValue(field.key, v ?? '')}
@@ -136,7 +147,10 @@ export function ConfigSection({
               const watchedValue = form.watch(field.key) as string | undefined
               return (
                 <div key={field.key}>
-                  <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                  <div className="flex items-center gap-1.5">
+                    <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${hasStoredValue(field.key) ? 'bg-emerald-500' : 'bg-muted-foreground/30'}`} />
+                    <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                  </div>
                   <ModelSelect
                     models={models}
                     value={watchedValue ?? ''}
@@ -151,7 +165,10 @@ export function ConfigSection({
 
             return (
               <div key={field.key}>
-                <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                <div className="flex items-center gap-1.5">
+                  <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${hasStoredValue(field.key) ? 'bg-emerald-500' : 'bg-muted-foreground/30'}`} />
+                  <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                </div>
                 <Input
                   {...form.register(field.key)}
                   type={field.type === 'number' ? 'number' : field.type === 'password' ? 'password' : 'text'}

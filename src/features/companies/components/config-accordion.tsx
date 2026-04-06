@@ -69,6 +69,15 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
     return typeof value === 'string' && value.includes('****')
   }
 
+  function hasStoredValue(key: string): boolean {
+    const v = currentValues?.[key]
+    return v !== undefined && v !== null && v !== ''
+  }
+
+  const valueDot = (key: string) => (
+    <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${hasStoredValue(key) ? 'bg-emerald-500' : 'bg-muted-foreground/30'}`} />
+  )
+
   return (
     <AccordionItem value={blockKey} className="rounded-lg border">
       <AccordionTrigger className="rounded-lg bg-card px-4 py-3 hover:no-underline">
@@ -92,7 +101,10 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
                 return (
                   <div key={field.key}>
                     <div className="flex items-center justify-between rounded-md border px-3 py-2">
-                      <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                      <div className="flex items-center gap-1.5">
+                        {valueDot(field.key)}
+                        <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                      </div>
                       <Switch
                         checked={watchedValue ?? false}
                         onCheckedChange={(v: boolean) => form.setValue(field.key, v)}
@@ -109,7 +121,10 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
                 const watchedValue = form.watch(field.key) as string | undefined
                 return (
                   <div key={field.key}>
-                    <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                    <div className="flex items-center gap-1.5">
+                      {valueDot(field.key)}
+                      <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                    </div>
                     <Select
                       value={watchedValue ?? ''}
                       onValueChange={(v: string | null) => form.setValue(field.key, v ?? '')}
@@ -134,7 +149,10 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
                 const watchedValue = form.watch(field.key) as string | undefined
                 return (
                   <div key={field.key}>
-                    <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                    <div className="flex items-center gap-1.5">
+                      {valueDot(field.key)}
+                      <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                    </div>
                     <ModelSelect
                       models={models}
                       value={watchedValue ?? ''}
@@ -149,7 +167,10 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
 
               return (
                 <div key={field.key}>
-                  <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                  <div className="flex items-center gap-1.5">
+                    {valueDot(field.key)}
+                    <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                  </div>
                   <Input
                     {...form.register(field.key)}
                     type={field.type === 'number' ? 'number' : field.type === 'password' ? 'password' : 'text'}
