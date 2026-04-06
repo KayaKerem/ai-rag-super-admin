@@ -41,7 +41,7 @@ const sectionMeta: Record<string, SectionMeta> = {
     description: 'Varsayılan embedding model ayarları',
     fields: [
       { key: 'model', label: 'Model', type: 'select', options: ['openai/text-embedding-3-small', 'openai/text-embedding-3-large', 'openai/text-embedding-ada-002', 'cohere/embed-multilingual-v3.0', 'cohere/embed-english-v3.0'], hint: 'Metin gomme (embedding) modeli. Dokumanlari vektore cevirir', required: true },
-      { key: 'apiKey', label: 'API Key', type: 'password', hint: 'Embedding API anahtari', required: true },
+      { key: 'apiKey', label: 'API Key', type: 'text', hint: 'Embedding API anahtari', required: true },
       { key: 'dimensions', label: 'Dimensions', type: 'number', hint: 'Embedding vektor boyutu. Model ile uyumlu olmali (or: 1536)' },
     ],
   },
@@ -51,7 +51,7 @@ const sectionMeta: Record<string, SectionMeta> = {
     fields: [
       { key: 'enabled', label: 'Tracing Enabled', type: 'boolean', hint: 'Platform genelinde Langfuse tracing acik/kapali' },
       { key: 'publicKey', label: 'Public Key', type: 'text', hint: 'Langfuse proje public key. Platform genelinde tek hesap' },
-      { key: 'secretKey', label: 'Secret Key', type: 'password', hint: 'Langfuse proje secret key' },
+      { key: 'secretKey', label: 'Secret Key', type: 'text', hint: 'Langfuse proje secret key' },
       { key: 'baseUrl', label: 'Base URL', type: 'text', placeholder: 'https://cloud.langfuse.com', hint: 'Langfuse sunucu adresi. Cloud icin: https://cloud.langfuse.com' },
       { key: 'environment', label: 'Environment', type: 'text', placeholder: 'production', hint: 'Ortam etiketi (or: production, staging). Langfuse filtreleme icin kullanilir' },
       { key: 'promptManagementEnabled', label: 'Prompt Management', type: 'boolean', hint: 'Aciksa prompt\'lar Langfuse\'dan yonetilir, kod icindeki varsayilan yerine Langfuse\'daki kullanilir' },
@@ -73,7 +73,7 @@ const sectionMeta: Record<string, SectionMeta> = {
       { key: 'deleteTtlSec', label: 'DELETE TTL (seconds)', type: 'number', hint: 'Dosya silme icin imzali URL gecerlilik suresi (saniye)' },
       { key: 'configCacheTtlMs', label: 'Config Cache TTL (ms)', type: 'number', hint: 'S3 config cache suresi (ms). Varsayilan: 5dk, maks: 1 saat' },
       { key: 'accessKeyId', label: 'Access Key ID', type: 'text', hint: 'Platform varsayilan S3 erisim anahtari' },
-      { key: 'secretAccessKey', label: 'Secret Access Key', type: 'password', hint: 'Platform varsayilan S3 gizli anahtari' },
+      { key: 'secretAccessKey', label: 'Secret Access Key', type: 'text', hint: 'Platform varsayilan S3 gizli anahtari' },
     ],
   },
   cdnConfig: {
@@ -83,7 +83,7 @@ const sectionMeta: Record<string, SectionMeta> = {
       { key: 'enabled', label: 'CDN Enabled', type: 'boolean', hint: 'CDN dagitimi acik/kapali' },
       { key: 'domain', label: 'Domain', type: 'text', hint: 'CDN domain adresi (or: cdn.platform.com)' },
       { key: 'keyPairId', label: 'Key Pair ID', type: 'text', hint: 'CloudFront key pair ID' },
-      { key: 'privateKey', label: 'Private Key', type: 'password', hint: 'CloudFront imzalama icin private key' },
+      { key: 'privateKey', label: 'Private Key', type: 'text', hint: 'CloudFront imzalama icin private key' },
       { key: 'ttlSec', label: 'TTL (seconds)', type: 'number', hint: 'CDN cache suresi (saniye)' },
     ],
   },
@@ -91,7 +91,7 @@ const sectionMeta: Record<string, SectionMeta> = {
     title: 'Mail Config',
     description: 'Varsayılan email ayarları',
     fields: [
-      { key: 'apiKey', label: 'API Key', type: 'password', hint: 'Email servisi API anahtari (or: SendGrid)', required: true },
+      { key: 'apiKey', label: 'API Key', type: 'text', hint: 'Email servisi API anahtari (or: SendGrid)', required: true },
       { key: 'fromAddress', label: 'From Address', type: 'text', hint: 'Gonderici email adresi', required: true },
       { key: 'fromName', label: 'From Name', type: 'text', hint: 'Gonderici gorunen ad', required: true },
       { key: 'replyTo', label: 'Reply To', type: 'text', hint: 'Yanit adresi (opsiyonel)' },
@@ -102,7 +102,7 @@ const sectionMeta: Record<string, SectionMeta> = {
     description: 'Varsayılan Trigger.dev ayarları',
     fields: [
       { key: 'projectRef', label: 'Project Ref', type: 'text', hint: 'Trigger.dev proje referans ID', required: true },
-      { key: 'secretKey', label: 'Secret Key', type: 'password', hint: 'Trigger.dev API anahtari', required: true },
+      { key: 'secretKey', label: 'Secret Key', type: 'text', hint: 'Trigger.dev API anahtari', required: true },
       { key: 'workerEnabled', label: 'Worker Enabled', type: 'boolean', hint: 'Trigger.dev worker\'lari aktif/pasif' },
     ],
   },
@@ -140,7 +140,7 @@ const sectionMeta: Record<string, SectionMeta> = {
     description: 'Website crawler ve Cloudflare Browser Rendering ayarları',
     fields: [
       { key: 'cloudflareAccountId', label: 'Cloudflare Account ID', type: 'text', hint: 'Cloudflare Browser Rendering hesap ID' },
-      { key: 'cloudflareApiToken', label: 'Cloudflare API Token', type: 'password', hint: 'Cloudflare API token (Browser Rendering erisimi icin)' },
+      { key: 'cloudflareApiToken', label: 'Cloudflare API Token', type: 'text', hint: 'Cloudflare API token (Browser Rendering erisimi icin)' },
       { key: 'maxGlobalConcurrentCrawls', label: 'Max Global Concurrent Crawls', type: 'number', hint: 'Platform genelinde es zamanli crawler sayisi' },
     ],
   },

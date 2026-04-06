@@ -70,7 +70,7 @@ const configBlocks: BlockDef[] = [
       { key: 'deleteTtlSec', label: 'DELETE TTL (sn)', type: 'number', hint: 'Dosya silme icin imzali URL gecerlilik suresi (saniye)' },
       { key: 'configCacheTtlMs', label: 'Config Cache TTL (ms)', type: 'number', hint: 'S3 config cache suresi (ms). Varsayilan: 5dk, maks: 1 saat' },
       { key: 'accessKeyId', label: 'Access Key ID', hint: 'Firmanin kendi S3 erisim anahtari (opsiyonel)' },
-      { key: 'secretAccessKey', label: 'Secret Access Key', type: 'password', hint: 'Firmanin kendi S3 gizli anahtari (opsiyonel)' },
+      { key: 'secretAccessKey', label: 'Secret Access Key', hint: 'Firmanin kendi S3 gizli anahtari (opsiyonel)' },
     ],
   },
   {
