@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
@@ -43,6 +44,13 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
     defaultValues: (currentValues as Record<string, unknown>) ?? {},
   })
 
+  // Sync form with latest API data (e.g. after save + refetch)
+  useEffect(() => {
+    if (currentValues) {
+      form.reset(currentValues as Record<string, unknown>)
+    }
+  }, [currentValues, form])
+
   function handleSubmit(values: Record<string, unknown>) {
     const cleaned = Object.fromEntries(
       Object.entries(values).filter(([, v]) => {
@@ -54,6 +62,8 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
     )
     onSave(blockKey, cleaned)
   }
+
+  const errors = form.formState.errors
 
   function isMasked(value: unknown): boolean {
     return typeof value === 'string' && value.includes('****')
@@ -80,12 +90,17 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
               if (field.type === 'boolean') {
                 const watchedValue = form.watch(field.key) as boolean | undefined
                 return (
-                  <div key={field.key} className="flex items-center justify-between rounded-md border px-3 py-2">
-                    <FieldLabel label={field.label} hint={field.hint} required={field.required} />
-                    <Switch
-                      checked={watchedValue ?? false}
-                      onCheckedChange={(v: boolean) => form.setValue(field.key, v)}
-                    />
+                  <div key={field.key}>
+                    <div className="flex items-center justify-between rounded-md border px-3 py-2">
+                      <FieldLabel label={field.label} hint={field.hint} required={field.required} />
+                      <Switch
+                        checked={watchedValue ?? false}
+                        onCheckedChange={(v: boolean) => form.setValue(field.key, v)}
+                      />
+                    </div>
+                    {errors[field.key] && (
+                      <p className="mt-1 text-xs text-destructive">{errors[field.key]?.message as string || 'Geçersiz değer'}</p>
+                    )}
                   </div>
                 )
               }
@@ -108,6 +123,9 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
                         ))}
                       </SelectContent>
                     </Select>
+                    {errors[field.key] && (
+                      <p className="mt-1 text-xs text-destructive">{errors[field.key]?.message as string || 'Geçersiz değer'}</p>
+                    )}
                   </div>
                 )
               }
@@ -122,6 +140,9 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
                       value={watchedValue ?? ''}
                       onChange={(v) => form.setValue(field.key, v)}
                     />
+                    {errors[field.key] && (
+                      <p className="mt-1 text-xs text-destructive">{errors[field.key]?.message as string || 'Geçersiz değer'}</p>
+                    )}
                   </div>
                 )
               }
@@ -131,11 +152,14 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
                   <FieldLabel label={field.label} hint={field.hint} required={field.required} />
                   <Input
                     {...form.register(field.key)}
-                    type={field.type === 'number' ? 'number' : 'text'}
+                    type={field.type === 'number' ? 'number' : field.type === 'password' ? 'password' : 'text'}
                     step={field.type === 'number' ? 'any' : undefined}
                     placeholder={masked ? String(currentVal) : (field.placeholder ?? '')}
                     className={`mt-1 ${masked ? 'italic text-muted-foreground' : ''}`}
                   />
+                  {errors[field.key] && (
+                    <p className="mt-1 text-xs text-destructive">{errors[field.key]?.message as string || 'Geçersiz değer'}</p>
+                  )}
                 </div>
               )
             })}

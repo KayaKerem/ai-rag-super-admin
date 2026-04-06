@@ -165,6 +165,20 @@ export function SettingsPage() {
 
   const modelOptions = useMemo(() => (models ?? []).map((m) => m.id), [models])
 
+  const configuredSections = useMemo(() => {
+    if (!defaults) return new Set<string>()
+    const set = new Set<string>()
+    for (const key of Object.keys(sectionMeta)) {
+      const block = defaults[key] as Record<string, unknown> | undefined
+      if (block && Object.values(block).some((v) => v !== undefined && v !== null && v !== '')) {
+        set.add(key)
+      }
+    }
+    // Special sections — check separately
+    if (defaults.aiConfig && Object.keys(defaults.aiConfig as object).length > 0) set.add('aiConfig')
+    return set
+  }, [defaults])
+
   const meta = sectionMeta[activeSection]
   const currentValues = defaults?.[activeSection] as Record<string, unknown> | undefined
 
@@ -187,7 +201,7 @@ export function SettingsPage() {
     <div className="flex h-full gap-6 p-6">
       <aside className="w-[220px] shrink-0">
         <h1 className="mb-4 text-base font-semibold">Platform Ayarları</h1>
-        <SettingsNav activeSection={activeSection} onSelect={setActiveSection} />
+        <SettingsNav activeSection={activeSection} onSelect={setActiveSection} configuredSections={configuredSections} />
       </aside>
 
       <main className="flex-1 min-w-0">
