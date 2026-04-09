@@ -20,14 +20,6 @@ export const s3ConfigSchema = z.object({
   secretAccessKey: z.string().optional(),
 })
 
-export const cdnConfigSchema = z.object({
-  enabled: z.boolean().optional(),
-  domain: z.string().optional(),
-  keyPairId: z.string().optional(),
-  privateKey: z.string().optional(),
-  ttlSec: optNum,
-})
-
 export const mailConfigSchema = z.object({
   apiKey: z.string().optional(),
   fromAddress: z.string().optional(),
@@ -104,10 +96,8 @@ export const limitsConfigSchema = z.object({
 })
 
 export const documentProcessingConfigSchema = z.object({
-  textractEndpoint: z.string().optional(),
   supportedSourceKinds: z.array(z.string()).optional(),
   maxAttempts: optNum,
-  syncTextractMaxSizeMb: optNum,
   workersEnabled: z.boolean().optional(),
 })
 
@@ -125,7 +115,6 @@ export const pricingConfigSchema = z.object({
 export const configBlockSchemas = {
   aiConfig: aiConfigSchema,
   s3Config: s3ConfigSchema,
-  cdnConfig: cdnConfigSchema,
   mailConfig: mailConfigSchema,
   embeddingConfig: embeddingConfigSchema,
   langfuseConfig: langfuseConfigSchema,
