@@ -38,6 +38,10 @@ export interface CompanyUser {
 export interface UsageMonth {
   month: string
   ai: { totalTokens: number; turnCount: number; costUsd: number }
+  rerank: { searchCount: number; documentCount: number; costUsd: number }
+  webSearch: { searchCount: number; resultCount: number; costUsd: number }
+  proactive: { runCount: number; insightCount: number; costUsd: number }
+  cacheHits: { hitCount: number; hitRate: number; estimatedSavingsUsd: number }
   storage: { currentBytes: number; costUsd: number }
   trigger: { taskCount: number; costUsd: number }
   totalCostUsd: number
@@ -380,4 +384,32 @@ export interface SearchAnalytics {
     topNegativeQueries: Array<{ queryText: string; negativeCount: number; totalCount: number }>
   }
   dailyTrend: Array<{ date: string; total: number; empty: number }>
+}
+
+// ─── Proactive Insights ─────────────────────────────
+
+export type ProactiveAgentType = 'freshness' | 'gap' | 'quality'
+export type ProactiveInsightStatus = 'new' | 'acknowledged' | 'resolved' | 'dismissed'
+export type ProactiveCategory = 'content_changed' | 'url_unreachable' | 'unanswered_topic' | 'citation_drop' | 'satisfaction_drop'
+
+export interface ProactiveInsight {
+  id: string
+  agentType: ProactiveAgentType
+  category: ProactiveCategory
+  status: ProactiveInsightStatus
+  title: string
+  description: string
+  metadata: Record<string, unknown> | null
+  actionTaken: string | null
+  costUsd: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ProactiveInsightSummary {
+  new: number
+  acknowledged: number
+  resolved: number
+  dismissed: number
+  total: number
 }
