@@ -16,17 +16,14 @@ function generateUsageMonth(month: string, scale: number) {
   const aiCost = +(aiTokens * 0.00001).toFixed(2)
   const storageBytes = Math.floor((2 + Math.random() * 8) * 1e9 * scale)
   const storageCost = +((storageBytes / 1e9) * 0.0245).toFixed(2)
-  const cdnBytes = Math.floor((5 + Math.random() * 30) * 1e9 * scale)
-  const cdnCost = +((cdnBytes / 1e9) * 0.085).toFixed(2)
   const taskCount = Math.floor((100 + Math.random() * 400) * scale)
   const triggerCost = +(taskCount * 0.0001).toFixed(4)
   return {
     month,
     ai: { totalTokens: aiTokens, turnCount: Math.floor(aiTokens / 15000), costUsd: aiCost },
     storage: { currentBytes: storageBytes, costUsd: storageCost },
-    cdn: { transferBytes: cdnBytes, costUsd: cdnCost },
     trigger: { taskCount, costUsd: triggerCost },
-    totalCostUsd: +(aiCost + storageCost + cdnCost + triggerCost).toFixed(2),
+    totalCostUsd: +(aiCost + storageCost + triggerCost).toFixed(2),
   }
 }
 
@@ -56,10 +53,6 @@ export function getPlatformSummary(numMonths: number) {
       storage: {
         totalBytes: allCompanyMonths.reduce((s, u) => s + u.storage.currentBytes, 0),
         costUsd: +allCompanyMonths.reduce((s, u) => s + u.storage.costUsd, 0).toFixed(2),
-      },
-      cdn: {
-        transferBytes: allCompanyMonths.reduce((s, u) => s + u.cdn.transferBytes, 0),
-        costUsd: +allCompanyMonths.reduce((s, u) => s + u.cdn.costUsd, 0).toFixed(2),
       },
       trigger: {
         taskCount: allCompanyMonths.reduce((s, u) => s + u.trigger.taskCount, 0),
@@ -388,13 +381,6 @@ export const mockPlatformDefaults: any = {
     accessKeyId: 'AKIA****WXYZ',
     secretAccessKey: 'sk-s3-****abcd',
   },
-  cdnConfig: {
-    enabled: true,
-    domain: 'cdn.platform.com',
-    keyPairId: 'KPID****1234',
-    privateKey: 'pk-****5678',
-    ttlSec: 3600,
-  },
   mailConfig: {
     apiKey: 'SG.****default',
     fromAddress: 'noreply@platform.com',
@@ -452,15 +438,12 @@ export const mockPlatformDefaults: any = {
     maxGlobalConcurrentCrawls: 3,
   },
   documentProcessingConfig: {
-    textractEndpoint: 'https://textract.eu-central-1.amazonaws.com',
     supportedSourceKinds: ['upload', 'url', 's3'],
     maxAttempts: 3,
-    syncTextractMaxSizeMb: 5,
     workersEnabled: true,
   },
   pricingConfig: {
     s3PerGbMonthUsd: 0.0245,
-    cdnPerGbTransferUsd: 0.085,
     triggerPerTaskUsd: 0.0001,
   },
 }
