@@ -31,7 +31,6 @@ const sectionMeta: Record<string, SectionMeta> = {
     description: 'Maliyet hesaplamasında kullanılan birim fiyatlar',
     fields: [
       { key: 's3PerGbMonthUsd', label: 'S3 per GB/Month (USD)', type: 'number', hint: 'S3 depolama birim fiyati. Aylik maliyet = kullanilan GB x bu fiyat' },
-      { key: 'cdnPerGbTransferUsd', label: 'CDN per GB Transfer (USD)', type: 'number', hint: 'CDN transfer birim fiyati. Maliyet = transfer edilen GB x bu fiyat' },
       { key: 'triggerPerTaskUsd', label: 'Trigger per Task (USD)', type: 'number', hint: 'Trigger.dev task birim fiyati. Maliyet = calistirilan task x bu fiyat' },
     ],
   },
@@ -74,17 +73,6 @@ const sectionMeta: Record<string, SectionMeta> = {
       { key: 'configCacheTtlMs', label: 'Config Cache TTL (ms)', type: 'number', hint: 'S3 config cache suresi (ms). Varsayilan: 5dk, maks: 1 saat' },
       { key: 'accessKeyId', label: 'Access Key ID', type: 'text', hint: 'Platform varsayilan S3 erisim anahtari' },
       { key: 'secretAccessKey', label: 'Secret Access Key', type: 'text', hint: 'Platform varsayilan S3 gizli anahtari' },
-    ],
-  },
-  cdnConfig: {
-    title: 'CDN Config',
-    description: 'Varsayılan CDN ayarları',
-    fields: [
-      { key: 'enabled', label: 'CDN Enabled', type: 'boolean', hint: 'CDN dagitimi acik/kapali' },
-      { key: 'domain', label: 'Domain', type: 'text', hint: 'CDN domain adresi (or: cdn.platform.com)' },
-      { key: 'keyPairId', label: 'Key Pair ID', type: 'text', hint: 'CloudFront key pair ID' },
-      { key: 'privateKey', label: 'Private Key', type: 'text', hint: 'CloudFront imzalama icin private key' },
-      { key: 'ttlSec', label: 'TTL (seconds)', type: 'number', hint: 'CDN cache suresi (saniye)' },
     ],
   },
   mailConfig: {
@@ -146,11 +134,10 @@ const sectionMeta: Record<string, SectionMeta> = {
   },
   documentProcessingConfig: {
     title: 'Document Processing',
-    description: 'Doküman işleme ve Textract ayarları',
+    description: 'Doküman işleme ayarları',
     fields: [
-      { key: 'textractEndpoint', label: 'Textract Endpoint', type: 'text', hint: 'AWS Textract endpoint adresi' },
+      { key: 'supportedSourceKinds', label: 'Desteklenen Kaynaklar', type: 'text', hint: 'Virgülle ayrılmış kaynak türleri (ör: upload, url, s3)' },
       { key: 'maxAttempts', label: 'Max Attempts', type: 'number', hint: 'Basarisiz islem icin maksimum deneme sayisi' },
-      { key: 'syncTextractMaxSizeMb', label: 'Sync Textract Max Size (MB)', type: 'number', hint: 'Senkron Textract islemi icin maksimum dosya boyutu (MB). Ustu asenkron islenir' },
       { key: 'workersEnabled', label: 'Workers Enabled', type: 'boolean', hint: 'Dokuman isleme worker\'lari aktif/pasif' },
     ],
   },
