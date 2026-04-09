@@ -40,9 +40,8 @@ export function UsageTab({ companyId }: UsageTabProps) {
         </Select>
       </div>
 
-      <div className="mb-4 grid grid-cols-4 gap-3">
+      <div className="mb-4 grid grid-cols-3 gap-3">
         <KpiCard label="AI" value={formatCurrency(current.ai.costUsd)} subtitle={`${formatNumber(current.ai.totalTokens)} token`} subtitleColor="text-violet-400" />
-        <KpiCard label="CDN" value={formatCurrency(current.cdn.costUsd)} subtitle={`${formatBytes(current.cdn.transferBytes)} transfer`} subtitleColor="text-blue-400" />
         <KpiCard label="Storage" value={formatCurrency(current.storage.costUsd)} subtitle={`${formatBytes(current.storage.currentBytes)} kullanım`} subtitleColor="text-green-400" />
         <KpiCard label="Trigger" value={formatCurrency(current.trigger.costUsd)} subtitle={`${formatNumber(current.trigger.taskCount)} task`} subtitleColor="text-yellow-400" />
       </div>
