@@ -70,6 +70,9 @@ export function DashboardPage() {
             <CostTrendChart data={data!.months} />
             <CategoryBreakdown
               ai={current.ai.costUsd}
+              rerank={current.rerank?.costUsd ?? 0}
+              webSearch={current.webSearch?.costUsd ?? 0}
+              proactive={current.proactive?.costUsd ?? 0}
               storage={current.storage.costUsd}
               trigger={current.trigger.costUsd}
             />

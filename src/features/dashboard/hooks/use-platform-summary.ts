@@ -6,6 +6,9 @@ interface UsageMonth {
   month: string
   companyCount: number
   ai: { totalTokens: number; costUsd: number }
+  rerank: { searchCount: number; costUsd: number }
+  webSearch: { searchCount: number; costUsd: number }
+  proactive: { runCount: number; costUsd: number }
   storage: { totalBytes: number; costUsd: number }
   trigger: { taskCount: number; costUsd: number }
   totalCostUsd: number

@@ -3,19 +3,25 @@ import { formatCurrency } from '@/lib/utils'
 
 interface CategoryBreakdownProps {
   ai: number
+  rerank: number
+  webSearch: number
+  proactive: number
   storage: number
   trigger: number
 }
 
 const categories = [
   { key: 'ai' as const, label: 'AI', color: '#6d28d9' },
+  { key: 'rerank' as const, label: 'Rerank', color: '#ec4899' },
+  { key: 'webSearch' as const, label: 'Web Search', color: '#14b8a6' },
+  { key: 'proactive' as const, label: 'Proaktif', color: '#f97316' },
   { key: 'storage' as const, label: 'Storage', color: '#22c55e' },
   { key: 'trigger' as const, label: 'Trigger', color: '#f59e0b' },
 ]
 
-export function CategoryBreakdown({ ai, storage, trigger }: CategoryBreakdownProps) {
-  const values = { ai, storage, trigger }
-  const max = Math.max(ai, storage, trigger, 0.01)
+export function CategoryBreakdown({ ai, rerank, webSearch, proactive, storage, trigger }: CategoryBreakdownProps) {
+  const values = { ai, rerank, webSearch, proactive, storage, trigger }
+  const max = Math.max(ai, rerank, webSearch, proactive, storage, trigger, 0.01)
 
   return (
     <Card>
