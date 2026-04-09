@@ -14,6 +14,10 @@ export const queryKeys = {
     billingEvents: (id: string) => ['companies', id, 'billing-events'] as const,
     activityLog: (id: string) => ['companies', id, 'activity-log'] as const,
     searchAnalytics: (id: string, windowDays: number) => ['companies', id, 'search-analytics', windowDays] as const,
+    proactiveInsights: (id: string, agentType?: string, status?: string) =>
+      ['companies', id, 'proactive-insights', agentType ?? '', status ?? ''] as const,
+    proactiveInsightSummary: (id: string) =>
+      ['companies', id, 'proactive-insights', 'summary'] as const,
   },
   platform: {
     summary: (months: number) => ['platform', 'summary', months] as const,
