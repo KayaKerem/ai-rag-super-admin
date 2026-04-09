@@ -74,18 +74,6 @@ const configBlocks: BlockDef[] = [
     ],
   },
   {
-    key: 'cdnConfig',
-    label: 'CDN Config',
-    icon: '🌐',
-    fields: [
-      { key: 'enabled', label: 'CDN Enabled', type: 'boolean', hint: 'CDN dagitimi acik/kapali' },
-      { key: 'domain', label: 'Domain', hint: 'CDN domain adresi (or: cdn.firma.com)' },
-      { key: 'keyPairId', label: 'Key Pair ID', hint: 'CloudFront key pair ID' },
-      { key: 'privateKey', label: 'Private Key', hint: 'CloudFront imzalama icin private key' },
-      { key: 'ttlSec', label: 'TTL (sn)', type: 'number', hint: 'CDN cache suresi (saniye)' },
-    ],
-  },
-  {
     key: 'mailConfig',
     label: 'Mail Config',
     icon: '✉️',
@@ -141,9 +129,8 @@ const configBlocks: BlockDef[] = [
     label: 'Document Processing',
     icon: '📄',
     fields: [
-      { key: 'textractEndpoint', label: 'Textract Endpoint', hint: 'AWS Textract endpoint adresi' },
+      { key: 'supportedSourceKinds', label: 'Desteklenen Kaynaklar', hint: 'Virgülle ayrılmış kaynak türleri (ör: upload, url, s3)' },
       { key: 'maxAttempts', label: 'Max Attempts', type: 'number', hint: 'Basarisiz islem icin maksimum deneme sayisi' },
-      { key: 'syncTextractMaxSizeMb', label: 'Sync Textract Max Size (MB)', type: 'number', hint: 'Senkron Textract islemi icin maksimum dosya boyutu (MB). Ustu asenkron islenir' },
       { key: 'workersEnabled', label: 'Workers Enabled', type: 'boolean', hint: 'Dokuman isleme worker\'lari aktif/pasif' },
     ],
   },
@@ -163,7 +150,6 @@ const configBlocks: BlockDef[] = [
     icon: '💰',
     fields: [
       { key: 's3PerGbMonthUsd', label: 'S3 ($/GB/ay)', type: 'number', hint: 'S3 depolama birim fiyati. Aylik maliyet = kullanilan GB x bu fiyat' },
-      { key: 'cdnPerGbTransferUsd', label: 'CDN ($/GB)', type: 'number', hint: 'CDN transfer birim fiyati. Maliyet = transfer edilen GB x bu fiyat' },
       { key: 'triggerPerTaskUsd', label: 'Trigger ($/task)', type: 'number', hint: 'Trigger.dev task birim fiyati. Maliyet = calistirilan task x bu fiyat' },
     ],
   },
