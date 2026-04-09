@@ -39,7 +39,6 @@ export interface UsageMonth {
   month: string
   ai: { totalTokens: number; turnCount: number; costUsd: number }
   storage: { currentBytes: number; costUsd: number }
-  cdn: { transferBytes: number; costUsd: number }
   trigger: { taskCount: number; costUsd: number }
   totalCostUsd: number
 }

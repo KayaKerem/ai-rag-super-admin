@@ -7,7 +7,6 @@ interface UsageMonth {
   companyCount: number
   ai: { totalTokens: number; costUsd: number }
   storage: { totalBytes: number; costUsd: number }
-  cdn: { transferBytes: number; costUsd: number }
   trigger: { taskCount: number; costUsd: number }
   totalCostUsd: number
   satisfactionRate?: number
