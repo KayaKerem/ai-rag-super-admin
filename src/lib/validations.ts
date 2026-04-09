@@ -43,6 +43,14 @@ export const aiConfigSchema = z.object({
   vectorSimilarityThreshold: optNum,
   qualityEvalEnabled: z.boolean().optional(),
   qualityEvalModel: z.string().optional(),
+  // Phase 2: Reranking
+  rerankApiKey: z.string().optional(),
+  rerankModel: z.string().optional(),
+  // Phase 2: Web Search
+  exaApiKey: z.string().optional(),
+  webSearchTier: z.enum(['basic', 'deep', 'deep_reasoning']).optional(),
+  // Phase 2: Advanced
+  multiModelStepEnabled: z.boolean().optional(),
 })
 
 export const embeddingConfigSchema = z.object({
@@ -112,6 +120,18 @@ export const pricingConfigSchema = z.object({
   triggerPerTaskUsd: optNum,
 })
 
+export const proactiveConfigSchema = z.object({
+  enabled: z.boolean().optional(),
+  freshnessEnabled: z.boolean().optional(),
+  freshnessIntervalHours: optNum,
+  gapEnabled: z.boolean().optional(),
+  gapMinQueryCount: optNum,
+  qualityEnabled: z.boolean().optional(),
+  qualitySampleSize: optNum,
+  monthlyBudgetUsd: optNum,
+  notifyEmail: z.boolean().optional(),
+})
+
 export const configBlockSchemas = {
   aiConfig: aiConfigSchema,
   s3Config: s3ConfigSchema,
@@ -123,6 +143,7 @@ export const configBlockSchemas = {
   documentProcessingConfig: documentProcessingConfigSchema,
   crawlerConfig: crawlerConfigSchema,
   pricingConfig: pricingConfigSchema,
+  proactiveConfig: proactiveConfigSchema,
 } as const
 
 export type ConfigBlockKey = keyof typeof configBlockSchemas
