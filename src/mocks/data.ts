@@ -18,12 +18,27 @@ function generateUsageMonth(month: string, scale: number) {
   const storageCost = +((storageBytes / 1e9) * 0.0245).toFixed(2)
   const taskCount = Math.floor((100 + Math.random() * 400) * scale)
   const triggerCost = +(taskCount * 0.0001).toFixed(4)
+  const rerankCount = Math.floor((50 + Math.random() * 300) * scale)
+  const rerankCost = +(rerankCount * 0.0025).toFixed(2)
+  const webSearchCount = Math.floor((10 + Math.random() * 50) * scale)
+  const webSearchCost = +(webSearchCount * 0.010).toFixed(2)
+  const proactiveRuns = Math.floor((30 + Math.random() * 150) * scale)
+  const proactiveInsights = Math.floor(proactiveRuns * 0.07)
+  const proactiveCost = +(proactiveRuns * 0.004).toFixed(2)
+  const cacheHitCount = Math.floor((20 + Math.random() * 300) * scale)
+  const totalTurns = Math.floor(aiTokens / 15000)
+  const cacheHitRate = totalTurns > 0 ? +(cacheHitCount / (totalTurns + cacheHitCount)).toFixed(2) : 0
+  const cacheSavings = +(cacheHitCount * 0.01).toFixed(2)
   return {
     month,
-    ai: { totalTokens: aiTokens, turnCount: Math.floor(aiTokens / 15000), costUsd: aiCost },
+    ai: { totalTokens: aiTokens, turnCount: totalTurns, costUsd: aiCost },
+    rerank: { searchCount: rerankCount, documentCount: rerankCount * 5, costUsd: rerankCost },
+    webSearch: { searchCount: webSearchCount, resultCount: webSearchCount * 3, costUsd: webSearchCost },
+    proactive: { runCount: proactiveRuns, insightCount: proactiveInsights, costUsd: proactiveCost },
+    cacheHits: { hitCount: cacheHitCount, hitRate: cacheHitRate, estimatedSavingsUsd: cacheSavings },
     storage: { currentBytes: storageBytes, costUsd: storageCost },
     trigger: { taskCount, costUsd: triggerCost },
-    totalCostUsd: +(aiCost + storageCost + triggerCost).toFixed(2),
+    totalCostUsd: +(aiCost + storageCost + triggerCost + rerankCost + webSearchCost + proactiveCost).toFixed(2),
   }
 }
 
@@ -53,6 +68,18 @@ export function getPlatformSummary(numMonths: number) {
       storage: {
         totalBytes: allCompanyMonths.reduce((s, u) => s + u.storage.currentBytes, 0),
         costUsd: +allCompanyMonths.reduce((s, u) => s + u.storage.costUsd, 0).toFixed(2),
+      },
+      rerank: {
+        searchCount: allCompanyMonths.reduce((s, u) => s + u.rerank.searchCount, 0),
+        costUsd: +allCompanyMonths.reduce((s, u) => s + u.rerank.costUsd, 0).toFixed(2),
+      },
+      webSearch: {
+        searchCount: allCompanyMonths.reduce((s, u) => s + u.webSearch.searchCount, 0),
+        costUsd: +allCompanyMonths.reduce((s, u) => s + u.webSearch.costUsd, 0).toFixed(2),
+      },
+      proactive: {
+        runCount: allCompanyMonths.reduce((s, u) => s + u.proactive.runCount, 0),
+        costUsd: +allCompanyMonths.reduce((s, u) => s + u.proactive.costUsd, 0).toFixed(2),
       },
       trigger: {
         taskCount: allCompanyMonths.reduce((s, u) => s + u.trigger.taskCount, 0),
@@ -370,6 +397,11 @@ export const mockPlatformDefaults: any = {
     vectorSimilarityThreshold: 0.5,
     qualityEvalEnabled: true,
     qualityEvalModel: 'openai/gpt-4o-mini',
+    rerankApiKey: 'cohe****abcd',
+    rerankModel: 'rerank-v3.5',
+    exaApiKey: 'exa-a****wxyz',
+    webSearchTier: 'basic',
+    multiModelStepEnabled: true,
   },
   s3Config: {
     bucket: 'platform-default-bucket',
@@ -445,6 +477,17 @@ export const mockPlatformDefaults: any = {
   pricingConfig: {
     s3PerGbMonthUsd: 0.0245,
     triggerPerTaskUsd: 0.0001,
+  },
+  proactiveConfig: {
+    enabled: false,
+    freshnessEnabled: true,
+    freshnessIntervalHours: 6,
+    gapEnabled: true,
+    gapMinQueryCount: 10,
+    qualityEnabled: true,
+    qualitySampleSize: 20,
+    monthlyBudgetUsd: 2.00,
+    notifyEmail: false,
   },
 }
 
@@ -788,3 +831,29 @@ export const mockActivityLog: Record<string, any[]> = {}
 mockCompanies.forEach((c: any) => {
   mockActivityLog[c.id] = generateActivityLog(c.id)
 })
+
+// Proactive Insights mock
+export const mockProactiveInsights: Record<string, any[]> = {
+  [mockCompanies[0].id]: [
+    { id: 'pi-1', agentType: 'freshness', category: 'content_changed', status: 'new', title: 'blog.firma.com/api-docs içeriği değişti', description: 'Son taramadan bu yana sayfa içeriğinde önemli değişiklikler tespit edildi. Bilgi tabanındaki ilgili dokümanlar güncelliğini kaybetmiş olabilir.', metadata: { url: 'https://blog.firma.com/api-docs', changePercent: 35 }, actionTaken: null, costUsd: 0.003, createdAt: '2026-04-08T10:30:00Z', updatedAt: '2026-04-08T10:30:00Z' },
+    { id: 'pi-2', agentType: 'freshness', category: 'url_unreachable', status: 'new', title: 'docs.firma.com/v1 erişilemez (404)', description: 'URL HTTP 404 döndürüyor. Bu kaynağa referans veren dokümanlar kontrol edilmeli.', metadata: { url: 'https://docs.firma.com/v1', httpStatus: 404 }, actionTaken: null, costUsd: 0.002, createdAt: '2026-04-08T06:00:00Z', updatedAt: '2026-04-08T06:00:00Z' },
+    { id: 'pi-3', agentType: 'gap', category: 'unanswered_topic', status: 'acknowledged', title: '"fatura iptali" konusunda bilgi eksikliği', description: '15 kullanıcı sorgusu bu konuda düşük kaliteli veya boş sonuç aldı. Bilgi tabanına bu konuda içerik eklenmesi önerilir.', metadata: { queryCluster: ['fatura iptal', 'fatura iade', 'iptal süreci'], queryCount: 15 }, actionTaken: null, costUsd: 0.004, createdAt: '2026-04-07T14:00:00Z', updatedAt: '2026-04-07T16:00:00Z' },
+    { id: 'pi-4', agentType: 'quality', category: 'citation_drop', status: 'resolved', title: 'Kaynak gösterim oranı %65\'e düştü', description: 'Son 7 günde citation rate %82\'den %65\'e geriledi. Olası neden: yeni eklenen dokümanlar henüz indekslenmemiş.', metadata: { previousRate: 0.82, currentRate: 0.65, windowDays: 7 }, actionTaken: 'Bekleyen dokümanlar yeniden indekslendi', costUsd: 0.005, createdAt: '2026-04-06T09:00:00Z', updatedAt: '2026-04-06T15:00:00Z' },
+    { id: 'pi-5', agentType: 'quality', category: 'satisfaction_drop', status: 'dismissed', title: 'Memnuniyet oranı %22 düştü', description: 'Son 7 günde kullanıcı memnuniyeti %85\'ten %63\'e geriledi.', metadata: { previousRate: 0.85, currentRate: 0.63, windowDays: 7 }, actionTaken: null, costUsd: 0.003, createdAt: '2026-04-05T11:00:00Z', updatedAt: '2026-04-05T12:00:00Z' },
+    { id: 'pi-6', agentType: 'gap', category: 'unanswered_topic', status: 'new', title: '"entegrasyon API" hakkında sık sorulan sorular', description: '22 sorgu bu konuda yetersiz sonuç aldı. API entegrasyon dokümanı eksik olabilir.', metadata: { queryCluster: ['API entegrasyon', 'webhook', 'API key nasıl'], queryCount: 22 }, actionTaken: null, costUsd: 0.004, createdAt: '2026-04-04T08:00:00Z', updatedAt: '2026-04-04T08:00:00Z' },
+  ],
+  [mockCompanies[1].id]: [
+    { id: 'pi-7', agentType: 'freshness', category: 'content_changed', status: 'new', title: 'help.techbeta.com güncellenmiş', description: 'Yardım sayfası içeriği değişti.', metadata: { url: 'https://help.techbeta.com', changePercent: 20 }, actionTaken: null, costUsd: 0.003, createdAt: '2026-04-08T08:00:00Z', updatedAt: '2026-04-08T08:00:00Z' },
+  ],
+}
+
+export function getProactiveInsightSummary(companyId: string) {
+  const items = mockProactiveInsights[companyId] ?? []
+  return {
+    new: items.filter((i) => i.status === 'new').length,
+    acknowledged: items.filter((i) => i.status === 'acknowledged').length,
+    resolved: items.filter((i) => i.status === 'resolved').length,
+    dismissed: items.filter((i) => i.status === 'dismissed').length,
+    total: items.length,
+  }
+}

@@ -21,6 +21,8 @@ import {
   mockBillingEvents,
   mockActivityLog,
   generateSearchAnalytics,
+  mockProactiveInsights,
+  getProactiveInsightSummary,
 } from './data'
 import {
   mockTreasuryDashboard,
@@ -727,5 +729,39 @@ export const handlers = [
   http.get(`${BASE}/platform/treasury/openrouter`, async () => {
     await delay(200)
     return HttpResponse.json(mockOpenRouterDetails)
+  }),
+
+  // ─── Proactive Insights ────────────────────────────
+  http.get(`${BASE}/platform/companies/:id/insights/summary`, async ({ params }) => {
+    await delay(100)
+    const id = params.id as string
+    return HttpResponse.json(getProactiveInsightSummary(id))
+  }),
+
+  http.get(`${BASE}/platform/companies/:id/insights`, async ({ params, request }) => {
+    await delay(200)
+    const id = params.id as string
+    const url = new URL(request.url)
+    const agentType = url.searchParams.get('agentType')
+    const status = url.searchParams.get('status')
+    let items = mockProactiveInsights[id] ?? []
+    if (agentType) items = items.filter((i: any) => i.agentType === agentType)
+    if (status) items = items.filter((i: any) => i.status === status)
+    return HttpResponse.json({ items, total: items.length })
+  }),
+
+  http.patch(`${BASE}/platform/companies/:id/insights/:insightId`, async ({ params, request }) => {
+    await delay(200)
+    const companyId = params.id as string
+    const insightId = params.insightId as string
+    const body = (await request.json()) as any
+    const items = mockProactiveInsights[companyId] ?? []
+    const insight = items.find((i: any) => i.id === insightId)
+    if (insight) {
+      insight.status = body.status
+      if (body.actionTaken) insight.actionTaken = body.actionTaken
+      insight.updatedAt = new Date().toISOString()
+    }
+    return HttpResponse.json(insight ?? {})
   }),
 ]
