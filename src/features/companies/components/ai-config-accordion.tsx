@@ -179,6 +179,86 @@ export function AiConfigAccordion({ currentValues, models, modelOptions: _modelO
                 onChange={(v) => form.setValue('qualityEvalModel', v)}
               />
             </div>
+
+          {/* Reranking Section */}
+          <div className="col-span-2">
+            <Separator className="my-3" />
+            <p className="mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Reranking</p>
+          </div>
+
+          <div>
+            <FieldLabel label="Rerank API Key" hint="Cohere API key. Ayarlanmazsa rerank atlanır" />
+            <Input
+              {...form.register('rerankApiKey')}
+              type="text"
+              placeholder={isMasked(currentValues?.rerankApiKey) ? String(currentValues?.rerankApiKey) : ''}
+              className={`mt-1 ${isMasked(currentValues?.rerankApiKey) ? 'italic text-muted-foreground' : ''}`}
+            />
+          </div>
+
+          <div>
+            <FieldLabel label="Rerank Model" hint="$0.0025/sorgu. rerank-v3.5 (varsayılan), v4.0-fast, v4.0-pro" />
+            <Select
+              value={(form.watch('rerankModel') as string) ?? ''}
+              onValueChange={(v: string | null) => form.setValue('rerankModel', v ?? '')}
+            >
+              <SelectTrigger className="mt-1 w-full">
+                <SelectValue placeholder="Seçin" />
+              </SelectTrigger>
+              <SelectContent>
+                {['rerank-v3.5', 'rerank-v4.0-fast', 'rerank-v4.0-pro'].map((opt) => (
+                  <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Web Search Section */}
+          <div className="col-span-2">
+            <Separator className="my-3" />
+            <p className="mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Web Search</p>
+          </div>
+
+          <div>
+            <FieldLabel label="Exa API Key" hint="Exa web search API key. Ayarlanmazsa web_search tool kullanılamaz" />
+            <Input
+              {...form.register('exaApiKey')}
+              type="text"
+              placeholder={isMasked(currentValues?.exaApiKey) ? String(currentValues?.exaApiKey) : ''}
+              className={`mt-1 ${isMasked(currentValues?.exaApiKey) ? 'italic text-muted-foreground' : ''}`}
+            />
+          </div>
+
+          <div>
+            <FieldLabel label="Web Search Tier" hint="basic: $0.010, deep: $0.015, deep_reasoning: $0.018 /arama" />
+            <Select
+              value={(form.watch('webSearchTier') as string) ?? ''}
+              onValueChange={(v: string | null) => form.setValue('webSearchTier', v ?? '')}
+            >
+              <SelectTrigger className="mt-1 w-full">
+                <SelectValue placeholder="Seçin" />
+              </SelectTrigger>
+              <SelectContent>
+                {['basic', 'deep', 'deep_reasoning'].map((opt) => (
+                  <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Advanced Section */}
+          <div className="col-span-2">
+            <Separator className="my-3" />
+            <p className="mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Gelişmiş</p>
+          </div>
+
+          <div className="flex items-center justify-between rounded-md border px-3 py-2">
+            <FieldLabel label="Multi-Model Step" hint="Tool step'lerinde ucuz model kullan (maliyet optimizasyonu)" />
+            <Switch
+              checked={(form.watch('multiModelStepEnabled') as boolean) ?? false}
+              onCheckedChange={(v: boolean) => form.setValue('multiModelStepEnabled', v)}
+            />
+          </div>
           </div>
 
           {/* Allowed Models Section */}
