@@ -11,6 +11,7 @@ import { DataSourcesTab } from '../components/data-sources-tab'
 import { PlanTab } from '../components/plan-tab'
 import { ActivityLogTab } from '../components/activity-log-tab'
 import { SearchAnalyticsTab } from '../components/search-analytics-tab'
+import { ProactiveInsightsTab } from '../components/proactive-insights-tab'
 
 export function CompanyDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -34,6 +35,7 @@ export function CompanyDetailPage() {
           <TabsTrigger value="data-sources">Veri Kaynaklari</TabsTrigger>
           <TabsTrigger value="activity">Aktivite</TabsTrigger>
           <TabsTrigger value="search-analytics">Arama Analitigi</TabsTrigger>
+          <TabsTrigger value="proactive">Proaktif</TabsTrigger>
         </TabsList>
         <TabsContent value="usage" className="mt-4">
           <UsageTab companyId={id!} />
@@ -61,6 +63,9 @@ export function CompanyDetailPage() {
         </TabsContent>
         <TabsContent value="search-analytics" className="mt-4">
           <SearchAnalyticsTab companyId={id!} />
+        </TabsContent>
+        <TabsContent value="proactive" className="mt-4">
+          <ProactiveInsightsTab companyId={id!} />
         </TabsContent>
       </Tabs>
     </div>
