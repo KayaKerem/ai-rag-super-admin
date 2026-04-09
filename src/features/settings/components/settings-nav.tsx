@@ -18,6 +18,7 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'triggerConfig', label: 'Trigger', icon: '⚡' },
   { key: 'limitsConfig', label: 'Limits', icon: '🚧' },
   { key: 'crawlerConfig', label: 'Crawler', icon: '🕷️' },
+  { key: 'proactiveConfig', label: 'Proaktif', icon: '🔮' },
   { key: 'documentProcessingConfig', label: 'Doc Processing', icon: '📄' },
 ]
 

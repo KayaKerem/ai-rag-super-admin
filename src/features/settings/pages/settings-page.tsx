@@ -132,6 +132,21 @@ const sectionMeta: Record<string, SectionMeta> = {
       { key: 'maxGlobalConcurrentCrawls', label: 'Max Global Concurrent Crawls', type: 'number', hint: 'Platform genelinde es zamanli crawler sayisi' },
     ],
   },
+  proactiveConfig: {
+    title: 'Proaktif Agentlar',
+    description: 'Varsayılan proaktif agent ayarları',
+    fields: [
+      { key: 'enabled', label: 'Aktif', type: 'boolean', hint: 'Platform genelinde proaktif agentlar varsayılan olarak açık/kapalı' },
+      { key: 'freshnessEnabled', label: 'Freshness Agent', type: 'boolean', hint: 'URL değişiklik kontrolü' },
+      { key: 'freshnessIntervalHours', label: 'Freshness Aralığı (saat)', type: 'number', hint: 'Kaç saatte bir kontrol (varsayılan: 6)' },
+      { key: 'gapEnabled', label: 'Gap Agent', type: 'boolean', hint: 'Bilgi boşluğu analizi' },
+      { key: 'gapMinQueryCount', label: 'Gap Min Sorgu', type: 'number', hint: 'Analiz için minimum sorgu sayısı (varsayılan: 10)' },
+      { key: 'qualityEnabled', label: 'Quality Agent', type: 'boolean', hint: 'Kalite izleme' },
+      { key: 'qualitySampleSize', label: 'Quality Örneklem', type: 'number', hint: 'Örneklem boyutu (varsayılan: 20)' },
+      { key: 'monthlyBudgetUsd', label: 'Aylık Bütçe ($)', type: 'number', hint: 'Proaktif agent bütçe limiti (varsayılan: $2.00)' },
+      { key: 'notifyEmail', label: 'Email Bildirimi', type: 'boolean', hint: 'Yeni insight bildirimi' },
+    ],
+  },
   documentProcessingConfig: {
     title: 'Document Processing',
     description: 'Doküman işleme ayarları',

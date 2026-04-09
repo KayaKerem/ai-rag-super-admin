@@ -70,6 +70,13 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
     return v !== undefined && v !== null && v !== ''
   }
 
+  const enabledField = fields.find((f) => f.key === 'enabled')
+  const isDisabledByEnabled = (fieldKey: string) => {
+    if (!enabledField || fieldKey === 'enabled') return false
+    const enabledValue = form.watch('enabled') as boolean | undefined
+    return enabledValue === false
+  }
+
   const valueDot = (key: string) => (
     <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${hasStoredValue(key) ? 'bg-emerald-500' : 'bg-muted-foreground/30'}`} />
   )
@@ -92,7 +99,7 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
               if (field.type === 'boolean') {
                 const watchedValue = form.watch(field.key) as boolean | undefined
                 return (
-                  <div key={field.key}>
+                  <div key={field.key} className={isDisabledByEnabled(field.key) ? 'opacity-50 pointer-events-none' : ''}>
                     <div className="flex items-center justify-between rounded-md border px-3 py-2">
                       <div className="flex items-center gap-1.5">
                         {valueDot(field.key)}
@@ -113,7 +120,7 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
               if (field.type === 'select' && field.options) {
                 const watchedValue = form.watch(field.key) as string | undefined
                 return (
-                  <div key={field.key}>
+                  <div key={field.key} className={isDisabledByEnabled(field.key) ? 'opacity-50 pointer-events-none' : ''}>
                     <div className="flex items-center gap-1.5">
                       {valueDot(field.key)}
                       <FieldLabel label={field.label} hint={field.hint} required={field.required} />
@@ -141,7 +148,7 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
               if (field.type === 'model' && models) {
                 const watchedValue = form.watch(field.key) as string | undefined
                 return (
-                  <div key={field.key}>
+                  <div key={field.key} className={isDisabledByEnabled(field.key) ? 'opacity-50 pointer-events-none' : ''}>
                     <div className="flex items-center gap-1.5">
                       {valueDot(field.key)}
                       <FieldLabel label={field.label} hint={field.hint} required={field.required} />
@@ -159,7 +166,7 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
               }
 
               return (
-                <div key={field.key}>
+                <div key={field.key} className={isDisabledByEnabled(field.key) ? 'opacity-50 pointer-events-none' : ''}>
                   <div className="flex items-center gap-1.5">
                     {valueDot(field.key)}
                     <FieldLabel label={field.label} hint={field.hint} required={field.required} />
