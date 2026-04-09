@@ -38,10 +38,10 @@ export interface CompanyUser {
 export interface UsageMonth {
   month: string
   ai: { totalTokens: number; turnCount: number; costUsd: number }
-  rerank: { searchCount: number; documentCount: number; costUsd: number }
-  webSearch: { searchCount: number; resultCount: number; costUsd: number }
-  proactive: { runCount: number; insightCount: number; costUsd: number }
-  cacheHits: { hitCount: number; hitRate: number; estimatedSavingsUsd: number }
+  rerank?: { searchCount: number; documentCount: number; costUsd: number }
+  webSearch?: { searchCount: number; resultCount: number; costUsd: number }
+  proactive?: { runCount: number; insightCount: number; costUsd: number }
+  cacheHits?: { hitCount: number; hitRate: number; estimatedSavingsUsd: number }
   storage: { currentBytes: number; costUsd: number }
   trigger: { taskCount: number; costUsd: number }
   totalCostUsd: number
