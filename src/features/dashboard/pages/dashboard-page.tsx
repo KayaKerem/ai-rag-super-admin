@@ -70,7 +70,6 @@ export function DashboardPage() {
             <CostTrendChart data={data!.months} />
             <CategoryBreakdown
               ai={current.ai.costUsd}
-              cdn={current.cdn.costUsd}
               storage={current.storage.costUsd}
               trigger={current.trigger.costUsd}
             />

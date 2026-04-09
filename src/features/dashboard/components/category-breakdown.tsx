@@ -3,21 +3,19 @@ import { formatCurrency } from '@/lib/utils'
 
 interface CategoryBreakdownProps {
   ai: number
-  cdn: number
   storage: number
   trigger: number
 }
 
 const categories = [
   { key: 'ai' as const, label: 'AI', color: '#6d28d9' },
-  { key: 'cdn' as const, label: 'CDN', color: '#3b82f6' },
   { key: 'storage' as const, label: 'Storage', color: '#22c55e' },
   { key: 'trigger' as const, label: 'Trigger', color: '#f59e0b' },
 ]
 
-export function CategoryBreakdown({ ai, cdn, storage, trigger }: CategoryBreakdownProps) {
-  const values = { ai, cdn, storage, trigger }
-  const max = Math.max(ai, cdn, storage, trigger, 0.01)
+export function CategoryBreakdown({ ai, storage, trigger }: CategoryBreakdownProps) {
+  const values = { ai, storage, trigger }
+  const max = Math.max(ai, storage, trigger, 0.01)
 
   return (
     <Card>

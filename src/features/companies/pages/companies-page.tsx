@@ -24,7 +24,6 @@ export function CompaniesPage() {
     return {
       ...c,
       aiCost: usage?.ai?.costUsd ?? 0,
-      cdnCost: usage?.cdn?.costUsd ?? 0,
       storageCost: usage?.storage?.costUsd ?? 0,
       triggerCost: usage?.trigger?.costUsd ?? 0,
       totalCost: usage?.totalCostUsd ?? 0,

@@ -20,7 +20,6 @@ import type { Company } from '../types'
 
 interface CompanyWithUsage extends Company {
   aiCost?: number
-  cdnCost?: number
   storageCost?: number
   triggerCost?: number
   totalCost?: number
