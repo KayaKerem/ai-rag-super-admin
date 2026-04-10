@@ -9,7 +9,6 @@ import { CompaniesPage } from '@/features/companies/pages/companies-page'
 import { CompanyDetailPage } from '@/features/companies/pages/company-detail-page'
 import { SettingsPage } from '@/features/settings/pages/settings-page'
 import { EmailTemplatesPage } from '@/features/email-templates/pages/email-templates-page'
-import { TreasuryPage } from '@/features/treasury/pages/treasury-page'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,7 +32,6 @@ function App() {
               <Route path="/companies/:id" element={<CompanyDetailPage />} />
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/email-templates" element={<EmailTemplatesPage />} />
-              <Route path="/treasury" element={<TreasuryPage />} />
             </Route>
           </Route>
         </Routes>

@@ -31,17 +31,5 @@ export const queryKeys = {
     revenue: ['platform', 'revenue'] as const,
     emailTemplates: ['platform', 'email-templates'] as const,
     emailTemplate: (slug: string) => ['platform', 'email-templates', slug] as const,
-    treasury: {
-      dashboard: ['platform', 'treasury', 'dashboard'] as const,
-      snapshots: (days: number) => ['platform', 'treasury', 'snapshots', days] as const,
-      customers: ['platform', 'treasury', 'customers'] as const,
-      transactions: (page: number, limit: number, type?: string) =>
-        ['platform', 'treasury', 'transactions', page, limit, type ?? ''] as const,
-      alerts: (severity?: string, acknowledged?: string) =>
-        ['platform', 'treasury', 'alerts', severity ?? '', acknowledged ?? ''] as const,
-      actions: (status: string) => ['platform', 'treasury', 'actions', status] as const,
-      config: ['platform', 'treasury', 'config'] as const,
-      openrouter: ['platform', 'treasury', 'openrouter'] as const,
-    },
   },
 }
