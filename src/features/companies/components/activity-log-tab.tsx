@@ -23,6 +23,7 @@ const categoryLabels: Record<ActivityCategory, string> = {
   note: 'Not',
   lead: 'Musteri Adayi',
   playbook: 'Playbook',
+  quote: 'Teklif',
   channel: 'Kanal',
 }
 
@@ -38,6 +39,7 @@ const categoryColors: Record<ActivityCategory, string> = {
   note: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
   lead: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300',
   playbook: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300',
+  quote: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300',
   channel: 'bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-300',
 }
 
@@ -54,6 +56,7 @@ const categoryOptions: { value: string; label: string }[] = [
   { value: 'note', label: 'Not' },
   { value: 'lead', label: 'Musteri Adayi' },
   { value: 'playbook', label: 'Playbook' },
+  { value: 'quote', label: 'Teklif' },
   { value: 'channel', label: 'Kanal' },
 ]
 

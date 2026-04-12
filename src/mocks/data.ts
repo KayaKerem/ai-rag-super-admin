@@ -803,6 +803,7 @@ const activityActions: Record<string, string[]> = {
   note: ['note.created', 'note.updated', 'note.deleted'],
   lead: ['lead.created', 'lead.updated', 'lead.anonymized', 'lead_activity.created'],
   playbook: ['playbook.created', 'playbook.updated', 'playbook.deleted'],
+  quote: ['quote.created', 'quote.updated', 'quote.approved', 'quote.rejected', 'quote.accepted'],
   channel: ['channel.created', 'channel.updated', 'channel.deleted'],
 }
 const activityCategories = Object.keys(activityActions)
@@ -826,8 +827,8 @@ function generateActivityLog(companyId: string) {
       userId,
       action,
       category,
-      resourceId: ['auth', 'user', 'company', 'lead', 'playbook', 'channel'].includes(category) ? null : `res-${Math.floor(Math.random() * 999)}`,
-      resourceType: ['auth', 'user', 'company', 'lead', 'playbook', 'channel'].includes(category) ? null : category,
+      resourceId: ['auth', 'user', 'company', 'lead', 'playbook', 'quote', 'channel'].includes(category) ? null : `res-${Math.floor(Math.random() * 999)}`,
+      resourceType: ['auth', 'user', 'company', 'lead', 'playbook', 'quote', 'channel'].includes(category) ? null : category,
       metadata: null,
       createdAt,
       sequenceNumber: 0,

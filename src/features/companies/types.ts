@@ -330,7 +330,7 @@ export interface BillingEvent {
 
 // ─── Activity Log ────────────────────────────────
 
-export type ActivityCategory = 'auth' | 'user' | 'document' | 'folder' | 'knowledge' | 'conversation' | 'company' | 'connector' | 'note' | 'lead' | 'playbook' | 'channel'
+export type ActivityCategory = 'auth' | 'user' | 'document' | 'folder' | 'knowledge' | 'conversation' | 'company' | 'connector' | 'note' | 'lead' | 'playbook' | 'quote' | 'channel'
 
 export interface ActivityLogItem {
   id: string
