@@ -100,6 +100,11 @@ export const handlers = [
       pendingPlanId: null,
       pendingPlan: null,
       downgradeScheduledAt: null,
+      customerAgentTrustLevel: 'FULL_CONTROL',
+      autoApproveQuoteThreshold: null,
+      approvalTimeoutMinutes: 30,
+      approvalTimeoutAction: 'REMIND',
+      customerOperationsBudgetUsd: null,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }
@@ -119,7 +124,12 @@ export const handlers = [
     const body = (await request.json()) as any
     const company = mockCompanies.find((c) => c.id === params.id)
     if (!company) return HttpResponse.json({ code: 'company_not_found' }, { status: 404 })
-    if (body.name) company.name = body.name
+    if (body.name !== undefined) company.name = body.name
+    if (body.customerAgentTrustLevel !== undefined) company.customerAgentTrustLevel = body.customerAgentTrustLevel
+    if (body.autoApproveQuoteThreshold !== undefined) company.autoApproveQuoteThreshold = body.autoApproveQuoteThreshold
+    if (body.approvalTimeoutMinutes !== undefined) company.approvalTimeoutMinutes = body.approvalTimeoutMinutes
+    if (body.approvalTimeoutAction !== undefined) company.approvalTimeoutAction = body.approvalTimeoutAction
+    if (body.customerOperationsBudgetUsd !== undefined) company.customerOperationsBudgetUsd = body.customerOperationsBudgetUsd
     company.updatedAt = new Date().toISOString()
     return HttpResponse.json(company)
   }),
@@ -599,6 +609,13 @@ export const handlers = [
     items = items.slice(offset, offset + limit)
 
     return HttpResponse.json({ items, total })
+  }),
+
+  http.post(`${BASE}/platform/companies/:id/activity-log/verify-integrity`, async ({ params }) => {
+    await delay(300)
+    const id = params.id as string
+    const items = mockActivityLog[id] ?? []
+    return HttpResponse.json({ valid: true, totalEntries: items.length })
   }),
 
   // ─── Proactive Insights ────────────────────────────

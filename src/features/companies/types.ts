@@ -9,6 +9,9 @@ export interface CompanyPlanSummary {
 
 export type SubscriptionStatus = 'trialing' | 'active' | 'suspended' | 'cancelled' | 'past_due'
 
+export type CustomerAgentTrustLevel = 'FULL_CONTROL' | 'AUTO_MESSAGE' | 'AUTO_ALL_QUOTE_APPROVAL' | 'FULLY_AUTOMATIC'
+export type ApprovalTimeoutAction = 'REMIND' | 'AUTO_SEND' | 'HOLD'
+
 export interface Company {
   id: string
   name: string
@@ -20,6 +23,11 @@ export interface Company {
   downgradeScheduledAt: string | null
   subscriptionStatus: SubscriptionStatus
   statusChangedAt: string | null
+  customerAgentTrustLevel: CustomerAgentTrustLevel
+  autoApproveQuoteThreshold: number | null
+  approvalTimeoutMinutes: number
+  approvalTimeoutAction: ApprovalTimeoutAction
+  customerOperationsBudgetUsd: number | null
   createdAt: string
   updatedAt: string
 }
@@ -322,7 +330,7 @@ export interface BillingEvent {
 
 // ─── Activity Log ────────────────────────────────
 
-export type ActivityCategory = 'auth' | 'user' | 'document' | 'folder' | 'knowledge' | 'conversation' | 'company' | 'connector' | 'note'
+export type ActivityCategory = 'auth' | 'user' | 'document' | 'folder' | 'knowledge' | 'conversation' | 'company' | 'connector' | 'note' | 'lead' | 'playbook' | 'channel'
 
 export interface ActivityLogItem {
   id: string
@@ -334,6 +342,9 @@ export interface ActivityLogItem {
   resourceType: string | null
   metadata: Record<string, unknown> | null
   createdAt: string
+  sequenceNumber: number
+  contentHash: string | null
+  previousHash: string | null
 }
 
 export interface ActivityLogResponse {
@@ -412,4 +423,26 @@ export interface ProactiveInsightSummary {
   resolved: number
   dismissed: number
   total: number
+}
+
+// ─── Company Memories ──────────────────────────────
+
+export type MemoryType = 'fact' | 'preference' | 'glossary'
+export type VisibilityScope = 'INTERNAL_ONLY' | 'CUSTOMER_SAFE'
+
+export interface CompanyMemory {
+  id: string
+  companyId: string
+  memoryType: MemoryType
+  content: string
+  source: string | null
+  createdByUserId: string | null
+  accessCount: number
+  lastAccessedAt: string | null
+  visibilityScope: VisibilityScope | null
+  category: string | null
+  sortOrder: number
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
 }

@@ -3,6 +3,8 @@ import { apiClient } from '@/lib/api-client'
 import { queryKeys } from '@/lib/query-keys'
 import type { Company } from '../types'
 
+export type UpdateCompanyPayload = Partial<Pick<Company, 'name' | 'customerAgentTrustLevel' | 'autoApproveQuoteThreshold' | 'approvalTimeoutMinutes' | 'approvalTimeoutAction' | 'customerOperationsBudgetUsd'>>
+
 export function useCompany(id: string) {
   return useQuery({
     queryKey: queryKeys.companies.detail(id),
@@ -17,8 +19,8 @@ export function useCompany(id: string) {
 export function useUpdateCompany(id: string) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (name: string) => {
-      const { data } = await apiClient.patch(`/platform/companies/${id}`, { name })
+    mutationFn: async (payload: UpdateCompanyPayload) => {
+      const { data } = await apiClient.patch(`/platform/companies/${id}`, payload)
       return data
     },
     onSuccess: () => {

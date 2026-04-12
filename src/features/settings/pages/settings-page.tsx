@@ -6,6 +6,7 @@ import { AiConfigSection } from '../components/ai-config-section'
 import { ToolPlansSection } from '../components/tool-plans-section'
 import { PricingPlansSection } from '../components/pricing-plans-section'
 import { usePlatformDefaults, useUpdatePlatformDefaults } from '../hooks/use-platform-defaults'
+import { WorkingHoursSection } from '../components/working-hours-section'
 import { usePlatformModels } from '@/features/companies/hooks/use-platform-models'
 import type { ConfigBlockKey } from '@/lib/validations'
 
@@ -121,6 +122,9 @@ const sectionMeta: Record<string, SectionMeta> = {
       { key: 'crawlConcurrency', label: 'Crawler Eşzamanlılık', type: 'number', hint: 'Es zamanli calisabilecek crawler sayisi' },
       { key: 'allowedConnectors', label: 'İzin Verilen Connector\'lar', type: 'text', hint: 'Virgülle ayrilmis connector listesi (or: website_crawler)' },
       { key: 'autoSummarizeEnabled', label: 'Otomatik Özetleme', type: 'boolean', hint: 'Yuklenen dokumanlar otomatik ozetlensin mi' },
+      { key: 'maxLeads', label: 'Max Müşteri Adayı', type: 'number', hint: 'Şirket için maksimum müşteri adayı (lead) sayısı. Boş bırakılırsa limitsiz' },
+      { key: 'maxPlaybookEntries', label: 'Max Playbook Girişi', type: 'number', hint: 'Şirket için maksimum playbook girişi sayısı. Boş bırakılırsa limitsiz' },
+      { key: 'maxChannels', label: 'Max Kanal', type: 'number', hint: 'Şirket için maksimum kanal sayısı. Boş bırakılırsa limitsiz' },
     ],
   },
   crawlerConfig: {
@@ -220,6 +224,13 @@ export function SettingsPage() {
           />
         ) : activeSection === 'toolPlans' ? (
           <ToolPlansSection key="toolPlans" />
+        ) : activeSection === 'workingHoursConfig' ? (
+          <WorkingHoursSection
+            key="workingHoursConfig"
+            currentValues={defaults?.workingHoursConfig as Record<string, unknown> | undefined}
+            onSave={handleSave}
+            isSaving={isPending}
+          />
         ) : meta ? (
           <ConfigSection
             key={activeSection}

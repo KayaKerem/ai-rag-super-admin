@@ -4,6 +4,7 @@ import { useCompanyConfig, useUpdateCompanyConfig } from '../hooks/use-company-c
 import { usePlatformModels } from '../hooks/use-platform-models'
 import { ConfigAccordion } from './config-accordion'
 import { AiConfigAccordion } from './ai-config-accordion'
+import { WorkingHoursAccordion } from './working-hours-accordion'
 import { toast } from 'sonner'
 import type { ConfigBlockKey } from '@/lib/validations'
 import { Info } from 'lucide-react'
@@ -138,6 +139,9 @@ const configBlocks: BlockDef[] = [
       { key: 'crawlConcurrency', label: 'Crawler Eşzamanlılık', type: 'number', hint: 'Es zamanli calisabilecek crawler sayisi' },
       { key: 'allowedConnectors', label: 'İzin Verilen Connector\'lar', hint: 'Virgülle ayrilmis connector listesi (or: website_crawler)' },
       { key: 'autoSummarizeEnabled', label: 'Otomatik Özetleme', type: 'boolean', hint: 'Yuklenen dokumanlar otomatik ozetlensin mi' },
+      { key: 'maxLeads', label: 'Max Müşteri Adayı', type: 'number', hint: 'Şirket için maksimum müşteri adayı (lead) sayısı. Boş bırakılırsa limitsiz' },
+      { key: 'maxPlaybookEntries', label: 'Max Playbook Girişi', type: 'number', hint: 'Şirket için maksimum playbook girişi sayısı. Boş bırakılırsa limitsiz' },
+      { key: 'maxChannels', label: 'Max Kanal', type: 'number', hint: 'Şirket için maksimum kanal sayısı. Boş bırakılırsa limitsiz' },
     ],
   },
   {
@@ -221,6 +225,12 @@ export function ConfigTab({ companyId }: ConfigTabProps) {
             models={models ?? []}
           />
         ))}
+
+        <WorkingHoursAccordion
+          currentValues={config?.workingHoursConfig}
+          onSave={handleSave}
+          isSaving={updateConfig.isPending}
+        />
       </Accordion>
     </div>
   )

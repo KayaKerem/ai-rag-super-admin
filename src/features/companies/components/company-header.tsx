@@ -27,7 +27,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
       setEditing(false)
       return
     }
-    updateCompany.mutate(editName.trim(), {
+    updateCompany.mutate({ name: editName.trim() }, {
       onSuccess: () => {
         toast.success('Şirket adı güncellendi')
         setEditing(false)

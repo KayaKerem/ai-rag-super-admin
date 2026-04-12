@@ -101,6 +101,9 @@ export const limitsConfigSchema = z.object({
   crawlConcurrency: optNum,
   allowedConnectors: z.array(z.string()).optional(),
   autoSummarizeEnabled: z.boolean().optional(),
+  maxLeads: optNum,
+  maxPlaybookEntries: optNum,
+  maxChannels: optNum,
 })
 
 export const documentProcessingConfigSchema = z.object({
@@ -132,6 +135,26 @@ export const proactiveConfigSchema = z.object({
   notifyEmail: z.boolean().optional(),
 })
 
+const dayScheduleSchema = z.object({
+  start: z.string().optional(),
+  end: z.string().optional(),
+}).nullable().optional()
+
+export const workingHoursConfigSchema = z.object({
+  enabled: z.boolean().optional(),
+  timezone: z.string().optional(),
+  schedule: z.object({
+    '0': dayScheduleSchema,
+    '1': dayScheduleSchema,
+    '2': dayScheduleSchema,
+    '3': dayScheduleSchema,
+    '4': dayScheduleSchema,
+    '5': dayScheduleSchema,
+    '6': dayScheduleSchema,
+  }).optional(),
+  outsideHoursMessage: z.string().optional(),
+})
+
 export const configBlockSchemas = {
   aiConfig: aiConfigSchema,
   s3Config: s3ConfigSchema,
@@ -144,6 +167,7 @@ export const configBlockSchemas = {
   crawlerConfig: crawlerConfigSchema,
   pricingConfig: pricingConfigSchema,
   proactiveConfig: proactiveConfigSchema,
+  workingHoursConfig: workingHoursConfigSchema,
 } as const
 
 export type ConfigBlockKey = keyof typeof configBlockSchemas

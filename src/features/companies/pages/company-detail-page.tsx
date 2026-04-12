@@ -12,6 +12,7 @@ import { PlanTab } from '../components/plan-tab'
 import { ActivityLogTab } from '../components/activity-log-tab'
 import { SearchAnalyticsTab } from '../components/search-analytics-tab'
 import { ProactiveInsightsTab } from '../components/proactive-insights-tab'
+import { AgentSettingsCard } from '../components/agent-settings-card'
 
 export function CompanyDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -23,6 +24,7 @@ export function CompanyDetailPage() {
   return (
     <div>
       <CompanyHeader company={company} />
+      <AgentSettingsCard company={company} />
 
       <Tabs defaultValue="usage">
         <TabsList>

@@ -21,6 +21,9 @@ const categoryLabels: Record<ActivityCategory, string> = {
   company: 'Sirket',
   connector: 'Baglanti',
   note: 'Not',
+  lead: 'Musteri Adayi',
+  playbook: 'Playbook',
+  channel: 'Kanal',
 }
 
 const categoryColors: Record<ActivityCategory, string> = {
@@ -33,6 +36,9 @@ const categoryColors: Record<ActivityCategory, string> = {
   company: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
   connector: 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300',
   note: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
+  lead: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300',
+  playbook: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300',
+  channel: 'bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-300',
 }
 
 const categoryOptions: { value: string; label: string }[] = [
@@ -46,6 +52,9 @@ const categoryOptions: { value: string; label: string }[] = [
   { value: 'company', label: 'Sirket' },
   { value: 'connector', label: 'Baglanti' },
   { value: 'note', label: 'Not' },
+  { value: 'lead', label: 'Musteri Adayi' },
+  { value: 'playbook', label: 'Playbook' },
+  { value: 'channel', label: 'Kanal' },
 ]
 
 export function ActivityLogTab({ companyId }: ActivityLogTabProps) {
