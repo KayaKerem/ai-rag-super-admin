@@ -159,6 +159,15 @@ export const mockRegisteredTools = [
   { id: 'search_memory', label: 'Hafıza Ara', description: 'Kullanıcı hafızasında arama yapar', category: 'search', requiresApproval: false },
   { id: 'web_search', label: 'Web Arama', description: "Web'de güncel bilgi arar", category: 'search', requiresApproval: false },
   { id: 'search_playbook', label: 'Playbook Ara', description: "Satış playbook'unda arama yapar", category: 'search', requiresApproval: false },
+  { id: 'create_quote', label: 'Teklif Oluştur', description: 'Müşteri için teklif hazırlama sürecini başlatır', category: 'action', requiresApproval: true },
+  { id: 'get_lead_context', label: 'Lead Bilgisi', description: 'Müşteri (lead) bilgilerini getirir', category: 'search', requiresApproval: false },
+  { id: 'schedule_follow_up', label: 'Takip Planla', description: 'Müşteri için takip tarihi planlar', category: 'action', requiresApproval: false },
+  { id: 'update_lead_status', label: 'Lead Durumu Güncelle', description: 'Lead pipeline durumunu günceller', category: 'action', requiresApproval: false },
+  { id: 'escalate_to_human', label: 'İnsana Aktar', description: 'Konuşmayı insan operatöre aktarır', category: 'action', requiresApproval: false },
+  { id: 'view_pipeline', label: 'Pipeline Görüntüle', description: 'Lead sayıları ve değerleriyle pipeline özeti', category: 'search', requiresApproval: false },
+  { id: 'view_lead', label: 'Lead Detayı', description: 'Detaylı lead bilgisi', category: 'search', requiresApproval: false },
+  { id: 'view_quote_stats', label: 'Teklif İstatistikleri', description: 'Şirketin teklif analitiği', category: 'search', requiresApproval: false },
+  { id: 'analyze_sales', label: 'Satış Analizi', description: 'Üst düzey satış analitiği', category: 'search', requiresApproval: false },
 ]
 
 export const mockToolPlans: any = {
@@ -171,8 +180,8 @@ export const mockToolPlans: any = {
     },
     pro: {
       label: 'Profesyonel',
-      description: 'Tüm arama ve şablon özellikleri',
-      tools: ['search_knowledge_base', 'list_knowledge_categories', 'search_drive_documents', 'search_templates', 'retrieve_template', 'save_memory', 'search_memory', 'search_notes', 'search_playbook'],
+      description: 'Tüm arama, şablon, CRM ve teklif özellikleri',
+      tools: ['search_knowledge_base', 'list_knowledge_categories', 'search_drive_documents', 'search_templates', 'retrieve_template', 'save_memory', 'search_memory', 'search_notes', 'search_playbook', 'create_quote', 'get_lead_context', 'schedule_follow_up', 'update_lead_status', 'escalate_to_human', 'view_pipeline', 'view_lead', 'view_quote_stats', 'analyze_sales'],
     },
     enterprise: {
       label: 'Kurumsal',

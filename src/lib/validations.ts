@@ -104,6 +104,8 @@ export const limitsConfigSchema = z.object({
   maxLeads: optNum,
   maxPlaybookEntries: optNum,
   maxChannels: optNum,
+  maxQuotes: optNum,
+  maxQuotesPerLead: optNum,
 })
 
 export const documentProcessingConfigSchema = z.object({

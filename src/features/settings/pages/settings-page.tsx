@@ -125,6 +125,8 @@ const sectionMeta: Record<string, SectionMeta> = {
       { key: 'maxLeads', label: 'Max Müşteri Adayı', type: 'number', hint: 'Şirket için maksimum müşteri adayı (lead) sayısı. Boş bırakılırsa limitsiz' },
       { key: 'maxPlaybookEntries', label: 'Max Playbook Girişi', type: 'number', hint: 'Şirket için maksimum playbook girişi sayısı. Boş bırakılırsa limitsiz' },
       { key: 'maxChannels', label: 'Max Kanal', type: 'number', hint: 'Şirket için maksimum kanal sayısı. Boş bırakılırsa limitsiz' },
+      { key: 'maxQuotes', label: 'Max Teklif', type: 'number', hint: 'Şirket için maksimum teklif sayısı. Boş bırakılırsa limitsiz' },
+      { key: 'maxQuotesPerLead', label: 'Max Teklif / Lead', type: 'number', hint: 'Lead başına maksimum teklif sayısı. Boş bırakılırsa limitsiz' },
     ],
   },
   crawlerConfig: {
