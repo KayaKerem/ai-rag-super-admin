@@ -157,6 +157,11 @@ export const workingHoursConfigSchema = z.object({
   outsideHoursMessage: z.string().optional(),
 })
 
+export const dataRetentionConfigSchema = z.object({
+  enabled: z.boolean().optional(),
+  leadRetentionDays: optNum,
+})
+
 export const configBlockSchemas = {
   aiConfig: aiConfigSchema,
   s3Config: s3ConfigSchema,
@@ -170,6 +175,7 @@ export const configBlockSchemas = {
   pricingConfig: pricingConfigSchema,
   proactiveConfig: proactiveConfigSchema,
   workingHoursConfig: workingHoursConfigSchema,
+  dataRetentionConfig: dataRetentionConfigSchema,
 } as const
 
 export type ConfigBlockKey = keyof typeof configBlockSchemas

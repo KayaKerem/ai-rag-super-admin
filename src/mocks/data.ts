@@ -502,6 +502,27 @@ export const mockPlatformDefaults: any = {
     monthlyBudgetUsd: 2.00,
     notifyEmail: false,
   },
+  dataRetentionConfig: {
+    enabled: false,
+    leadRetentionDays: 365,
+  },
+}
+
+// Leads per company
+export const mockCompanyLeads: Record<string, any[]> = {
+  [mockCompanies[0].id]: [
+    { id: 'lead-1', companyId: mockCompanies[0].id, name: 'Ahmet Yılmaz', email: 'ahmet@example.com', phone: '+90 532 111 2233', status: 'qualified', source: 'website', lastContactAt: '2026-04-10T14:30:00Z', createdAt: '2026-03-15T10:00:00Z' },
+    { id: 'lead-2', companyId: mockCompanies[0].id, name: 'Elif Demir', email: 'elif@example.com', phone: '+90 533 222 3344', status: 'new', source: 'whatsapp', lastContactAt: null, createdAt: '2026-04-01T09:00:00Z' },
+    { id: 'lead-3', companyId: mockCompanies[0].id, name: 'Mehmet Kaya', email: null, phone: '+90 534 333 4455', status: 'contacted', source: 'referral', lastContactAt: '2026-04-08T16:00:00Z', createdAt: '2026-03-20T11:30:00Z' },
+    { id: 'lead-4', companyId: mockCompanies[0].id, name: 'Zeynep Aksoy', email: 'zeynep@example.com', phone: null, status: 'won', source: 'website', lastContactAt: '2026-04-12T10:00:00Z', createdAt: '2026-02-10T08:00:00Z' },
+  ],
+  [mockCompanies[1].id]: [
+    { id: 'lead-5', companyId: mockCompanies[1].id, name: 'Can Öztürk', email: 'can@example.com', phone: '+90 535 444 5566', status: 'proposal', source: 'website', lastContactAt: '2026-04-11T12:00:00Z', createdAt: '2026-03-25T14:00:00Z' },
+  ],
+  [mockCompanies[3].id]: [
+    { id: 'lead-6', companyId: mockCompanies[3].id, name: 'Selin Arslan', email: 'selin@example.com', phone: null, status: 'negotiation', source: 'whatsapp', lastContactAt: '2026-04-09T09:30:00Z', createdAt: '2026-03-05T10:00:00Z' },
+    { id: 'lead-7', companyId: mockCompanies[3].id, name: 'Burak Çelik', email: 'burak@example.com', phone: '+90 536 555 6677', status: 'lost', source: 'referral', lastContactAt: '2026-04-07T15:00:00Z', createdAt: '2026-02-20T13:00:00Z' },
+  ],
 }
 
 // Pricing plans

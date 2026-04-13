@@ -162,6 +162,14 @@ const sectionMeta: Record<string, SectionMeta> = {
       { key: 'workersEnabled', label: 'Workers Enabled', type: 'boolean', hint: 'Dokuman isleme worker\'lari aktif/pasif' },
     ],
   },
+  dataRetentionConfig: {
+    title: 'Veri Saklama',
+    description: 'Veri saklama süresi konfigürasyonu. Aktif edildiğinde süresi geçmiş lead\'ler otomatik olarak kalıcı silinir.',
+    fields: [
+      { key: 'enabled', label: 'Otomatik Temizlik', type: 'boolean', hint: 'Aktif edildiğinde süresi geçmiş lead\'ler geri döndürülemez şekilde silinir' },
+      { key: 'leadRetentionDays', label: 'Lead Saklama Süresi (gün)', type: 'number', hint: 'Son temas tarihinden itibaren gün sayısı (min: 30, max: 3650). Varsayılan: 365' },
+    ],
+  },
 }
 
 export function SettingsPage() {

@@ -328,6 +328,25 @@ export interface BillingEvent {
   createdAt: string
 }
 
+// ─── Leads ──────────────────────────────────────
+
+export interface Lead {
+  id: string
+  companyId: string
+  name: string
+  email: string | null
+  phone: string | null
+  status: string
+  source: string | null
+  lastContactAt: string | null
+  createdAt: string
+}
+
+export interface PermanentDeleteResponse {
+  taskId: string
+  status: 'processing'
+}
+
 // ─── Activity Log ────────────────────────────────
 
 export type ActivityCategory = 'auth' | 'user' | 'document' | 'folder' | 'knowledge' | 'conversation' | 'company' | 'connector' | 'note' | 'lead' | 'playbook' | 'quote' | 'channel'

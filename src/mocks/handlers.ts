@@ -23,6 +23,7 @@ import {
   generateSearchAnalytics,
   mockProactiveInsights,
   getProactiveInsightSummary,
+  mockCompanyLeads,
 } from './data'
 
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -635,6 +636,26 @@ export const handlers = [
     if (agentType) items = items.filter((i: any) => i.agentType === agentType)
     if (status) items = items.filter((i: any) => i.status === status)
     return HttpResponse.json({ items, total: items.length })
+  }),
+
+  // ─── Company Leads ────────────────────────────────
+  http.get(`${BASE}/platform/companies/:id/leads`, async ({ params }) => {
+    await delay(200)
+    const id = params.id as string
+    const items = mockCompanyLeads[id] ?? []
+    return HttpResponse.json({ items, total: items.length })
+  }),
+
+  http.delete(`${BASE}/platform/companies/:companyId/leads/:leadId/permanent`, async ({ params }) => {
+    await delay(400)
+    const companyId = params.companyId as string
+    const leadId = params.leadId as string
+    const leads = mockCompanyLeads[companyId]
+    if (leads) {
+      const idx = leads.findIndex((l: any) => l.id === leadId)
+      if (idx !== -1) leads.splice(idx, 1)
+    }
+    return HttpResponse.json({ taskId: `task-${Date.now()}`, status: 'processing' }, { status: 202 })
   }),
 
   http.patch(`${BASE}/platform/companies/:id/insights/:insightId`, async ({ params, request }) => {

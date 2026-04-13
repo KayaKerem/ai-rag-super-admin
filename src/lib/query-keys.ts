@@ -18,6 +18,7 @@ export const queryKeys = {
       ['companies', id, 'proactive-insights', agentType ?? '', status ?? ''] as const,
     proactiveInsightSummary: (id: string) =>
       ['companies', id, 'proactive-insights', 'summary'] as const,
+    leads: (id: string) => ['companies', id, 'leads'] as const,
   },
   platform: {
     summary: (months: number) => ['platform', 'summary', months] as const,

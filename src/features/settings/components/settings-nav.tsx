@@ -21,6 +21,7 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'proactiveConfig', label: 'Proaktif', icon: '🔮' },
   { key: 'workingHoursConfig', label: 'Çalışma Saatleri', icon: '🕐' },
   { key: 'documentProcessingConfig', label: 'Doc Processing', icon: '📄' },
+  { key: 'dataRetentionConfig', label: 'Veri Saklama', icon: '🗑️' },
 ]
 
 interface SettingsNavProps {

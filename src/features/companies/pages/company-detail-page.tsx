@@ -12,6 +12,7 @@ import { PlanTab } from '../components/plan-tab'
 import { ActivityLogTab } from '../components/activity-log-tab'
 import { SearchAnalyticsTab } from '../components/search-analytics-tab'
 import { ProactiveInsightsTab } from '../components/proactive-insights-tab'
+import { LeadsTab } from '../components/leads-tab'
 import { AgentSettingsCard } from '../components/agent-settings-card'
 
 export function CompanyDetailPage() {
@@ -37,6 +38,7 @@ export function CompanyDetailPage() {
           <TabsTrigger value="data-sources">Veri Kaynaklari</TabsTrigger>
           <TabsTrigger value="activity">Aktivite</TabsTrigger>
           <TabsTrigger value="search-analytics">Arama Analitigi</TabsTrigger>
+          <TabsTrigger value="leads">Lead&apos;ler</TabsTrigger>
           <TabsTrigger value="proactive">Proaktif</TabsTrigger>
         </TabsList>
         <TabsContent value="usage" className="mt-4">
@@ -65,6 +67,9 @@ export function CompanyDetailPage() {
         </TabsContent>
         <TabsContent value="search-analytics" className="mt-4">
           <SearchAnalyticsTab companyId={id!} />
+        </TabsContent>
+        <TabsContent value="leads" className="mt-4">
+          <LeadsTab companyId={id!} />
         </TabsContent>
         <TabsContent value="proactive" className="mt-4">
           <ProactiveInsightsTab companyId={id!} />
