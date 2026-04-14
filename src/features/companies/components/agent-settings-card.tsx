@@ -62,10 +62,10 @@ export function AgentSettingsCard({ company }: AgentSettingsCardProps) {
     updateCompany.mutate(
       {
         customerAgentTrustLevel: trustLevel,
-        autoApproveQuoteThreshold: threshold !== '' ? Number(threshold) : null,
-        approvalTimeoutMinutes: Number(timeoutMinutes) || 30,
+        autoApproveQuoteThreshold: threshold !== '' ? Math.max(0, Number(threshold) || 0) : null,
+        approvalTimeoutMinutes: Math.max(1, Number(timeoutMinutes) || 30),
         approvalTimeoutAction: timeoutAction,
-        customerOperationsBudgetUsd: budget !== '' ? Number(budget) : null,
+        customerOperationsBudgetUsd: budget !== '' ? Math.max(0, Number(budget) || 0) : null,
       },
       {
         onSuccess: () => toast.success('Agent ayarları güncellendi'),

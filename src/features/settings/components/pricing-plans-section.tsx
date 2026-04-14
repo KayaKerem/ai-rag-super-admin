@@ -61,19 +61,24 @@ function planToForm(p: PricingPlan): PlanFormData {
   }
 }
 
+function clamp(v: number, min: number, fallback: number): number {
+  const n = Number(v)
+  return isNaN(n) ? fallback : Math.max(min, n)
+}
+
 function formToRequest(f: PlanFormData): CreatePlanRequest {
   return {
     name: f.name, slug: f.slug,
     description: f.description || undefined,
-    monthlyPriceTry: f.monthlyPriceTry ? Number(f.monthlyPriceTry) : null,
-    includedUsers: Number(f.includedUsers) || 1,
-    extraUserPriceTry: f.extraUserPriceTry ? Number(f.extraUserPriceTry) : null,
-    budgetUsd: Number(f.budgetUsd) || 10,
-    budgetDowngradeThresholdPct: Number(f.budgetDowngradeThresholdPct) || 80,
-    maxStorageGb: Number(f.maxStorageGb) || 5, maxFileSizeMb: Number(f.maxFileSizeMb) || 25,
-    crawlMaxPages: Number(f.crawlMaxPages) || 50, crawlMaxSources: Number(f.crawlMaxSources) || 2,
+    monthlyPriceTry: f.monthlyPriceTry ? clamp(Number(f.monthlyPriceTry), 0, 0) : null,
+    includedUsers: clamp(Number(f.includedUsers), 1, 1),
+    extraUserPriceTry: f.extraUserPriceTry ? clamp(Number(f.extraUserPriceTry), 0, 0) : null,
+    budgetUsd: clamp(Number(f.budgetUsd), 0, 10),
+    budgetDowngradeThresholdPct: clamp(Number(f.budgetDowngradeThresholdPct), 0, 80),
+    maxStorageGb: clamp(Number(f.maxStorageGb), 0, 5), maxFileSizeMb: clamp(Number(f.maxFileSizeMb), 0, 25),
+    crawlMaxPages: clamp(Number(f.crawlMaxPages), 0, 50), crawlMaxSources: clamp(Number(f.crawlMaxSources), 0, 2),
     allowedModels: f.allowedModels, allowedTools: f.allowedTools, allowedConnectors: f.allowedConnectors,
-    isActive: f.isActive, sortOrder: Number(f.sortOrder) || 0,
+    isActive: f.isActive, sortOrder: Math.max(0, Number(f.sortOrder) || 0),
   }
 }
 
@@ -275,9 +280,9 @@ function PlanDialog({
             </div>
             <div><Label>Açıklama</Label><Input value={form.description} onChange={(e) => setField('description', e.target.value)} /></div>
             <div className="grid grid-cols-3 gap-3">
-              <div><Label>Aylık Fiyat (TRY)</Label><Input type="number" value={form.monthlyPriceTry} onChange={(e) => setField('monthlyPriceTry', e.target.value)} placeholder="Boş = Kurumsal" /></div>
-              <div><Label>Dahil Kullanıcı</Label><Input type="number" value={form.includedUsers} onChange={(e) => setField('includedUsers', e.target.value)} /></div>
-              <div><Label>Ek Kul. Fiyat (TRY)</Label><Input type="number" value={form.extraUserPriceTry} onChange={(e) => setField('extraUserPriceTry', e.target.value)} placeholder="Boş = yok" /></div>
+              <div><Label>Aylık Fiyat (TRY)</Label><Input type="number" min={0} value={form.monthlyPriceTry} onChange={(e) => setField('monthlyPriceTry', e.target.value)} placeholder="Boş = Kurumsal" /></div>
+              <div><Label>Dahil Kullanıcı</Label><Input type="number" min={1} value={form.includedUsers} onChange={(e) => setField('includedUsers', e.target.value)} /></div>
+              <div><Label>Ek Kul. Fiyat (TRY)</Label><Input type="number" min={0} value={form.extraUserPriceTry} onChange={(e) => setField('extraUserPriceTry', e.target.value)} placeholder="Boş = yok" /></div>
             </div>
           </div>
 
@@ -285,12 +290,12 @@ function PlanDialog({
           <div className="space-y-3">
             <h3 className="text-sm font-semibold">Limitler</h3>
             <div className="grid grid-cols-3 gap-3">
-              <div><Label>AI Bütçe (USD)</Label><Input type="number" value={form.budgetUsd} onChange={(e) => setField('budgetUsd', e.target.value)} /></div>
-              <div><Label>Bütçe Uyarı %</Label><Input type="number" value={form.budgetDowngradeThresholdPct} onChange={(e) => setField('budgetDowngradeThresholdPct', e.target.value)} /></div>
-              <div><Label>Maks Depolama (GB)</Label><Input type="number" value={form.maxStorageGb} onChange={(e) => setField('maxStorageGb', e.target.value)} /></div>
-              <div><Label>Maks Dosya (MB)</Label><Input type="number" value={form.maxFileSizeMb} onChange={(e) => setField('maxFileSizeMb', e.target.value)} /></div>
-              <div><Label>Crawler Maks Sayfa</Label><Input type="number" value={form.crawlMaxPages} onChange={(e) => setField('crawlMaxPages', e.target.value)} /></div>
-              <div><Label>Crawler Maks Kaynak</Label><Input type="number" value={form.crawlMaxSources} onChange={(e) => setField('crawlMaxSources', e.target.value)} /></div>
+              <div><Label>AI Bütçe (USD)</Label><Input type="number" min={0} value={form.budgetUsd} onChange={(e) => setField('budgetUsd', e.target.value)} /></div>
+              <div><Label>Bütçe Uyarı %</Label><Input type="number" min={0} max={100} value={form.budgetDowngradeThresholdPct} onChange={(e) => setField('budgetDowngradeThresholdPct', e.target.value)} /></div>
+              <div><Label>Maks Depolama (GB)</Label><Input type="number" min={0} value={form.maxStorageGb} onChange={(e) => setField('maxStorageGb', e.target.value)} /></div>
+              <div><Label>Maks Dosya (MB)</Label><Input type="number" min={0} value={form.maxFileSizeMb} onChange={(e) => setField('maxFileSizeMb', e.target.value)} /></div>
+              <div><Label>Crawler Maks Sayfa</Label><Input type="number" min={0} value={form.crawlMaxPages} onChange={(e) => setField('crawlMaxPages', e.target.value)} /></div>
+              <div><Label>Crawler Maks Kaynak</Label><Input type="number" min={0} value={form.crawlMaxSources} onChange={(e) => setField('crawlMaxSources', e.target.value)} /></div>
             </div>
           </div>
 

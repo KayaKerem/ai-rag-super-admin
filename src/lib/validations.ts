@@ -6,16 +6,22 @@ const optNum = z.preprocess(
   z.number().optional(),
 )
 
+// Like optNum but enforces >= 0 — use for budgets, prices, and limits
+const posNum = z.preprocess(
+  (v) => (v === '' || v === undefined || v === null ? undefined : Number(v)),
+  z.number().min(0).optional(),
+)
+
 export const s3ConfigSchema = z.object({
   bucket: z.string().optional(),
   region: z.string().optional(),
   endpoint: z.string().optional(),
   forcePathStyle: z.boolean().optional(),
   keyPrefix: z.string().optional(),
-  putTtlSec: optNum,
-  getTtlSec: optNum,
-  deleteTtlSec: optNum,
-  configCacheTtlMs: optNum,
+  putTtlSec: posNum,
+  getTtlSec: posNum,
+  deleteTtlSec: posNum,
+  configCacheTtlMs: posNum,
   accessKeyId: z.string().optional(),
   secretAccessKey: z.string().optional(),
 })
@@ -34,12 +40,12 @@ export const aiConfigSchema = z.object({
   apiKey: z.string().optional(),
   language: z.enum(['tr', 'en']).optional(),
   summaryModel: z.string().optional(),
-  requestTimeoutMs: optNum,
-  budgetUsd: optNum,
-  budgetDowngradeThresholdPct: optNum,
+  requestTimeoutMs: posNum,
+  budgetUsd: posNum,
+  budgetDowngradeThresholdPct: posNum,
   citationGateMode: z.enum(['off', 'warn', 'block']).optional(),
-  hybridRrfK: optNum,
-  maxOutputTokensRetryCap: optNum,
+  hybridRrfK: posNum,
+  maxOutputTokensRetryCap: posNum,
   vectorSimilarityThreshold: optNum,
   qualityEvalEnabled: z.boolean().optional(),
   qualityEvalModel: z.string().optional(),
@@ -56,7 +62,7 @@ export const aiConfigSchema = z.object({
 export const embeddingConfigSchema = z.object({
   model: z.string().optional(),
   apiKey: z.string().optional(),
-  dimensions: optNum,
+  dimensions: posNum,
 })
 
 export const langfuseConfigSchema = z.object({
@@ -67,7 +73,7 @@ export const langfuseConfigSchema = z.object({
   environment: z.string().optional(),
   promptManagementEnabled: z.boolean().optional(),
   promptLabel: z.string().optional(),
-  promptCacheTtlMs: optNum,
+  promptCacheTtlMs: posNum,
 })
 
 export const triggerConfigSchema = z.object({
@@ -77,63 +83,63 @@ export const triggerConfigSchema = z.object({
 })
 
 export const limitsConfigSchema = z.object({
-  maxStorageMb: optNum,
-  maxFileSizeMb: optNum,
+  maxStorageMb: posNum,
+  maxFileSizeMb: posNum,
   supportedFormats: z.array(z.string()).optional(),
-  chunkMaxChars: optNum,
-  chunkOverlapChars: optNum,
-  embeddingBatchSize: optNum,
-  historyTokenBudget: optNum,
-  compactionTriggerTokens: optNum,
-  searchDefaultLimit: optNum,
-  batchMaxFiles: optNum,
-  batchMaxTotalSizeMb: optNum,
-  singleFileMaxSizeMb: optNum,
-  maxTagsPerDocument: optNum,
-  maxTagLength: optNum,
-  approvalTimeoutMinutes: optNum,
-  queueConcurrencyExtract: optNum,
-  queueConcurrencyIngest: optNum,
-  queueConcurrencyAutoTag: optNum,
-  crawlMaxPages: optNum,
-  crawlMaxSources: optNum,
-  crawlMinIntervalHours: optNum,
-  crawlConcurrency: optNum,
+  chunkMaxChars: posNum,
+  chunkOverlapChars: posNum,
+  embeddingBatchSize: posNum,
+  historyTokenBudget: posNum,
+  compactionTriggerTokens: posNum,
+  searchDefaultLimit: posNum,
+  batchMaxFiles: posNum,
+  batchMaxTotalSizeMb: posNum,
+  singleFileMaxSizeMb: posNum,
+  maxTagsPerDocument: posNum,
+  maxTagLength: posNum,
+  approvalTimeoutMinutes: posNum,
+  queueConcurrencyExtract: posNum,
+  queueConcurrencyIngest: posNum,
+  queueConcurrencyAutoTag: posNum,
+  crawlMaxPages: posNum,
+  crawlMaxSources: posNum,
+  crawlMinIntervalHours: posNum,
+  crawlConcurrency: posNum,
   allowedConnectors: z.array(z.string()).optional(),
   autoSummarizeEnabled: z.boolean().optional(),
-  maxLeads: optNum,
-  maxPlaybookEntries: optNum,
-  maxChannels: optNum,
-  maxQuotes: optNum,
-  maxQuotesPerLead: optNum,
+  maxLeads: posNum,
+  maxPlaybookEntries: posNum,
+  maxChannels: posNum,
+  maxQuotes: posNum,
+  maxQuotesPerLead: posNum,
 })
 
 export const documentProcessingConfigSchema = z.object({
   supportedSourceKinds: z.array(z.string()).optional(),
-  maxAttempts: optNum,
+  maxAttempts: posNum,
   workersEnabled: z.boolean().optional(),
 })
 
 export const crawlerConfigSchema = z.object({
   cloudflareAccountId: z.string().optional(),
   cloudflareApiToken: z.string().optional(),
-  maxGlobalConcurrentCrawls: optNum,
+  maxGlobalConcurrentCrawls: posNum,
 })
 
 export const pricingConfigSchema = z.object({
-  s3PerGbMonthUsd: optNum,
-  triggerPerTaskUsd: optNum,
+  s3PerGbMonthUsd: posNum,
+  triggerPerTaskUsd: posNum,
 })
 
 export const proactiveConfigSchema = z.object({
   enabled: z.boolean().optional(),
   freshnessEnabled: z.boolean().optional(),
-  freshnessIntervalHours: optNum,
+  freshnessIntervalHours: posNum,
   gapEnabled: z.boolean().optional(),
-  gapMinQueryCount: optNum,
+  gapMinQueryCount: posNum,
   qualityEnabled: z.boolean().optional(),
-  qualitySampleSize: optNum,
-  monthlyBudgetUsd: optNum,
+  qualitySampleSize: posNum,
+  monthlyBudgetUsd: posNum,
   notifyEmail: z.boolean().optional(),
 })
 
@@ -159,7 +165,7 @@ export const workingHoursConfigSchema = z.object({
 
 export const dataRetentionConfigSchema = z.object({
   enabled: z.boolean().optional(),
-  leadRetentionDays: optNum,
+  leadRetentionDays: posNum,
 })
 
 export const whatsAppConfigSchema = z.object({

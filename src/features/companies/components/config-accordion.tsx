@@ -175,6 +175,7 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
                     {...form.register(field.key)}
                     type={field.type === 'number' ? 'number' : field.type === 'password' ? 'password' : 'text'}
                     step={field.type === 'number' ? 'any' : undefined}
+                    min={field.type === 'number' ? 0 : undefined}
                     placeholder={field.placeholder ?? ''}
                     className="mt-1"
                   />
