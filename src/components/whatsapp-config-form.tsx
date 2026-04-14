@@ -81,7 +81,7 @@ export function WhatsAppConfigForm({ currentValues, onSave, isSaving }: WhatsApp
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Template Dili</Label>
-            <Select value={templateLang} onValueChange={setTemplateLang}>
+            <Select value={templateLang} onValueChange={(v) => v && setTemplateLang(v)}>
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>

@@ -108,7 +108,7 @@ export function WorkingHoursForm({ currentValues, onSave, isSaving }: WorkingHou
         <div className="mb-3 grid grid-cols-2 gap-3">
           <div className="space-y-1.5">
             <Label className="text-xs">Zaman Dilimi</Label>
-            <Select value={timezone} onValueChange={setTimezone}>
+            <Select value={timezone} onValueChange={(v) => v && setTimezone(v)}>
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>

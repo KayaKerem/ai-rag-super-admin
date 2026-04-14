@@ -7,7 +7,7 @@ import { ServiceAccountDialog } from '../components/service-account-dialog'
 import type { ServiceAccount } from '@/features/companies/types'
 
 export function ServiceAccountsPage() {
-  const { data: accounts, isLoading } = useServiceAccounts()
+  const { data: accounts, isLoading, isError } = useServiceAccounts()
   const [selected, setSelected] = useState<ServiceAccount | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
 
@@ -19,6 +19,15 @@ export function ServiceAccountsPage() {
   function handleCreate() {
     setSelected(null)
     setDialogOpen(true)
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6">
+        <h1 className="text-xl font-bold">Servis Hesaplari</h1>
+        <p className="mt-2 text-sm text-destructive">Servis hesaplari yuklenemedi. API baglantisini kontrol edin.</p>
+      </div>
+    )
   }
 
   return (
