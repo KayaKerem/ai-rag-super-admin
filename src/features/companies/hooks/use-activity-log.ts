@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api-client'
 import { queryKeys } from '@/lib/query-keys'
 import type { ActivityLogResponse } from '../types'
@@ -20,5 +20,19 @@ export function useActivityLog(companyId: string, params: ActivityLogParams = {}
       return data
     },
     enabled: !!companyId,
+  })
+}
+
+export interface IntegrityResult {
+  valid: boolean
+  totalEntries: number
+}
+
+export function useVerifyActivityLogIntegrity(companyId: string) {
+  return useMutation({
+    mutationFn: async (): Promise<IntegrityResult> => {
+      const { data } = await apiClient.post(`/platform/companies/${companyId}/activity-log/verify-integrity`)
+      return data
+    },
   })
 }
