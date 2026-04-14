@@ -162,6 +162,17 @@ export const dataRetentionConfigSchema = z.object({
   leadRetentionDays: optNum,
 })
 
+export const whatsAppConfigSchema = z.object({
+  defaultTemplateName: z.string().optional(),
+  defaultTemplateLanguage: z.string().optional(),
+  typingIndicatorEnabled: z.boolean().optional(),
+  welcomeMessages: z.object({
+    enabled: z.boolean().optional(),
+    newLead: z.string().optional(),
+    returningLead: z.string().optional(),
+  }).optional(),
+})
+
 export const configBlockSchemas = {
   aiConfig: aiConfigSchema,
   s3Config: s3ConfigSchema,
@@ -176,6 +187,7 @@ export const configBlockSchemas = {
   proactiveConfig: proactiveConfigSchema,
   workingHoursConfig: workingHoursConfigSchema,
   dataRetentionConfig: dataRetentionConfigSchema,
+  whatsAppConfig: whatsAppConfigSchema,
 } as const
 
 export type ConfigBlockKey = keyof typeof configBlockSchemas

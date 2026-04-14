@@ -19,6 +19,7 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'limitsConfig', label: 'Limits', icon: '🚧' },
   { key: 'crawlerConfig', label: 'Crawler', icon: '🕷️' },
   { key: 'proactiveConfig', label: 'Proaktif', icon: '🔮' },
+  { key: 'whatsAppConfig', label: 'WhatsApp', icon: '💬' },
   { key: 'workingHoursConfig', label: 'Çalışma Saatleri', icon: '🕐' },
   { key: 'documentProcessingConfig', label: 'Doc Processing', icon: '📄' },
   { key: 'dataRetentionConfig', label: 'Veri Saklama', icon: '🗑️' },

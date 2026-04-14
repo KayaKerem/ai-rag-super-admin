@@ -347,6 +347,41 @@ export interface PermanentDeleteResponse {
   status: 'processing'
 }
 
+// ─── Service Accounts ───────────────────────────
+
+export type AuthMethod = 'email_password' | 'google' | 'github' | 'sso' | 'api_key_only'
+
+export interface ServiceAccount {
+  id: string
+  serviceName: string
+  url: string | null
+  email: string | null
+  encryptedPassword: string
+  decryptedPassword?: string
+  authMethod: AuthMethod | null
+  notes: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CreateServiceAccountRequest {
+  serviceName: string
+  url?: string
+  email?: string
+  password?: string
+  authMethod?: AuthMethod
+  notes?: string
+}
+
+export interface UpdateServiceAccountRequest {
+  serviceName?: string
+  url?: string | null
+  email?: string | null
+  password?: string | null
+  authMethod?: AuthMethod
+  notes?: string | null
+}
+
 // ─── Activity Log ────────────────────────────────
 
 export type ActivityCategory = 'auth' | 'user' | 'document' | 'folder' | 'knowledge' | 'conversation' | 'company' | 'connector' | 'note' | 'lead' | 'playbook' | 'quote' | 'channel'

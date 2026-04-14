@@ -7,6 +7,7 @@ import { ToolPlansSection } from '../components/tool-plans-section'
 import { PricingPlansSection } from '../components/pricing-plans-section'
 import { usePlatformDefaults, useUpdatePlatformDefaults } from '../hooks/use-platform-defaults'
 import { WorkingHoursSection } from '../components/working-hours-section'
+import { WhatsAppConfigSection } from '../components/whatsapp-config-section'
 import { usePlatformModels } from '@/features/companies/hooks/use-platform-models'
 import type { ConfigBlockKey } from '@/lib/validations'
 
@@ -234,6 +235,13 @@ export function SettingsPage() {
           />
         ) : activeSection === 'toolPlans' ? (
           <ToolPlansSection key="toolPlans" />
+        ) : activeSection === 'whatsAppConfig' ? (
+          <WhatsAppConfigSection
+            key="whatsAppConfig"
+            currentValues={defaults?.whatsAppConfig as Record<string, unknown> | undefined}
+            onSave={handleSave}
+            isSaving={isPending}
+          />
         ) : activeSection === 'workingHoursConfig' ? (
           <WorkingHoursSection
             key="workingHoursConfig"

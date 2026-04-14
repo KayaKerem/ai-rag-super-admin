@@ -502,11 +502,35 @@ export const mockPlatformDefaults: any = {
     monthlyBudgetUsd: 2.00,
     notifyEmail: false,
   },
+  whatsAppConfig: {
+    defaultTemplateName: 'hello_world',
+    defaultTemplateLanguage: 'tr',
+    typingIndicatorEnabled: false,
+    welcomeMessages: {
+      enabled: true,
+      newLead: 'Merhaba! {{companyName}} olarak size nasil yardimci olabiliriz?',
+      returningLead: 'Tekrar hosgeldiniz! Size nasil yardimci olabiliriz?',
+    },
+  },
   dataRetentionConfig: {
     enabled: false,
     leadRetentionDays: 365,
   },
 }
+
+// Service Accounts
+export const mockServiceAccounts: any[] = [
+  { id: 'sa-1', serviceName: 'OpenRouter', url: 'https://openrouter.ai/settings/keys', email: 'admin@edfu.ai', encryptedPassword: '****', authMethod: 'email_password', notes: 'AI chat models gateway', createdAt: '2026-04-01T10:00:00Z', updatedAt: '2026-04-10T14:00:00Z' },
+  { id: 'sa-2', serviceName: 'OpenAI', url: 'https://platform.openai.com', email: 'admin@edfu.ai', encryptedPassword: '****', authMethod: 'email_password', notes: 'Embedding models', createdAt: '2026-04-01T10:00:00Z', updatedAt: '2026-04-01T10:00:00Z' },
+  { id: 'sa-3', serviceName: 'Cohere', url: 'https://dashboard.cohere.com', email: 'admin@edfu.ai', encryptedPassword: '****', authMethod: 'email_password', notes: 'Reranking API', createdAt: '2026-04-01T10:00:00Z', updatedAt: '2026-04-01T10:00:00Z' },
+  { id: 'sa-4', serviceName: 'Exa', url: 'https://dashboard.exa.ai', email: 'admin@edfu.ai', encryptedPassword: '****', authMethod: 'email_password', notes: 'Web search API', createdAt: '2026-04-01T10:00:00Z', updatedAt: '2026-04-01T10:00:00Z' },
+  { id: 'sa-5', serviceName: 'Langfuse', url: 'https://cloud.langfuse.com', email: 'admin@edfu.ai', encryptedPassword: '****', authMethod: 'email_password', notes: 'LLM tracing', createdAt: '2026-04-01T10:00:00Z', updatedAt: '2026-04-01T10:00:00Z' },
+  { id: 'sa-6', serviceName: 'Trigger.dev', url: 'https://cloud.trigger.dev', email: null, encryptedPassword: '****', authMethod: 'github', notes: 'Background jobs', createdAt: '2026-04-01T10:00:00Z', updatedAt: '2026-04-01T10:00:00Z' },
+  { id: 'sa-7', serviceName: 'Hetzner Cloud', url: 'https://console.hetzner.cloud', email: 'admin@edfu.ai', encryptedPassword: '****', authMethod: 'email_password', notes: 'Server + S3', createdAt: '2026-04-01T10:00:00Z', updatedAt: '2026-04-01T10:00:00Z' },
+  { id: 'sa-8', serviceName: 'Coolify', url: null, email: 'admin@edfu.ai', encryptedPassword: '****', authMethod: 'email_password', notes: 'Deployment', createdAt: '2026-04-01T10:00:00Z', updatedAt: '2026-04-01T10:00:00Z' },
+  { id: 'sa-9', serviceName: 'Meta Business', url: 'https://business.facebook.com', email: 'admin@edfu.ai', encryptedPassword: '****', authMethod: 'email_password', notes: 'WhatsApp API', createdAt: '2026-04-01T10:00:00Z', updatedAt: '2026-04-01T10:00:00Z' },
+  { id: 'sa-10', serviceName: 'GitHub', url: 'https://github.com', email: 'admin@edfu.ai', encryptedPassword: '****', authMethod: 'email_password', notes: 'Source code', createdAt: '2026-04-01T10:00:00Z', updatedAt: '2026-04-01T10:00:00Z' },
+]
 
 // Leads per company
 export const mockCompanyLeads: Record<string, any[]> = {

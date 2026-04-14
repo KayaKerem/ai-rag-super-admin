@@ -24,6 +24,7 @@ import {
   mockProactiveInsights,
   getProactiveInsightSummary,
   mockCompanyLeads,
+  mockServiceAccounts,
 } from './data'
 
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -671,5 +672,65 @@ export const handlers = [
       insight.updatedAt = new Date().toISOString()
     }
     return HttpResponse.json(insight ?? {})
+  }),
+
+  // ─── Service Accounts ─────────────────────────────
+  http.get(`${BASE}/platform/service-accounts`, async () => {
+    await delay(200)
+    return HttpResponse.json(mockServiceAccounts)
+  }),
+
+  http.get(`${BASE}/platform/service-accounts/:id/reveal`, async ({ params }) => {
+    await delay(300)
+    const account = mockServiceAccounts.find((a: any) => a.id === params.id)
+    if (!account) return HttpResponse.json({ message: 'Not found' }, { status: 404 })
+    return HttpResponse.json({ ...account, decryptedPassword: 'mock-decrypted-password-123' })
+  }),
+
+  http.get(`${BASE}/platform/service-accounts/:id`, async ({ params }) => {
+    await delay(150)
+    const account = mockServiceAccounts.find((a: any) => a.id === params.id)
+    if (!account) return HttpResponse.json({ message: 'Not found' }, { status: 404 })
+    return HttpResponse.json(account)
+  }),
+
+  http.post(`${BASE}/platform/service-accounts`, async ({ request }) => {
+    await delay(300)
+    const body = (await request.json()) as any
+    const newAccount = {
+      id: 'sa-' + Date.now(),
+      serviceName: body.serviceName,
+      url: body.url ?? null,
+      email: body.email ?? null,
+      encryptedPassword: '****',
+      authMethod: body.authMethod ?? null,
+      notes: body.notes ?? null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    mockServiceAccounts.push(newAccount)
+    return HttpResponse.json(newAccount, { status: 201 })
+  }),
+
+  http.patch(`${BASE}/platform/service-accounts/:id`, async ({ params, request }) => {
+    await delay(300)
+    const body = (await request.json()) as any
+    const account = mockServiceAccounts.find((a: any) => a.id === params.id)
+    if (!account) return HttpResponse.json({ message: 'Not found' }, { status: 404 })
+    if (body.serviceName !== undefined) account.serviceName = body.serviceName
+    if (body.url !== undefined) account.url = body.url
+    if (body.email !== undefined) account.email = body.email
+    if (body.authMethod !== undefined) account.authMethod = body.authMethod
+    if (body.notes !== undefined) account.notes = body.notes
+    account.updatedAt = new Date().toISOString()
+    return HttpResponse.json(account)
+  }),
+
+  http.delete(`${BASE}/platform/service-accounts/:id`, async ({ params }) => {
+    await delay(200)
+    const idx = mockServiceAccounts.findIndex((a: any) => a.id === params.id)
+    if (idx === -1) return HttpResponse.json({ message: 'Not found' }, { status: 404 })
+    mockServiceAccounts.splice(idx, 1)
+    return HttpResponse.json({ deleted: true })
   }),
 ]
