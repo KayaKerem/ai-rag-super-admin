@@ -25,7 +25,10 @@ Backend Phase 2 maliyet kalemleri (`research_tool`, `quote_prepare`) ve yeni mod
 
 `src/features/dashboard/hooks/use-platform-summary.ts:UsageMonth` (lokal) — Platform summary için ayrı tip. Aynı alanlar yok.
 
-`src/features/companies/components/usage-tab.tsx` — 7 KPI kartı (4+3 grid). Rerank, WebSearch, Proactive, Cache, Storage, Trigger görünür; Research ve QuotePrepare yok.
+`src/features/companies/components/usage-tab.tsx` — 7 KPI kartı (4+3 grid).
+- 1. satır (4'lü): AI, Rerank, Web Search, **Storage**.
+- 2. satır (3'lü): Proaktif, Cache Tasarruf, Trigger.
+- Research ve QuotePrepare henüz yok. Bu sprint Storage'ı **Altyapı grubuna** taşıyacak — kullanıcı için yer değişimi olarak hissedilir, ancak yeni semantik gruplama bunu gerektirir.
 
 `src/features/companies/components/usage-chart.tsx` — Stacked BarChart, 6 seri. Research/QuotePrepare yok.
 
@@ -53,7 +56,7 @@ Backend Phase 2 maliyet kalemleri (`research_tool`, `quote_prepare`) ve yeni mod
 
 | Karar | Değer | Soru no |
 |-------|-------|---------|
-| KPI yerleşimi | İki başlıklı grup (`AI Maliyetleri` / `Altyapı`) | Q1-D |
+| KPI yerleşimi | İki başlıklı grup (`AI` / `Altyapı`) | Q1-D |
 | Chart serileri | 8 seri, AI grubu önce + altyapı sonra; renk paleti AI grubu sıcak (mor→pembe→turuncu), altyapı soğuk (yeşil→sarı) | Q2-C |
 | Kapsam | Şirket detay + platform dashboard, defensive `?? 0` | Q3-C |
 | Free tier | `TIER_LABELS` + `TIER_ORDER` sonuna ekle, normal davranış | Q4-A |
@@ -61,11 +64,13 @@ Backend Phase 2 maliyet kalemleri (`research_tool`, `quote_prepare`) ve yeni mod
 
 ### 3.2 KPI Gruplaması (Soru 1 — D)
 
-**`AI Maliyetleri` grubu** (7 kart):
+> Başlık seçimi: "AI Maliyetleri" yerine **"AI"** kullanıldı çünkü `Cache Tasarruf` kalemi maliyet değil tasarruf (negatif sinyal). Tek başlık altında her ikisi de "AI ile ilgili" semantik olarak doğru kalır.
+
+**`AI` grubu** (7 kart):
 - AI (toplam token + maliyet)
 - Rerank (sorgu sayısı)
 - Web Search (arama sayısı)
-- **Research (yeni)** — `${formatCurrency(current.research?.costUsd ?? 0)}` + `${formatNumber(current.research?.searchCount ?? 0)} arastırma` (subtitle rengi cyan-400)
+- **Research (yeni)** — `${formatCurrency(current.research?.costUsd ?? 0)}` + `${formatNumber(current.research?.searchCount ?? 0)} araştırma` (subtitle rengi cyan-400)
 - **Quote Hazırlama (yeni)** — `${formatCurrency(current.quotePrepare?.costUsd ?? 0)}` + `${formatNumber(current.quotePrepare?.quoteCount ?? 0)} teklif` (subtitle rengi indigo-400)
 - Proaktif (insight sayısı)
 - Cache Tasarruf (hit rate)
@@ -75,7 +80,7 @@ Backend Phase 2 maliyet kalemleri (`research_tool`, `quote_prepare`) ve yeni mod
 - Trigger
 
 Render kuralı:
-- İki başlık: `<h3 className="text-xs font-semibold uppercase text-muted-foreground mb-2">AI Maliyetleri</h3>` ve `<h3 ...>Altyapı</h3>`.
+- İki başlık: `<h3 className="text-xs font-semibold uppercase text-muted-foreground mb-2">AI</h3>` ve `<h3 ...>Altyapı</h3>`.
 - AI grubu: `grid grid-cols-4 gap-3` — 7 kart, son satırda 3 kart (4+3 düzen).
 - Altyapı grubu: `grid grid-cols-2 gap-3` — 2 kart yan yana.
 - Gruplar arası `space-y-4` ile dikey ayrım.
@@ -108,7 +113,8 @@ quotePrepare?: { quoteCount: number; costUsd: number }
 
 **`category-breakdown.tsx`** props:
 - `research: number` ve `quotePrepare: number` props'larını ekle.
-- `BARS` dizisine 2 yeni bar (cyan + indigo).
+- `categories` dizisine 2 yeni öğe: `{ key: 'research', label: 'Research', color: '#06b6d4' }`, `{ key: 'quotePrepare', label: 'Quote Hazırlama', color: '#6366f1' }`.
+- `values` objesi ve `Math.max(...)` argümanlarına `research` ve `quotePrepare` eklenmeli (yoksa max hesabı yanlış olur).
 - `dashboard-page.tsx`'de `<CategoryBreakdown research={current.research?.costUsd ?? 0} quotePrepare={current.quotePrepare?.costUsd ?? 0} ... />`.
 
 **`cost-trend-chart.tsx`** — UsageChart ile aynı mantık (chart serileri ekle, sıralama).
@@ -137,9 +143,21 @@ research?: { searchCount: number; costUsd: number }
 quotePrepare?: { quoteCount: number; costUsd: number }
 ```
 
-**`src/features/dashboard/hooks/use-platform-summary.ts:UsageMonth`** (lokal) — aynı opsiyonel alanlar.
+**`src/features/companies/types.ts:PlatformModel`** — tier union'ına `'free'` eklenecek:
+```ts
+tier: 'premium' | 'standard' | 'economy' | 'free'
+```
 
-> İki tip ayrı tutulur — şirket bazlı response'ta ek alanlar var (`turnCount`, `currentBytes`), platform summary'de ek alanlar (`companyCount`, `totalBytes`). Tek tipte birleştirme YAGNI.
+**`src/features/companies/types.ts:AllowedModel`** — aynı şekilde:
+```ts
+tier?: 'premium' | 'standard' | 'economy' | 'free'
+```
+
+> Bu olmadan `allowed-models-editor.tsx:51` (`{ id, label, tier: model.tier }`) `tsc -b` build'inde tip hatası verir, çünkü `model.tier` artık `'free'` olabilir ama `AllowedModel.tier` union'ı bunu kabul etmez.
+
+**`src/features/dashboard/hooks/use-platform-summary.ts:UsageMonth`** (lokal) — aynı opsiyonel alanlar (research, quotePrepare).
+
+> İki `UsageMonth` tipi ayrı tutulur — şirket bazlı response'ta ek alanlar var (`turnCount`, `currentBytes`), platform summary'de ek alanlar (`companyCount`, `totalBytes`). Tek tipte birleştirme YAGNI.
 
 ---
 
@@ -147,7 +165,7 @@ quotePrepare?: { quoteCount: number; costUsd: number }
 
 | # | Dosya | Değişiklik tipi |
 |---|-------|-----------------|
-| 1 | `src/features/companies/types.ts` | `UsageMonth` 2 opsiyonel alan eklendi |
+| 1 | `src/features/companies/types.ts` | `UsageMonth` 2 opsiyonel alan + `PlatformModel.tier` & `AllowedModel.tier` union'a `'free'` |
 | 2 | `src/features/companies/components/usage-tab.tsx` | KPI gruplaması (2 başlık), 2 yeni kart |
 | 3 | `src/features/companies/components/usage-chart.tsx` | 2 seri eklendi, sıralama AI grubu önce |
 | 4 | `src/features/dashboard/hooks/use-platform-summary.ts` | Lokal `UsageMonth` 2 opsiyonel alan |
@@ -204,6 +222,7 @@ Frontend'de unit test yok (mevcut konvansiyon). Doğrulama yöntemi:
 
 ## 9. Sonraki Adım
 
+0. **Backend field adı doğrulaması (zorunlu, implementasyon öncesi):** `https://api.edfu.ai/platform/companies/:id/usage/current` ile gerçek bir çağrı yapılıp `research` ve `quotePrepare` field adları (camelCase mı snake_case mı) doğrulanır. Tutarsızsa spec güncellenir.
 1. Bu spec onaylanır.
 2. `superpowers:writing-plans` skill'i invoke edilir.
 3. Implementation plan'i (TDD veya direkt edit) yazılır.
