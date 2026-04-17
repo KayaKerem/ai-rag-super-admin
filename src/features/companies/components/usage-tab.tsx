@@ -21,14 +21,14 @@ const periodOptions = [
 
 export function UsageTab({ companyId }: UsageTabProps) {
   const [months, setMonths] = useState(6)
-  const { data, isLoading } = useCompanyUsage(companyId, months)
-  const { data: company } = useCompany(companyId)
-  const { data: plan } = usePricingPlan(company?.planId ?? '')
+  const { data, isLoading: isUsageLoading } = useCompanyUsage(companyId, months)
+  const { data: company, isLoading: isCompanyLoading } = useCompany(companyId)
+  const { data: plan, isLoading: isPlanLoading } = usePricingPlan(company?.planId ?? '')
 
   const current = data?.months?.[0]
   const budgetCap = plan?.budgetUsd ?? null
 
-  if (isLoading) return <div className="text-sm text-muted-foreground">Yükleniyor...</div>
+  if (isUsageLoading) return <div className="text-sm text-muted-foreground">Yükleniyor...</div>
   if (!current) return <div className="text-sm text-muted-foreground">Veri bulunamadı.</div>
 
   return (
@@ -46,9 +46,11 @@ export function UsageTab({ companyId }: UsageTabProps) {
         </Select>
       </div>
 
-      <div className="mb-4">
-        <BudgetStatusCard spendUsd={current.totalCostUsd} capUsd={budgetCap} />
-      </div>
+      {!isCompanyLoading && !isPlanLoading && (
+        <div className="mb-4">
+          <BudgetStatusCard spendUsd={current.totalCostUsd} capUsd={budgetCap} />
+        </div>
+      )}
 
       <div className="mb-4 space-y-4">
         <div>
