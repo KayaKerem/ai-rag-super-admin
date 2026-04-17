@@ -9,6 +9,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { key: 'pricingPlans', label: 'Fiyatlandırma', icon: '💎' },
   { key: 'pricingConfig', label: 'Pricing', icon: '💰' },
+  { key: 'quotePipeline', label: 'Quote Pipeline', icon: '📋' },
   { key: 'aiConfig', label: 'AI Config', icon: '🤖' },
   { key: 'toolPlans', label: 'Tool Planları', icon: '🔧' },
   { key: 'embeddingConfig', label: 'Embedding', icon: '🧬' },

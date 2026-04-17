@@ -5,6 +5,7 @@ import { ConfigSection } from '../components/config-section'
 import { AiConfigSection } from '../components/ai-config-section'
 import { ToolPlansSection } from '../components/tool-plans-section'
 import { PricingPlansSection } from '../components/pricing-plans-section'
+import { QuotePipelineSection } from '../components/quote-pipeline-section'
 import { usePlatformDefaults, useUpdatePlatformDefaults } from '../hooks/use-platform-defaults'
 import { WorkingHoursSection } from '../components/working-hours-section'
 import { WhatsAppConfigSection } from '../components/whatsapp-config-section'
@@ -224,6 +225,8 @@ export function SettingsPage() {
       <main className="flex-1 min-w-0">
         {activeSection === 'pricingPlans' ? (
           <PricingPlansSection key="pricingPlans" />
+        ) : activeSection === 'quotePipeline' ? (
+          <QuotePipelineSection key="quotePipeline" />
         ) : activeSection === 'aiConfig' ? (
           <AiConfigSection
             key="aiConfig"
