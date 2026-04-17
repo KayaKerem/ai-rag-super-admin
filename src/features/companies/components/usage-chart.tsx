@@ -11,6 +11,8 @@ export function UsageChart({ data }: UsageChartProps) {
     month: d.month.slice(5),
     AI: d.ai.costUsd,
     Rerank: d.rerank?.costUsd ?? 0,
+    Research: d.research?.costUsd ?? 0,
+    'Quote Hazırlama': d.quotePrepare?.costUsd ?? 0,
     'Web Search': d.webSearch?.costUsd ?? 0,
     Proactive: d.proactive?.costUsd ?? 0,
     Storage: d.storage.costUsd,
@@ -31,6 +33,8 @@ export function UsageChart({ data }: UsageChartProps) {
             <Legend wrapperStyle={{ fontSize: 11 }} />
             <Bar dataKey="AI" stackId="a" fill="#6d28d9" />
             <Bar dataKey="Rerank" stackId="a" fill="#ec4899" />
+            <Bar dataKey="Research" stackId="a" fill="#06b6d4" />
+            <Bar dataKey="Quote Hazırlama" stackId="a" fill="#6366f1" />
             <Bar dataKey="Web Search" stackId="a" fill="#14b8a6" />
             <Bar dataKey="Proactive" stackId="a" fill="#f97316" />
             <Bar dataKey="Storage" stackId="a" fill="#22c55e" />
