@@ -17,9 +17,10 @@ const TIER_LABELS: Record<string, string> = {
   premium: 'Premium',
   standard: 'Standard',
   economy: 'Economy',
+  free: 'Ücretsiz',
 }
 
-const TIER_ORDER = ['premium', 'standard', 'economy']
+const TIER_ORDER = ['premium', 'standard', 'economy', 'free']
 
 export function AllowedModelsEditor({ models, value, onChange }: AllowedModelsEditorProps) {
   const [selected, setSelected] = useState<Map<string, AllowedModel>>(new Map())
