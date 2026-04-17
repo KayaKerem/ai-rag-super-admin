@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useCompanyUsage } from '../hooks/use-company-usage'
+import { useCompany } from '../hooks/use-company'
+import { usePricingPlan } from '../hooks/use-pricing-plans'
 import { KpiCard } from '@/features/dashboard/components/kpi-card'
 import { UsageChart } from './usage-chart'
+import { BudgetStatusCard } from './budget-status-card'
 import { formatCurrency, formatBytes, formatNumber } from '@/lib/utils'
 
 interface UsageTabProps {
@@ -19,8 +22,11 @@ const periodOptions = [
 export function UsageTab({ companyId }: UsageTabProps) {
   const [months, setMonths] = useState(6)
   const { data, isLoading } = useCompanyUsage(companyId, months)
+  const { data: company } = useCompany(companyId)
+  const { data: plan } = usePricingPlan(company?.planId ?? '')
 
   const current = data?.months?.[0]
+  const budgetCap = plan?.budgetUsd ?? null
 
   if (isLoading) return <div className="text-sm text-muted-foreground">Yükleniyor...</div>
   if (!current) return <div className="text-sm text-muted-foreground">Veri bulunamadı.</div>
@@ -38,6 +44,10 @@ export function UsageTab({ companyId }: UsageTabProps) {
             ))}
           </SelectContent>
         </Select>
+      </div>
+
+      <div className="mb-4">
+        <BudgetStatusCard spendUsd={current.totalCostUsd} capUsd={budgetCap} />
       </div>
 
       <div className="mb-4 space-y-4">
