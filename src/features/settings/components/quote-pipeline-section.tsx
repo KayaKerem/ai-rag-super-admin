@@ -1,6 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-const STEPS = [
+interface PipelineStep {
+  n: number
+  title: string
+  desc: string
+}
+
+const STEPS: PipelineStep[] = [
   { n: 1, title: 'Bütçe Rezervasyonu', desc: 'Firma AI bütçesinden $0.10 rezerve edilir; yetersizse task durdurulur.' },
   { n: 2, title: 'Hazırlama', desc: 'AI agent KB + playbook arar, multi-step tool calling ile içerik üretir.' },
   { n: 3, title: 'Oluşturma', desc: 'Quote entity oluşturulur (advisory lock ile referans numarası).' },
