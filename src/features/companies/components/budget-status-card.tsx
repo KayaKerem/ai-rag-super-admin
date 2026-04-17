@@ -1,6 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
-import { formatCurrency } from '@/lib/utils'
+import { cn, formatCurrency } from '@/lib/utils'
 import { computeBudgetBand } from '../lib/budget-band'
 
 interface BudgetStatusCardProps {
