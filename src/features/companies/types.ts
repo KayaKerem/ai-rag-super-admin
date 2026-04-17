@@ -50,6 +50,8 @@ export interface UsageMonth {
   webSearch?: { searchCount: number; resultCount: number; costUsd: number }
   proactive?: { runCount: number; insightCount: number; costUsd: number }
   cacheHits?: { hitCount: number; hitRate: number; estimatedSavingsUsd: number }
+  research?: { searchCount: number; costUsd: number }
+  quotePrepare?: { quoteCount: number; costUsd: number }
   storage: { currentBytes: number; costUsd: number }
   trigger: { taskCount: number; costUsd: number }
   totalCostUsd: number
@@ -64,14 +66,14 @@ export interface CompanyUsage {
 export interface PlatformModel {
   id: string
   label: string
-  tier: 'premium' | 'standard' | 'economy'
+  tier: 'premium' | 'standard' | 'economy' | 'free'
   pricing: { inputPerMtok: number; outputPerMtok: number }
 }
 
 export interface AllowedModel {
   id: string
   label?: string
-  tier?: 'premium' | 'standard' | 'economy'
+  tier?: 'premium' | 'standard' | 'economy' | 'free'
   isDefault?: boolean
 }
 
