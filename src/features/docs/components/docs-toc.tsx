@@ -20,6 +20,12 @@ export function DocsToc() {
           .find((e) => e?.isIntersecting)
         if (firstVisible) {
           setActiveId(firstVisible.target.id)
+        } else {
+          const lastAbove = [...DOCS_SECTIONS].reverse().find((s) => {
+            const e = sectionMap.get(s.id)
+            return e ? e.boundingClientRect.top < 0 : false
+          })
+          if (lastAbove) setActiveId(lastAbove.id)
         }
       },
       { rootMargin: '-20% 0px -70% 0px', threshold: 0 },
@@ -57,6 +63,7 @@ export function DocsToc() {
           <li key={s.id}>
             <a
               href={`#${s.id}`}
+              aria-current={activeId === s.id ? 'location' : undefined}
               onClick={(e) => handleClick(e, s.id)}
               className={cn(
                 'block rounded-md px-2 py-1 text-sm transition-colors',
