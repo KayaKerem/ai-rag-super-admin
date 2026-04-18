@@ -37,7 +37,11 @@ const BAND_META: Record<BudgetBand, { label: string; barColorClass: string; badg
   },
 }
 
-export function computeBudgetBand(spendUsd: number, capUsd: number | null | undefined): BudgetStatus {
+export function computeBudgetBand(
+  spendUsd: number,
+  capUsd: number | null | undefined,
+  thresholdPct?: number,
+): BudgetStatus {
   if (capUsd == null || capUsd <= 0) {
     return { band: 'unconfigured', pct: 0, rawPct: 0, ...BAND_META.unconfigured }
   }
@@ -45,8 +49,9 @@ export function computeBudgetBand(spendUsd: number, capUsd: number | null | unde
   const rawPct = (spendUsd / capUsd) * 100
   const pct = Math.min(100, Math.max(0, rawPct))
 
+  const t1 = thresholdPct ?? 80
   let band: BudgetBand
-  if (rawPct < 80) band = 'normal'
+  if (rawPct < t1) band = 'normal'
   else if (rawPct < 95) band = 'standard'
   else if (rawPct < 97) band = 'economy'
   else band = 'exhausted'
