@@ -74,7 +74,7 @@ function formToRequest(f: PlanFormData): CreatePlanRequest {
     includedUsers: clamp(Number(f.includedUsers), 1, 1),
     extraUserPriceTry: f.extraUserPriceTry ? clamp(Number(f.extraUserPriceTry), 0, 0) : null,
     budgetUsd: clamp(Number(f.budgetUsd), 0, 10),
-    budgetDowngradeThresholdPct: clamp(Number(f.budgetDowngradeThresholdPct), 0, 80),
+    budgetDowngradeThresholdPct: Math.min(100, Math.max(1, Number(f.budgetDowngradeThresholdPct) || 80)),
     maxStorageGb: clamp(Number(f.maxStorageGb), 0, 5), maxFileSizeMb: clamp(Number(f.maxFileSizeMb), 0, 25),
     crawlMaxPages: clamp(Number(f.crawlMaxPages), 0, 50), crawlMaxSources: clamp(Number(f.crawlMaxSources), 0, 2),
     allowedModels: f.allowedModels, allowedTools: f.allowedTools, allowedConnectors: f.allowedConnectors,
@@ -291,7 +291,7 @@ function PlanDialog({
             <h3 className="text-sm font-semibold">Limitler</h3>
             <div className="grid grid-cols-3 gap-3">
               <div><Label>AI Bütçe (USD)</Label><Input type="number" min={0} value={form.budgetUsd} onChange={(e) => setField('budgetUsd', e.target.value)} /></div>
-              <div><Label>Bütçe Uyarı %</Label><Input type="number" min={0} max={100} value={form.budgetDowngradeThresholdPct} onChange={(e) => setField('budgetDowngradeThresholdPct', e.target.value)} /></div>
+              <div><Label>Bütçe Uyarı %</Label><Input type="number" min={1} max={100} value={form.budgetDowngradeThresholdPct} onChange={(e) => setField('budgetDowngradeThresholdPct', e.target.value)} /></div>
               <div><Label>Maks Depolama (GB)</Label><Input type="number" min={0} value={form.maxStorageGb} onChange={(e) => setField('maxStorageGb', e.target.value)} /></div>
               <div><Label>Maks Dosya (MB)</Label><Input type="number" min={0} value={form.maxFileSizeMb} onChange={(e) => setField('maxFileSizeMb', e.target.value)} /></div>
               <div><Label>Crawler Maks Sayfa</Label><Input type="number" min={0} value={form.crawlMaxPages} onChange={(e) => setField('crawlMaxPages', e.target.value)} /></div>
