@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Building2, Settings, LogOut, Mail, KeyRound } from 'lucide-react'
+import { LayoutDashboard, Building2, Settings, LogOut, Mail, KeyRound, BookOpen } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useAuth } from '@/features/auth/hooks/use-auth'
 import { apiClient } from '@/lib/api-client'
@@ -11,6 +11,7 @@ const navItems = [
   { to: '/settings', icon: Settings, label: 'Ayarlar' },
   { to: '/email-templates', icon: Mail, label: 'Email Şablonları' },
   { to: '/service-accounts', icon: KeyRound, label: 'Servis Hesapları' },
+  { to: '/docs', icon: BookOpen, label: 'Dokümantasyon' },
 ]
 
 export function Sidebar() {
