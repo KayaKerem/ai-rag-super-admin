@@ -79,7 +79,7 @@ export function AtRiskCompaniesTable() {
                 {data.map((c) => (
                   <TableRow
                     key={c.id}
-                    className="cursor-pointer"
+                    className="cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     role="link"
                     tabIndex={0}
                     onClick={() => goToCompany(c.id)}
