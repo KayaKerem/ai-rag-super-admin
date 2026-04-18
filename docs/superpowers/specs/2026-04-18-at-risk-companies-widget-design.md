@@ -23,10 +23,12 @@ Platform operatörü dashboard'a girdiğinde **bütçesi tehlikede olan firmalar
 
 - "Standard" bandını dahil etmek (operatör için aksiyonable değil — band tanımı: standard = downgrade tetiklendi ama hâlâ çalışıyor)
 - Widget üzerinde band filtresi seçici UI (YAGNI — gerekirse Sprint 5)
-- Pagination veya "tümünü gör" linki (max 40 satır = ≥%95 firmalar zaten az sayıda olmalı)
+- Tam pagination (limit=100 + truncation footer ile yetinilir; gerçek pagination Sprint 5)
 - Backend'e yeni endpoint isteme veya `band` parametresine multi-value desteği eklemesini isteme (frontend iki call ile çözüyor)
 - Widget'ın notification/toast'a dönüşmesi (sadece dashboard içi statik render)
 - "Tüm firmalar güvende" durumunda widget'ın gizlenmesi (her zaman görünür, empty state pozitif onay olarak rol oynar)
+- `company-detail-page.tsx` içinde `?tab=` query param desteği (drill-through default tab'a güvenir; default'un "usage" kalması bir kabul kriterine bağlanır)
+- `AtRiskCompany` tipinin/hook'un dashboard dışı feature'larda yeniden kullanımı (widget-private; başka bir aggregate consumer çıkarsa kendi tipini tanımlasın)
 
 ## 3. Mimari
 
@@ -60,23 +62,31 @@ Widget sadece `economy` ve `exhausted` bantlarını gösterir.
 
 ```
 useAtRiskCompanies()
-├─ useQueries([
-│    { queryKey: ['platform', 'aggregate', 'exhausted'], ... },
-│    { queryKey: ['platform', 'aggregate', 'economy'], ... },
-│  ])
-└─ return:
-   - data: [...exhausted, ...economy]  (her grup backend sırasını korur)
+├─ const queries = useQueries({ queries: [
+│    { queryKey: queryKeys.platform.atRisk('exhausted'), ... },
+│    { queryKey: queryKeys.platform.atRisk('economy'), ... },
+│  ]})
+│  // queries: [UseQueryResult, UseQueryResult] — DİZİ döner, obje değil
+└─ derived return:
    - isLoading: queries.some(q => q.isLoading)
-   - isError: queries.some(q => q.isError)
+   - isError:   queries.some(q => q.isError)
+   - data:      (isLoading || isError) ? undefined
+                : [...queries[0].data.companies, ...queries[1].data.companies]
+   - totals:    { exhausted: queries[0].data?.total ?? 0,
+                  economy:   queries[1].data?.total ?? 0 }
+   // data tüm-veya-hiç: kısmi loading sırasında undefined kalır
 
 AtRiskCompaniesTable
-├─ const { data, isLoading, isError } = useAtRiskCompanies()
-├─ const { data: plans } = usePricingPlans()  ← cache hit beklenir
+├─ const { data, totals, isLoading, isError } = useAtRiskCompanies()
+├─ const { data: plans } = usePricingPlans()
+│  // NOT: dashboard-page.tsx şu an usePricingPlans çağırmıyor — ilk
+│  // mount'ta /platform/plans için fresh fetch tetiklenir, cache hit DEĞİL
 └─ render:
    isError    → "Yüklenemedi" hata satırı
    isLoading  → 3 satırlık skeleton
-   empty data → "Tüm firmalar güvenli bantta ✓" pozitif onay
-   default    → Card > Table satırları (Link wrap'lı)
+   empty data → CheckCircle2 ikon + "Tüm firmalar güvenli bantta" metni
+   default    → Card > Table satırları (onClick + useNavigate);
+                truncation footer (totals.exhausted/economy > limit)
 ```
 
 ### 3.4 Backend Performans
@@ -89,21 +99,29 @@ Backend dokümantasyonu (§1 son paragraf): "Spend hesabı tek SQL query'si ile 
 
 ```typescript
 // src/features/dashboard/hooks/use-at-risk-companies.ts içinde tanımlı
-export interface AtRiskCompany {
+// Her ikisi de hook-private; widget dışı export YAPILMAZ.
+
+// Wire shape — backend response'unu birebir yansıtır.
+interface AggregateApiCompany {
   id: string
   name: string
   planId: string | null
   budgetUsd: number
   currentSpendUsd: number
   spendPct: number
-  band: 'economy' | 'exhausted'  // bu hook sadece bu iki bandı döndürür
+  band: 'normal' | 'standard' | 'economy' | 'exhausted' | 'unconfigured'
   budgetDowngradeThresholdPct: number
-  subscriptionStatus: string
 }
 
-interface AggregateResponse {
-  companies: AtRiskCompany[]
+interface AggregateApiResponse {
+  companies: AggregateApiCompany[]
   total: number
+}
+
+// Post-filter, narrowed shape — widget yalnızca bu iki bandı render eder.
+// `subscriptionStatus` widget tarafından kullanılmadığı için tipe alınmaz (YAGNI).
+interface AtRiskCompany extends Omit<AggregateApiCompany, 'band'> {
+  band: 'economy' | 'exhausted'
 }
 ```
 
@@ -112,25 +130,27 @@ interface AggregateResponse {
 ```typescript
 export function useAtRiskCompanies(): {
   data: AtRiskCompany[] | undefined
+  totals: { exhausted: number; economy: number }
   isLoading: boolean
   isError: boolean
 }
 ```
 
-- İki paralel useQuery (`useQueries`) ile `?band=exhausted&limit=20` ve `?band=economy&limit=20` çağrılır
-- `data`: ikisinin birleşimi, exhausted ÖNCE (her grup içinde backend sıralaması korunur)
-- Her iki query başarılıysa `data` dolu; biri başarısızsa `isError: true` (kısmi data göstermek karışıklık yaratır)
+- `useQueries` ile iki paralel call: `?band=exhausted&limit=100` ve `?band=economy&limit=100` (backend max — truncation footgun riskini olabildiğince geç tetikler)
+- `useQueries` DİZİ döner; hook bu diziden `data`/`totals`/`isLoading`/`isError` türetir
+- `data`: tüm-veya-hiç — `isLoading || isError` iken `undefined`; aksi halde `[...exhausted, ...economy]` (her grup backend sırasını korur)
+- `totals`: backend `total` alanından her bant için ayrı tutulur (truncation footer render'ı için)
 - Stale time React Query default'u (yok — her mount/focus'ta refetch); manuel refresh yok
 
 ### 4.3 Query Keys
 
-`src/lib/query-keys.ts`:
+`src/lib/query-keys.ts` — mevcut konvansiyon: factory fonksiyon adı = ikinci segment (`['platform', 'summary', months]`, `['platform', 'plans']`).
 
 ```typescript
 platform: {
   // ... mevcut
   atRisk: (band: 'exhausted' | 'economy') =>
-    ['platform', 'aggregate', band] as const,
+    ['platform', 'atRisk', band] as const,
 }
 ```
 
@@ -150,34 +170,51 @@ Prop almaz — kendi datasını hook'tan çeker (KpiCard / RevenueSummary patter
 |-------|------|-------|---------|---|------|
 
 - **Firma**: `c.name`
-- **Plan**: `pricingPlans?.find(p => p.id === c.planId)?.name ?? '—'`
+- **Plan**: `pricingPlans?.find(p => p.id === c.planId)?.name ?? '—'` (plan silinmişse veya `planId === null` ise `—`)
 - **Bütçe**: `formatCurrency(c.budgetUsd)` (`$50.00`)
 - **Harcama**: `formatCurrency(c.currentSpendUsd)` (`$48.75`)
 - **%**: `${c.spendPct.toFixed(1)}%` (`97.5%`)
-- **Band**: shadcn `Badge`:
-  - `exhausted` → `variant="destructive"`, lucide `AlertTriangle` icon, label "Exhausted"
-  - `economy` → custom `bg-orange-500 text-white hover:bg-orange-500/90` (mevcut tema'da turuncu Badge variant yok), lucide `AlertCircle` icon, label "Economy"
+- **Band**: özel solid Badge'ler — mevcut `destructive` variant tinted (düşük opaklık) olduğu için `variant="destructive"` kullanılmaz; aksi halde "exhausted" görsel olarak "economy"den daha zayıf görünür. İkisi de solid, exhausted kırmızı en güçlü vurgu:
+  - `exhausted` → `<Badge className="bg-destructive text-destructive-foreground hover:bg-destructive/90">` + lucide `AlertTriangle` (h-3 w-3, mr-1) + "Exhausted"
+  - `economy` → `<Badge className="bg-orange-500 text-white hover:bg-orange-500/90">` + lucide `AlertCircle` (h-3 w-3, mr-1) + "Economy"
 
 ### 5.2 Satır Davranışı
 
-Her satır React Router `Link` içine sarılır:
+shadcn `TableRow` (`src/components/ui/table.tsx:55`) plain `<tr>` — `asChild` desteği YOK. `<a>` etiketi `<tr>` içinde geçerli HTML değil. Bu yüzden satır navigasyonu `useNavigate()` + `onClick` + klavye desteği ile yapılır:
 
 ```tsx
-<TableRow asChild className="cursor-pointer hover:bg-muted/50">
-  <Link to={`/companies/${c.id}?tab=usage`}>
-    {/* TableCell'ler */}
-  </Link>
+const navigate = useNavigate()
+const goToCompany = (id: string) => navigate(`/companies/${id}`)
+
+<TableRow
+  className="cursor-pointer"
+  role="link"
+  tabIndex={0}
+  onClick={() => goToCompany(c.id)}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      goToCompany(c.id)
+    }
+  }}
+  aria-label={`${c.name} — Usage detayına git`}
+>
+  {/* TableCell'ler */}
 </TableRow>
 ```
 
-Hedef sayfa: `companies/pages/company-detail-page.tsx` Usage tab'ı. `?tab=usage` query parametresi mevcut tab state'ini override etmeli — eğer henüz desteklemiyorsa **bu spec dışında**, ayrı küçük bir issue olur (companies sayfasında tab parametresi varsa kullan, yoksa default tab açılır; bu kabul edilebilir UX).
+Hedef sayfa: `companies/pages/company-detail-page.tsx`. Mevcut state: `<Tabs defaultValue="usage">` (line 30) — Usage zaten default tab. URL'e `?tab=usage` koymak ölü parametre olur (sayfa `useSearchParams` okumuyor; grep "tab=" → 0 match), o yüzden link'e eklenmez. Default'un "usage" kalması §11'de kabul kriterine bağlanır.
+
+**Trade-off:** Middle-click veya "Open in new tab" kaybedilir (anchor değil). Bu widget için kritik değil — operatör drill-through'u current-tab'da kullanır.
 
 ### 5.3 Card Wrapper
+
+`RevenueSummary`'nin (`src/features/dashboard/components/revenue-summary.tsx:14`) konvansiyonuna uygun olarak `CardTitle` `text-base`:
 
 ```tsx
 <Card>
   <CardHeader className="pb-2">
-    <CardTitle className="text-sm font-semibold">Bütçesi Tehlikedeki Firmalar</CardTitle>
+    <CardTitle className="text-base">Bütçesi Tehlikedeki Firmalar</CardTitle>
     {data && data.length > 0 && (
       <p className="text-xs text-muted-foreground">{data.length} firma ≥ %95 bütçe kullanımında</p>
     )}
@@ -186,6 +223,19 @@ Hedef sayfa: `companies/pages/company-detail-page.tsx` Usage tab'ı. `?tab=usage
     {/* state-based render */}
   </CardContent>
 </Card>
+```
+
+### 5.4 Truncation Footer
+
+`limit=100` çok yüksek; gerçek kapasite aşımı düşük olasılık ama imkansız değil. Aşıldığında sessiz kalmak yerine açık göster:
+
+```tsx
+{data && (totals.exhausted > data.filter(c => c.band === 'exhausted').length ||
+          totals.economy   > data.filter(c => c.band === 'economy').length) && (
+  <p className="mt-2 text-xs text-muted-foreground">
+    İlk 100 firma gösteriliyor (toplam: {totals.exhausted} exhausted, {totals.economy} economy)
+  </p>
+)}
 ```
 
 ## 6. State'ler
@@ -216,11 +266,11 @@ Retry butonu yok — React Query background refetch'e güvenir; kullanıcı sayf
 
 ### 6.3 Empty (her iki bant boş)
 
-Pozitif onay göster (widget'ı gizleme):
+Pozitif onay göster (widget'ı gizleme). `✓` işareti ayrı bir lucide ikonu (`CheckCircle2`) — string içinde literal karakter YOK:
 
 ```tsx
 <div className="flex items-center gap-2 text-sm text-green-500">
-  <CheckCircle2 className="h-4 w-4" />
+  <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
   <span>Tüm firmalar güvenli bantta</span>
 </div>
 ```
@@ -232,8 +282,7 @@ Pozitif onay göster (widget'ı gizleme):
 - Card'a `aria-label="Bütçesi tehlikedeki firmalar listesi"`
 - Empty state ikon'una `aria-hidden="true"`
 - Band Badge'lerine ek `aria-label` (sadece icon değil; "Exhausted: bütçe %97 üzeri")
-- Satır link'leri klavye odaklanabilir (`<Link>` zaten varsayılan)
-- Tab parametresi destekli drill-through bu spec dışı; eklenmiyorsa link yine `/companies/:id`'ya gider, kabul edilebilir
+- Satır navigasyonu klavye desteği: `tabIndex={0}` + `role="link"` + `onKeyDown` (Enter ve Space) + descriptive `aria-label` (§5.2)
 
 ## 8. Test
 
@@ -254,10 +303,11 @@ Mevcut konvansiyon: dashboard component'lerinin (`KpiCard`, `RevenueSummary`, `C
 
 | Konu | Karar | Risk |
 |------|-------|------|
-| `?tab=usage` query parametresi destekleniyor mu? | Bu spec dışı; companies/pages/company-detail-page.tsx incelendiğinde karar | Desteklenmiyorsa drill-through default tab açar (kabul edilebilir UX) |
-| Backend yeni endpoint'i auth filtrelemeli mi? | Mevcut `/platform/*` auth pattern'ını izleyecektir | Ek doğrulama gerekmez |
-| 40 satır overflow olursa? | Widget içi natural scroll (Card sabit yükseklik vermez) | Pratikte ≥%95 firma sayısı 40'ı aşması düşük olasılık; aşarsa Sprint 5 issue |
-| Plan silinmişse (planId var ama plans listesinde yok)? | Plan adı `—` olarak render | Edge case, sessizce handle edilir |
+| Drill-through tab seçimi | `?tab=usage` koymak yerine link `/companies/:id`'ya gider; default tab `usage` kabul kriterine bağlanır (§11) | Birisi `defaultValue`'yu değiştirirse drill-through farklı tab açar — kabul kriteri yakalar |
+| Backend yeni endpoint auth | Mevcut `/platform/*` auth pattern'ını izler | Ek doğrulama gerekmez |
+| 100 satır aşılırsa | Truncation footer (§5.4) "ilk 100 gösteriliyor (toplam: X)" notu render eder | Operatör eksik veriyi fark eder; gerçek pagination Sprint 5 |
+| Plan silinmişse (planId var ama plans listesinde yok) | Plan adı `—` olarak render | Edge case, sessizce handle edilir |
+| `usePricingPlans` ilk dashboard mount'unda cache miss | Tek ek `/platform/plans` call (küçük response, ihmal edilebilir) | Kabul edilebilir |
 
 ## 10. Sprint Sonrası Sonraki Adımlar
 
@@ -272,10 +322,16 @@ Bu widget shipped olduktan sonra:
 ## 11. Kabul Kriterleri
 
 - [ ] Dashboard'da charts grid altında, RevenueSummary üstünde "Bütçesi Tehlikedeki Firmalar" kartı görünür
-- [ ] Kart `band=exhausted` ve `band=economy` için iki paralel call yapar; exhausted satırlar önce, economy satırlar sonra sıralı
-- [ ] Plan sütunu `usePricingPlans()` cache'inden firma planının adını gösterir; plan bulunamazsa `—`
-- [ ] Band Badge'leri: exhausted = kırmızı (destructive), economy = turuncu, ikon dahil
-- [ ] Loading: 3 satırlık skeleton; Error: "Yüklenemedi"; Empty: yeşil "Tüm firmalar güvenli bantta ✓"
-- [ ] Satır tıklama `/companies/:id?tab=usage`'a gider (tab parametresi destekli değilse default tab açılır)
+- [ ] Kart `band=exhausted` ve `band=economy` için iki paralel call yapar (`limit=100` her biri); exhausted satırlar önce, economy satırlar sonra sıralı
+- [ ] Plan sütunu `usePricingPlans()` ile firma planının adını gösterir; plan bulunamazsa veya `planId === null` ise `—`
+- [ ] Band Badge'leri solid renkli ve ikon dahil: exhausted = `bg-destructive text-destructive-foreground` + `AlertTriangle`, economy = `bg-orange-500 text-white` + `AlertCircle`
+- [ ] Loading: 3 satırlık skeleton; Error: "Yüklenemedi"; Empty: `CheckCircle2` ikon + "Tüm firmalar güvenli bantta" metni (literal `✓` karakter yok)
+- [ ] Satır tıklama VEYA Enter/Space tuşu `/companies/:id`'ya gider (URL'de `?tab=` parametresi YOK); satırlar `tabIndex={0}` + `role="link"` + descriptive `aria-label`
+- [ ] `company-detail-page.tsx` Tabs `defaultValue` "usage" olarak kalır (drill-through'un beklenen tab'a inmesi buna bağlı)
+- [ ] Truncation footer: `totals.exhausted` veya `totals.economy` görünen satır sayısını aşarsa "İlk 100 firma gösteriliyor (toplam: X exhausted, Y economy)" notu render olur
+- [ ] `useAtRiskCompanies` `data` alanı `isLoading || isError` iken `undefined`; aksi halde birleşik dizi
+- [ ] `AtRiskCompany` ve `AggregateApiCompany` tipleri hook dosyası içinde, dışarı export edilmez
+- [ ] Query key konvansiyonu: `['platform', 'atRisk', band]` (factory adı = ikinci segment)
+- [ ] CardTitle `text-base` (RevenueSummary ile tutarlı)
 - [ ] `npx tsc -b && npx vite build` temiz çalışır
 - [ ] Mevcut dashboard layout (KPI grid 3 sütun, charts grid 2 sütun, RevenueSummary tam genişlik) bozulmaz
