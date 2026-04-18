@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react'
+import { GenelMimari } from '../sections/genel-mimari'
 
 export interface DocsSection {
   id: string
@@ -7,4 +8,6 @@ export interface DocsSection {
   Component: ComponentType
 }
 
-export const DOCS_SECTIONS: DocsSection[] = []
+export const DOCS_SECTIONS: DocsSection[] = [
+  { id: 'genel-mimari', title: 'Genel Mimari', icon: '🏗️', Component: GenelMimari },
+]
