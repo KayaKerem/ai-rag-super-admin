@@ -6,6 +6,7 @@ import { KpiCard } from '../components/kpi-card'
 import { CostTrendChart } from '../components/cost-trend-chart'
 import { CategoryBreakdown } from '../components/category-breakdown'
 import { RevenueSummary } from '../components/revenue-summary'
+import { AtRiskCompaniesTable } from '../components/at-risk-companies-table'
 import { formatCurrency, formatCurrencyTry } from '@/lib/utils'
 
 const periodOptions = [
@@ -78,6 +79,10 @@ export function DashboardPage() {
               storage={current.storage.costUsd}
               trigger={current.trigger.costUsd}
             />
+          </div>
+
+          <div className="mb-6">
+            <AtRiskCompaniesTable />
           </div>
 
           {revenue && <RevenueSummary data={revenue} />}
