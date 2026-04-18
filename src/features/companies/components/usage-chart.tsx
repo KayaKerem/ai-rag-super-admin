@@ -9,7 +9,7 @@ interface UsageChartProps {
 export function UsageChart({ data }: UsageChartProps) {
   const chartData = [...data].reverse().map((d) => ({
     month: d.month.slice(5),
-    AI: d.ai.costUsd,
+    'AI (diğer)': d.ai.costUsd - d.research.costUsd - d.quotePrepare.costUsd,
     Rerank: d.rerank?.costUsd ?? 0,
     Research: d.research.costUsd,
     'Quote Hazırlama': d.quotePrepare.costUsd,
@@ -31,7 +31,7 @@ export function UsageChart({ data }: UsageChartProps) {
             <YAxis tick={{ fontSize: 11, fill: '#666' }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${v}`} />
             <Tooltip contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 8 }} cursor={{ fill: 'rgba(255,255,255,0.05)' }} formatter={(v: any) => `$${(v as number).toFixed(2)}`} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="AI" stackId="a" fill="#6d28d9" />
+            <Bar dataKey="AI (diğer)" stackId="a" fill="#6d28d9" />
             <Bar dataKey="Rerank" stackId="a" fill="#ec4899" />
             <Bar dataKey="Research" stackId="a" fill="#06b6d4" />
             <Bar dataKey="Quote Hazırlama" stackId="a" fill="#6366f1" />
