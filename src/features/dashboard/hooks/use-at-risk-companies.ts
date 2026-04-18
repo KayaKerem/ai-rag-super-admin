@@ -21,7 +21,7 @@ interface AggregateApiResponse {
 
 // Post-filter, narrowed shape — widget yalnızca bu iki bandı render eder.
 // `subscriptionStatus` widget tarafından kullanılmadığı için tipe alınmaz.
-export interface AtRiskCompany extends Omit<AggregateApiCompany, 'band'> {
+interface AtRiskCompany extends Omit<AggregateApiCompany, 'band'> {
   band: 'economy' | 'exhausted'
 }
 
