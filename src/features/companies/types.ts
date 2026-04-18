@@ -50,8 +50,8 @@ export interface UsageMonth {
   webSearch?: { searchCount: number; resultCount: number; costUsd: number }
   proactive?: { runCount: number; insightCount: number; costUsd: number }
   cacheHits?: { hitCount: number; hitRate: number; estimatedSavingsUsd: number }
-  research?: { searchCount: number; costUsd: number }
-  quotePrepare?: { quoteCount: number; costUsd: number }
+  research: { callCount: number; costUsd: number }
+  quotePrepare: { callCount: number; costUsd: number }
   storage: { currentBytes: number; costUsd: number }
   trigger: { taskCount: number; costUsd: number }
   totalCostUsd: number

@@ -63,8 +63,8 @@ export function UsageTab({ companyId }: UsageTabProps) {
             <KpiCard label="AI" value={formatCurrency(current.ai.costUsd)} subtitle={`${formatNumber(current.ai.totalTokens)} token`} subtitleColor="text-violet-400" />
             <KpiCard label="Rerank" value={formatCurrency(current.rerank?.costUsd ?? 0)} subtitle={`${formatNumber(current.rerank?.searchCount ?? 0)} sorgu`} subtitleColor="text-pink-400" />
             <KpiCard label="Web Search" value={formatCurrency(current.webSearch?.costUsd ?? 0)} subtitle={`${formatNumber(current.webSearch?.searchCount ?? 0)} arama`} subtitleColor="text-teal-400" />
-            <KpiCard label="Research" value={formatCurrency(current.research?.costUsd ?? 0)} subtitle={`${formatNumber(current.research?.searchCount ?? 0)} araştırma`} subtitleColor="text-cyan-400" />
-            <KpiCard label="Quote Hazırlama" value={formatCurrency(current.quotePrepare?.costUsd ?? 0)} subtitle={`${formatNumber(current.quotePrepare?.quoteCount ?? 0)} teklif`} subtitleColor="text-indigo-400" />
+            <KpiCard label="Research" value={formatCurrency(current.research.costUsd)} subtitle={`${formatNumber(current.research.callCount)} araştırma`} subtitleColor="text-cyan-400" />
+            <KpiCard label="Quote Hazırlama" value={formatCurrency(current.quotePrepare.costUsd)} subtitle={`${formatNumber(current.quotePrepare.callCount)} teklif`} subtitleColor="text-indigo-400" />
             <KpiCard label="Proaktif" value={formatCurrency(current.proactive?.costUsd ?? 0)} subtitle={`${formatNumber(current.proactive?.insightCount ?? 0)} insight`} subtitleColor="text-orange-400" />
             <KpiCard label="Cache Tasarruf" value={formatCurrency(current.cacheHits?.estimatedSavingsUsd ?? 0)} subtitle={`%${Math.round((current.cacheHits?.hitRate ?? 0) * 100)} hit rate`} subtitleColor="text-emerald-400" />
           </div>
