@@ -21,7 +21,7 @@ export function MesajAkisi() {
   return (
     <DocsSectionCard id="mesaj-akisi" title="Mesaj İşlem Akışı" icon="💬">
       <p className="text-sm text-muted-foreground">
-        Bir mesaj backend&apos;e ulaştıktan sonra 7 adımlık deterministik bir pipeline çalışır. Her adım hata verirse önceki adımların etkisi geri alınır (örn. agent başarısızsa rezervasyon serbest bırakılır).
+        Bir mesaj backend'e ulaştıktan sonra 7 adımlık deterministik bir pipeline çalışır. Her adım hata verirse önceki adımların etkisi geri alınır (örn. agent başarısızsa rezervasyon serbest bırakılır).
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
