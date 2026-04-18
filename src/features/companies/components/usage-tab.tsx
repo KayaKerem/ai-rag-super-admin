@@ -48,7 +48,11 @@ export function UsageTab({ companyId }: UsageTabProps) {
 
       {!isCompanyLoading && !isPlanLoading && (
         <div className="mb-4">
-          <BudgetStatusCard spendUsd={current.totalCostUsd} capUsd={budgetCap} />
+          <BudgetStatusCard
+              spendUsd={current.totalCostUsd}
+              capUsd={budgetCap}
+              thresholdPct={plan?.budgetDowngradeThresholdPct}
+            />
         </div>
       )}
 

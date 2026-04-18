@@ -5,10 +5,11 @@ import { computeBudgetBand } from '../lib/budget-band'
 interface BudgetStatusCardProps {
   spendUsd: number
   capUsd: number | null
+  thresholdPct?: number
 }
 
-export function BudgetStatusCard({ spendUsd, capUsd }: BudgetStatusCardProps) {
-  const status = computeBudgetBand(spendUsd, capUsd)
+export function BudgetStatusCard({ spendUsd, capUsd, thresholdPct }: BudgetStatusCardProps) {
+  const status = computeBudgetBand(spendUsd, capUsd, thresholdPct)
 
   if (status.band === 'unconfigured') {
     return (
