@@ -33,5 +33,6 @@ export const queryKeys = {
     emailTemplates: ['platform', 'email-templates'] as const,
     emailTemplate: (slug: string) => ['platform', 'email-templates', slug] as const,
     serviceAccounts: ['platform', 'service-accounts'] as const,
+    atRisk: (band: 'exhausted' | 'economy') => ['platform', 'atRisk', band] as const,
   },
 }
