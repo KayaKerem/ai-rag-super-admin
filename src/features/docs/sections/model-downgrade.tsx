@@ -49,7 +49,7 @@ export function ModelDowngrade() {
         <CardContent className="py-4 text-sm text-muted-foreground">
           <div className="font-semibold text-amber-400">⚠ Plan-Bazlı Threshold</div>
           <div className="mt-2">
-            Yukarıdaki yüzdeler varsayılandır. <code className="rounded bg-muted px-1 py-0.5 text-xs">budgetDowngradeThresholdPct</code> alanı <strong>yalnızca Normal → Standard geçişini</strong> kontrol eder (1–100 arası, default 80). %95 (Economy) ve %97 (Exhausted) eşikleri sabittir, plan-bazında değişmez. Backend §5.3 + §12 ile teyit edildi.
+            Yukarıdaki yüzdeler varsayılandır. <code className="rounded bg-muted px-1 py-0.5 text-xs">budgetDowngradeThresholdPct</code> alanı <strong>yalnızca Normal → Standard geçişini</strong> kontrol eder (1–100 arası, default 80). %95 (Economy) ve %97 (Exhausted) eşikleri sabittir, plan-bazında değişmez. Backend §5.3 + §12 ile teyit edildi. Plan alanının tanımı ve billing bağlamı için <a href="#fiyatlandirma-gelir" className="underline hover:text-foreground">Fiyatlandırma & Gelir</a> bölümüne bakın.
           </div>
         </CardContent>
       </Card>
