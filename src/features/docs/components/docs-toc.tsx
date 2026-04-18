@@ -43,7 +43,8 @@ export function DocsToc() {
     e.preventDefault()
     const el = document.getElementById(id)
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      el.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' })
       history.replaceState(null, '', `#${id}`)
       setActiveId(id)
     }
