@@ -73,8 +73,8 @@ export function DashboardPage() {
               ai={current.ai.costUsd}
               rerank={current.rerank?.costUsd ?? 0}
               webSearch={current.webSearch?.costUsd ?? 0}
-              research={current.research.costUsd}
-              quotePrepare={current.quotePrepare.costUsd}
+              research={current.research?.costUsd ?? 0}
+              quotePrepare={current.quotePrepare?.costUsd ?? 0}
               proactive={current.proactive?.costUsd ?? 0}
               storage={current.storage.costUsd}
               trigger={current.trigger.costUsd}
