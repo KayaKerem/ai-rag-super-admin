@@ -47,7 +47,13 @@ export function AgentSettingsCard({ company }: AgentSettingsCardProps) {
     setTimeoutMinutes(company.approvalTimeoutMinutes.toString())
     setTimeoutAction(company.approvalTimeoutAction)
     setBudget(company.customerOperationsBudgetUsd?.toString() ?? '')
-  }, [company.updatedAt])
+  }, [
+    company.customerAgentTrustLevel,
+    company.autoApproveQuoteThreshold,
+    company.approvalTimeoutMinutes,
+    company.approvalTimeoutAction,
+    company.customerOperationsBudgetUsd,
+  ])
 
   const toNullable = (v: string) => (v === '' ? null : v)
 

@@ -14,7 +14,15 @@ interface ActivityLogParams {
 
 export function useActivityLog(companyId: string, params: ActivityLogParams = {}) {
   return useQuery({
-    queryKey: [...queryKeys.companies.activityLog(companyId), params],
+    queryKey: [
+      ...queryKeys.companies.activityLog(companyId),
+      params.category ?? '',
+      params.action ?? '',
+      params.startDate ?? '',
+      params.endDate ?? '',
+      params.limit ?? 0,
+      params.offset ?? 0,
+    ],
     queryFn: async (): Promise<ActivityLogResponse> => {
       const { data } = await apiClient.get(`/platform/companies/${companyId}/activity-log`, { params })
       return data

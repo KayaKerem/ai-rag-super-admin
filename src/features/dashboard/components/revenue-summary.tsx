@@ -32,7 +32,7 @@ export function RevenueSummary({ data }: RevenueSummaryProps) {
           </div>
         </div>
 
-        {data.byPlan.length > 0 && (
+        {(data.byPlan ?? []).length > 0 && (
           <Table>
             <TableHeader>
               <TableRow>
@@ -45,7 +45,7 @@ export function RevenueSummary({ data }: RevenueSummaryProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.byPlan.map((bp) => (
+              {(data.byPlan ?? []).map((bp) => (
                 <TableRow key={bp.planId}>
                   <TableCell className="font-medium">{bp.planName}</TableCell>
                   <TableCell className="text-right">{bp.companyCount}</TableCell>

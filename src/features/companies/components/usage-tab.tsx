@@ -62,7 +62,7 @@ export function UsageTab({ companyId }: UsageTabProps) {
         <div>
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">AI</h3>
           <div className="grid grid-cols-4 gap-3">
-            <KpiCard label="AI" value={formatCurrency(current.ai.costUsd)} subtitle={`${formatNumber(current.ai.totalTokens)} token`} subtitleColor="text-violet-400" />
+            <KpiCard label="AI" value={formatCurrency(current.ai?.costUsd ?? 0)} subtitle={`${formatNumber(current.ai?.totalTokens ?? 0)} token`} subtitleColor="text-violet-400" />
             <KpiCard label="Rerank" value={formatCurrency(current.rerank?.costUsd ?? 0)} subtitle={`${formatNumber(current.rerank?.searchCount ?? 0)} sorgu`} subtitleColor="text-pink-400" />
             <KpiCard label="Web Search" value={formatCurrency(current.webSearch?.costUsd ?? 0)} subtitle={`${formatNumber(current.webSearch?.searchCount ?? 0)} arama`} subtitleColor="text-teal-400" />
             <KpiCard label="Research" value={formatCurrency(current.research?.costUsd ?? 0)} subtitle={`${formatNumber(current.research?.callCount ?? 0)} araştırma`} subtitleColor="text-cyan-400" />
@@ -74,8 +74,8 @@ export function UsageTab({ companyId }: UsageTabProps) {
         <div>
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Altyapı</h3>
           <div className="grid grid-cols-2 gap-3">
-            <KpiCard label="Storage" value={formatCurrency(current.storage.costUsd)} subtitle={`${formatBytes(current.storage.currentBytes)} kullanım`} subtitleColor="text-green-400" />
-            <KpiCard label="Trigger" value={formatCurrency(current.trigger.costUsd)} subtitle={`${formatNumber(current.trigger.taskCount)} task`} subtitleColor="text-yellow-400" />
+            <KpiCard label="Storage" value={formatCurrency(current.storage?.costUsd ?? 0)} subtitle={`${formatBytes(current.storage?.currentBytes ?? 0)} kullanım`} subtitleColor="text-green-400" />
+            <KpiCard label="Trigger" value={formatCurrency(current.trigger?.costUsd ?? 0)} subtitle={`${formatNumber(current.trigger?.taskCount ?? 0)} task`} subtitleColor="text-yellow-400" />
           </div>
         </div>
       </div>

@@ -18,7 +18,9 @@ const agentIcons: Record<string, string> = {
   quality: '📊',
 }
 
-const statusColors: Record<string, string> = {
+type BadgeVariant = 'destructive' | 'default' | 'secondary' | 'outline'
+
+const statusColors: Record<string, BadgeVariant> = {
   new: 'destructive',
   acknowledged: 'default',
   resolved: 'secondary',
@@ -34,13 +36,13 @@ const categoryLabels: Record<string, string> = {
 }
 
 export function ProactiveInsightsTab({ companyId }: ProactiveInsightsTabProps) {
-  const [agentType, setAgentType] = useState<string>('')
-  const [status, setStatus] = useState<string>('')
+  const [agentType, setAgentType] = useState<string>('all')
+  const [status, setStatus] = useState<string>('all')
 
   const { data: summary } = useProactiveInsightSummary(companyId)
   const { data, isLoading } = useProactiveInsights(companyId, {
-    agentType: agentType || undefined,
-    status: status || undefined,
+    agentType: agentType === 'all' ? undefined : agentType,
+    status: status === 'all' ? undefined : status,
   })
   const updateStatus = useUpdateInsightStatus(companyId)
 
@@ -62,24 +64,24 @@ export function ProactiveInsightsTab({ companyId }: ProactiveInsightsTabProps) {
 
       {/* Filters */}
       <div className="mb-4 flex gap-3">
-        <Select value={agentType} onValueChange={(v: string | null) => setAgentType(v ?? '')}>
+        <Select value={agentType} onValueChange={(v: string | null) => setAgentType(v ?? 'all')}>
           <SelectTrigger className="w-40">
             <SelectValue placeholder="Tüm Agentlar" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Tümü</SelectItem>
+            <SelectItem value="all">Tümü</SelectItem>
             <SelectItem value="freshness">Freshness</SelectItem>
             <SelectItem value="gap">Gap</SelectItem>
             <SelectItem value="quality">Quality</SelectItem>
           </SelectContent>
         </Select>
 
-        <Select value={status} onValueChange={(v: string | null) => setStatus(v ?? '')}>
+        <Select value={status} onValueChange={(v: string | null) => setStatus(v ?? 'all')}>
           <SelectTrigger className="w-40">
             <SelectValue placeholder="Tüm Durumlar" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Tümü</SelectItem>
+            <SelectItem value="all">Tümü</SelectItem>
             <SelectItem value="new">Yeni</SelectItem>
             <SelectItem value="acknowledged">İncelendi</SelectItem>
             <SelectItem value="resolved">Çözüldü</SelectItem>
@@ -108,7 +110,7 @@ export function ProactiveInsightsTab({ companyId }: ProactiveInsightsTabProps) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-sm font-medium">{insight.title}</span>
-                    <Badge variant={statusColors[insight.status] as any} className="text-[10px]">
+                    <Badge variant={statusColors[insight.status] ?? 'secondary'} className="text-[10px]">
                       {insight.status}
                     </Badge>
                     <Badge variant="outline" className="text-[10px]">

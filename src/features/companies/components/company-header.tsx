@@ -23,6 +23,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
   const deleteCompany = useDeleteCompany()
 
   function handleSaveName() {
+    if (updateCompany.isPending) return
     if (!editName.trim() || editName.trim() === company.name) {
       setEditing(false)
       return

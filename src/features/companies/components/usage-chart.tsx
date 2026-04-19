@@ -9,14 +9,14 @@ interface UsageChartProps {
 export function UsageChart({ data }: UsageChartProps) {
   const chartData = [...data].reverse().map((d) => ({
     month: d.month.slice(5),
-    'AI (diğer)': d.ai.costUsd - (d.research?.costUsd ?? 0) - (d.quotePrepare?.costUsd ?? 0),
+    'AI (diğer)': (d.ai?.costUsd ?? 0) - (d.research?.costUsd ?? 0) - (d.quotePrepare?.costUsd ?? 0),
     Rerank: d.rerank?.costUsd ?? 0,
     Research: d.research?.costUsd ?? 0,
     'Quote Hazırlama': d.quotePrepare?.costUsd ?? 0,
     'Web Search': d.webSearch?.costUsd ?? 0,
     Proactive: d.proactive?.costUsd ?? 0,
-    Storage: d.storage.costUsd,
-    Trigger: d.trigger.costUsd,
+    Storage: d.storage?.costUsd ?? 0,
+    Trigger: d.trigger?.costUsd ?? 0,
   }))
 
   return (

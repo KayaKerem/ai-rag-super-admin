@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
@@ -37,6 +37,16 @@ export function AiConfigAccordion({ currentValues, models, modelOptions: _modelO
     resolver: zodResolver(schema as any),
     defaultValues: (currentValues as Record<string, unknown>) ?? {},
   })
+
+  useEffect(() => {
+    setAllowedModels((currentValues?.allowedModels as AllowedModel[] | undefined) ?? [])
+  }, [currentValues])
+
+  useEffect(() => {
+    if (currentValues) {
+      form.reset(currentValues as Record<string, unknown>)
+    }
+  }, [currentValues, form])
 
   function handleSubmit(values: Record<string, unknown>) {
     const cleaned = Object.fromEntries(

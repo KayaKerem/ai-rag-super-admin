@@ -32,7 +32,7 @@ export function SearchAnalyticsTab({ companyId }: SearchAnalyticsTabProps) {
   if (isLoading) return <div className="text-sm text-muted-foreground">Yukleniyor...</div>
   if (!data) return <div className="text-sm text-muted-foreground">Veri bulunamadi.</div>
 
-  const toolEntries = Object.entries(data.byTool)
+  const toolEntries = Object.entries(data.byTool ?? {})
 
   return (
     <div>
@@ -83,7 +83,7 @@ export function SearchAnalyticsTab({ companyId }: SearchAnalyticsTabProps) {
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={260}>
-            <LineChart data={data.dailyTrend}>
+            <LineChart data={data.dailyTrend ?? []}>
               <CartesianGrid strokeDasharray="3 3" stroke="#333" />
               <XAxis
                 dataKey="date"
@@ -119,7 +119,7 @@ export function SearchAnalyticsTab({ companyId }: SearchAnalyticsTabProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.topQueries.map((q) => (
+              {(data.topQueries ?? []).map((q) => (
                 <TableRow key={q.queryText}>
                   <TableCell className="font-mono text-sm">{q.queryText}</TableCell>
                   <TableCell className="text-right">{q.count}</TableCell>
@@ -149,7 +149,7 @@ export function SearchAnalyticsTab({ companyId }: SearchAnalyticsTabProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.unansweredQueries.map((q) => (
+              {(data.unansweredQueries ?? []).map((q) => (
                 <TableRow key={q.queryText}>
                   <TableCell className="font-mono text-sm">{q.queryText}</TableCell>
                   <TableCell className="text-right">{q.count}</TableCell>
@@ -198,7 +198,7 @@ export function SearchAnalyticsTab({ companyId }: SearchAnalyticsTabProps) {
           <CardTitle className="text-sm font-semibold">
             Olumsuz Geri Bildirim Korelasyonu
             <span className="ml-2 text-xs font-normal text-muted-foreground">
-              ({data.feedbackCorrelation.queriesWithNegativeFeedback} sorgu olumsuz geri bildirim aldi)
+              ({data.feedbackCorrelation?.queriesWithNegativeFeedback ?? 0} sorgu olumsuz geri bildirim aldi)
             </span>
           </CardTitle>
         </CardHeader>
@@ -212,7 +212,7 @@ export function SearchAnalyticsTab({ companyId }: SearchAnalyticsTabProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.feedbackCorrelation.topNegativeQueries.map((q) => (
+              {(data.feedbackCorrelation?.topNegativeQueries ?? []).map((q) => (
                 <TableRow key={q.queryText}>
                   <TableCell className="font-mono text-sm">{q.queryText}</TableCell>
                   <TableCell className="text-right text-red-400">{q.negativeCount}</TableCell>

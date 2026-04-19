@@ -78,11 +78,6 @@ export const handlers = [
     return HttpResponse.json({ success: true })
   }),
 
-  http.post(`${BASE}/auth/logout-all`, async () => {
-    await delay(100)
-    return HttpResponse.json({ success: true })
-  }),
-
   // ─── Companies CRUD ─────────────────────────────────
   http.get(`${BASE}/platform/companies`, async () => {
     await delay(200)

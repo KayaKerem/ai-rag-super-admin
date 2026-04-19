@@ -45,23 +45,23 @@ export function AnalyticsTab({ companyId }: AnalyticsTabProps) {
   if (isLoading) return <div className="text-sm text-muted-foreground">Yukleniyor...</div>
   if (!current) return <div className="text-sm text-muted-foreground">Veri bulunamadi.</div>
 
-  const satisfactionPct = (current.feedback.satisfactionRate * 100).toFixed(0)
-  const groundednessPct = (current.quality.avgGroundedness * 100).toFixed(0)
-  const relevancePct = (current.quality.avgRelevance * 100).toFixed(0)
+  const satisfactionPct = ((current.feedback?.satisfactionRate ?? 0) * 100).toFixed(0)
+  const groundednessPct = ((current.quality?.avgGroundedness ?? 0) * 100).toFixed(0)
+  const relevancePct = ((current.quality?.avgRelevance ?? 0) * 100).toFixed(0)
 
   // Chart data for conversations trend
   const chartData = [...(data?.months ?? [])].reverse().map((m) => ({
     month: m.month.slice(5),
-    Sohbet: m.conversations.total,
-    Turn: m.turns.total,
+    Sohbet: m.conversations?.total ?? 0,
+    Turn: m.turns?.total ?? 0,
   }))
 
   // Feedback bar widths
-  const feedbackTotal = current.feedback.positiveCount + current.feedback.negativeCount
-  const positivePct = feedbackTotal > 0 ? (current.feedback.positiveCount / feedbackTotal) * 100 : 0
+  const feedbackTotal = (current.feedback?.positiveCount ?? 0) + (current.feedback?.negativeCount ?? 0)
+  const positivePct = feedbackTotal > 0 ? ((current.feedback?.positiveCount ?? 0) / feedbackTotal) * 100 : 0
 
   // Tool usage max for bar scaling
-  const maxToolCount = Math.max(...current.tools.byTool.map((t) => t.count), 1)
+  const maxToolCount = Math.max(...(current.tools?.byTool ?? []).map((t) => t.count), 1)
 
   return (
     <div>
@@ -84,25 +84,25 @@ export function AnalyticsTab({ companyId }: AnalyticsTabProps) {
         <KpiCard
           label="Memnuniyet Orani"
           value={`%${satisfactionPct}`}
-          subtitle={`${current.feedback.totalRatings} degerlendirme`}
+          subtitle={`${current.feedback?.totalRatings ?? 0} degerlendirme`}
           subtitleColor="text-emerald-400"
         />
         <KpiCard
           label="Ort. Groundedness"
           value={`%${groundednessPct}`}
-          subtitle={`${current.quality.evaluatedCount} turn degerlendirildi`}
+          subtitle={`${current.quality?.evaluatedCount ?? 0} turn degerlendirildi`}
           subtitleColor="text-blue-400"
         />
         <KpiCard
           label="Ort. Relevance"
           value={`%${relevancePct}`}
-          subtitle={`${current.quality.evaluatedCount} turn degerlendirildi`}
+          subtitle={`${current.quality?.evaluatedCount ?? 0} turn degerlendirildi`}
           subtitleColor="text-violet-400"
         />
         <KpiCard
           label="Dusuk Kalite"
-          value={`${current.quality.lowQualityCount} adet`}
-          subtitle={`${current.quality.evaluatedCount} turn icinde`}
+          value={`${current.quality?.lowQualityCount ?? 0} adet`}
+          subtitle={`${current.quality?.evaluatedCount ?? 0} turn icinde`}
           subtitleColor="text-red-400"
         />
       </div>
@@ -112,38 +112,38 @@ export function AnalyticsTab({ companyId }: AnalyticsTabProps) {
         <Card>
           <CardContent className="p-3">
             <p className="text-xs text-muted-foreground">Toplam Sohbet</p>
-            <p className="mt-1 text-lg font-bold">{current.conversations.total}</p>
+            <p className="mt-1 text-lg font-bold">{current.conversations?.total ?? 0}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-3">
             <p className="text-xs text-muted-foreground">Aktif Kullanici</p>
-            <p className="mt-1 text-lg font-bold">{current.conversations.activeUsers}</p>
+            <p className="mt-1 text-lg font-bold">{current.conversations?.activeUsers ?? 0}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-3">
             <p className="text-xs text-muted-foreground">Toplam Turn</p>
-            <p className="mt-1 text-lg font-bold">{current.turns.total}</p>
+            <p className="mt-1 text-lg font-bold">{current.turns?.total ?? 0}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-3">
             <p className="text-xs text-muted-foreground">Ort. Turn/Sohbet</p>
-            <p className="mt-1 text-lg font-bold">{current.turns.avgPerConversation}</p>
+            <p className="mt-1 text-lg font-bold">{current.turns?.avgPerConversation ?? 0}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-3">
             <p className="text-xs text-muted-foreground">Tool Cagrisi</p>
-            <p className="mt-1 text-lg font-bold">{current.tools.totalCalls}</p>
+            <p className="mt-1 text-lg font-bold">{current.tools?.totalCalls ?? 0}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-3">
             <p className="text-xs text-muted-foreground">Bos Arama</p>
-            <p className="mt-1 text-lg font-bold">{current.search.noResultCount}</p>
-            <p className="text-xs text-muted-foreground">%{(current.search.noResultRate * 100).toFixed(1)}</p>
+            <p className="mt-1 text-lg font-bold">{current.search?.noResultCount ?? 0}</p>
+            <p className="text-xs text-muted-foreground">%{((current.search?.noResultRate ?? 0) * 100).toFixed(1)}</p>
           </CardContent>
         </Card>
       </div>
@@ -190,14 +190,14 @@ export function AnalyticsTab({ companyId }: AnalyticsTabProps) {
               />
             </div>
             <div className="mb-4 flex justify-between text-xs text-muted-foreground">
-              <span>Olumlu: {current.feedback.positiveCount}</span>
-              <span>Olumsuz: {current.feedback.negativeCount}</span>
+              <span>Olumlu: {current.feedback?.positiveCount ?? 0}</span>
+              <span>Olumsuz: {current.feedback?.negativeCount ?? 0}</span>
             </div>
 
             {/* Top negative reasons */}
             <p className="mb-2 text-xs font-medium text-muted-foreground">Olumsuz Sebepler</p>
             <ul className="space-y-1.5">
-              {current.feedback.topReasons.map((r) => (
+              {(current.feedback?.topReasons ?? []).map((r) => (
                 <li key={r.code} className="flex items-center justify-between text-sm">
                   <span>{reasonLabels[r.code] ?? r.code}</span>
                   <span className="font-mono text-xs text-muted-foreground">{r.count}</span>
@@ -214,7 +214,7 @@ export function AnalyticsTab({ companyId }: AnalyticsTabProps) {
           </CardHeader>
           <CardContent>
             <ul className="space-y-2">
-              {current.tools.byTool.map((t) => (
+              {(current.tools?.byTool ?? []).map((t) => (
                 <li key={t.name}>
                   <div className="mb-0.5 flex items-center justify-between text-sm">
                     <span className="truncate font-mono text-xs">{t.name}</span>

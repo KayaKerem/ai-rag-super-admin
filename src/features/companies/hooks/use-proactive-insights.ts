@@ -47,6 +47,7 @@ export function useUpdateInsightStatus(companyId: string) {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['companies', companyId, 'proactive-insights'] })
+      qc.invalidateQueries({ queryKey: queryKeys.companies.proactiveInsightSummary(companyId) })
     },
   })
 }

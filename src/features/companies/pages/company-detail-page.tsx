@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useCompany } from '../hooks/use-company'
@@ -18,6 +19,7 @@ import { AgentSettingsCard } from '../components/agent-settings-card'
 export function CompanyDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { data: company, isLoading } = useCompany(id!)
+  const [activeTab, setActiveTab] = useState('usage')
 
   if (isLoading) return <div className="text-sm text-muted-foreground">Yükleniyor...</div>
   if (!company) return <div className="text-sm text-muted-foreground">Şirket bulunamadı.</div>
@@ -27,7 +29,7 @@ export function CompanyDetailPage() {
       <CompanyHeader company={company} />
       <AgentSettingsCard company={company} />
 
-      <Tabs defaultValue="usage">
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="usage">Kullanım</TabsTrigger>
           <TabsTrigger value="plan">Plan</TabsTrigger>
@@ -42,37 +44,37 @@ export function CompanyDetailPage() {
           <TabsTrigger value="proactive">Proaktif</TabsTrigger>
         </TabsList>
         <TabsContent value="usage" className="mt-4">
-          <UsageTab companyId={id!} />
+          {activeTab === 'usage' && <UsageTab companyId={id!} />}
         </TabsContent>
         <TabsContent value="plan" className="mt-4">
-          <PlanTab companyId={id!} company={company} />
+          {activeTab === 'plan' && <PlanTab companyId={id!} company={company} />}
         </TabsContent>
         <TabsContent value="analytics" className="mt-4">
-          <AnalyticsTab companyId={id!} />
+          {activeTab === 'analytics' && <AnalyticsTab companyId={id!} />}
         </TabsContent>
         <TabsContent value="config" className="mt-4">
-          <ConfigTab companyId={id!} />
+          {activeTab === 'config' && <ConfigTab companyId={id!} />}
         </TabsContent>
         <TabsContent value="tools" className="mt-4">
-          <ToolConfigTab companyId={id!} />
+          {activeTab === 'tools' && <ToolConfigTab companyId={id!} />}
         </TabsContent>
         <TabsContent value="users" className="mt-4">
-          <UsersTab companyId={id!} />
+          {activeTab === 'users' && <UsersTab companyId={id!} />}
         </TabsContent>
         <TabsContent value="data-sources" className="mt-4">
-          <DataSourcesTab companyId={id!} />
+          {activeTab === 'data-sources' && <DataSourcesTab companyId={id!} />}
         </TabsContent>
         <TabsContent value="activity" className="mt-4">
-          <ActivityLogTab companyId={id!} />
+          {activeTab === 'activity' && <ActivityLogTab companyId={id!} />}
         </TabsContent>
         <TabsContent value="search-analytics" className="mt-4">
-          <SearchAnalyticsTab companyId={id!} />
+          {activeTab === 'search-analytics' && <SearchAnalyticsTab companyId={id!} />}
         </TabsContent>
         <TabsContent value="leads" className="mt-4">
-          <LeadsTab companyId={id!} />
+          {activeTab === 'leads' && <LeadsTab companyId={id!} />}
         </TabsContent>
         <TabsContent value="proactive" className="mt-4">
-          <ProactiveInsightsTab companyId={id!} />
+          {activeTab === 'proactive' && <ProactiveInsightsTab companyId={id!} />}
         </TabsContent>
       </Tabs>
     </div>
