@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Building2, Settings, LogOut, Mail, KeyRound, BookOpen } from 'lucide-react'
+import { LayoutDashboard, Building2, Settings, LogOut, Mail, KeyRound, BookOpen, Activity } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useAuth } from '@/features/auth/hooks/use-auth'
 import { apiClient } from '@/lib/api-client'
@@ -14,6 +14,10 @@ const navItems = [
   { to: '/docs', icon: BookOpen, label: 'Dokümantasyon' },
 ]
 
+const platformItems = [
+  { to: '/admin/cost-health', icon: Activity, label: 'Cost Health' },
+]
+
 export function Sidebar() {
   const { logout } = useAuth()
   const navigate = useNavigate()
@@ -23,6 +27,32 @@ export function Sidebar() {
     apiClient.post('/auth/logout').catch(() => {})
     logout()
     navigate('/login')
+  }
+
+  function renderNavItem(item: { to: string; icon: typeof Activity; label: string }) {
+    return (
+      <Tooltip key={item.to}>
+        <TooltipTrigger
+          render={
+            <NavLink
+              to={item.to}
+              end={item.to === '/'}
+              className={({ isActive }) =>
+                cn(
+                  'flex h-9 w-9 items-center justify-center rounded-lg transition-colors',
+                  isActive
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                )
+              }
+            >
+              <item.icon className="h-4 w-4" />
+            </NavLink>
+          }
+        />
+        <TooltipContent side="right">{item.label}</TooltipContent>
+      </Tooltip>
+    )
   }
 
   return (
@@ -35,29 +65,9 @@ export function Sidebar() {
 
         {/* Nav */}
         <nav className="flex flex-1 flex-col items-center gap-2">
-          {navItems.map((item) => (
-            <Tooltip key={item.to}>
-              <TooltipTrigger
-                render={
-                  <NavLink
-                    to={item.to}
-                    end={item.to === '/'}
-                    className={({ isActive }) =>
-                      cn(
-                        'flex h-9 w-9 items-center justify-center rounded-lg transition-colors',
-                        isActive
-                          ? 'bg-primary text-primary-foreground'
-                          : 'text-muted-foreground hover:bg-accent hover:text-foreground'
-                      )
-                    }
-                  >
-                    <item.icon className="h-4 w-4" />
-                  </NavLink>
-                }
-              />
-              <TooltipContent side="right">{item.label}</TooltipContent>
-            </Tooltip>
-          ))}
+          {navItems.map(renderNavItem)}
+          <div className="h-px w-8 bg-border my-1" aria-hidden="true" />
+          {platformItems.map(renderNavItem)}
         </nav>
 
         {/* Logout */}
