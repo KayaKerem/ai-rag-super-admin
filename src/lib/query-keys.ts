@@ -35,4 +35,12 @@ export const queryKeys = {
     serviceAccounts: ['platform', 'service-accounts'] as const,
     atRisk: (band: 'exhausted' | 'economy') => ['platform', 'atRisk', band] as const,
   },
+  admin: {
+    all: ['admin'] as const,
+    costHealth: (params: {
+      companyId: string | null
+      fromIso: string | null
+      toIso: string | null
+    }) => ['admin', 'cost-health', params] as const,
+  },
 }
