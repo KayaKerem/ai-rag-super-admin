@@ -1,9 +1,10 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Building2, Settings, LogOut, Mail, KeyRound, BookOpen, Activity } from 'lucide-react'
+import { LayoutDashboard, Building2, Settings, LogOut, Mail, KeyRound, BookOpen, Activity, Gauge, Bell } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useAuth } from '@/features/auth/hooks/use-auth'
 import { apiClient } from '@/lib/api-client'
 import { cn } from '@/lib/utils'
+import { AlertCountBadge } from './alert-count-badge'
 
 const navItems = [
   { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -14,8 +15,20 @@ const navItems = [
   { to: '/docs', icon: BookOpen, label: 'Dokümantasyon' },
 ]
 
-const platformItems = [
+const platformItems: Array<{
+  to: string
+  icon: typeof Activity
+  label: string
+  badge?: 'agent-quality-alerts'
+}> = [
   { to: '/admin/cost-health', icon: Activity, label: 'Cost Health' },
+  { to: '/admin/agent-quality', icon: Gauge, label: 'Agent Kalite' },
+  {
+    to: '/admin/agent-quality/alerts',
+    icon: Bell,
+    label: 'Alerts',
+    badge: 'agent-quality-alerts',
+  },
 ]
 
 export function Sidebar() {
@@ -29,7 +42,12 @@ export function Sidebar() {
     navigate('/login')
   }
 
-  function renderNavItem(item: { to: string; icon: typeof Activity; label: string }) {
+  function renderNavItem(item: {
+    to: string
+    icon: typeof Activity
+    label: string
+    badge?: 'agent-quality-alerts'
+  }) {
     return (
       <Tooltip key={item.to}>
         <TooltipTrigger
@@ -39,7 +57,7 @@ export function Sidebar() {
               end={item.to === '/'}
               className={({ isActive }) =>
                 cn(
-                  'flex h-9 w-9 items-center justify-center rounded-lg transition-colors',
+                  'relative flex h-9 w-9 items-center justify-center rounded-lg transition-colors',
                   isActive
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:bg-accent hover:text-foreground'
@@ -47,6 +65,7 @@ export function Sidebar() {
               }
             >
               <item.icon className="h-4 w-4" />
+              {item.badge === 'agent-quality-alerts' && <AlertCountBadge />}
             </NavLink>
           }
         />

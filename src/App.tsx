@@ -19,6 +19,16 @@ const CostHealthPage = lazy(() =>
     default: m.CostHealthPage,
   }))
 )
+const AgentQualityPage = lazy(() =>
+  import('@/features/agent-quality/pages/agent-quality-page').then((m) => ({
+    default: m.AgentQualityPage,
+  }))
+)
+const AgentQualityAlertsPage = lazy(() =>
+  import('@/features/agent-quality/pages/agent-quality-alerts-page').then(
+    (m) => ({ default: m.AgentQualityAlertsPage })
+  )
+)
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,6 +59,22 @@ function App() {
                 element={
                   <Suspense fallback={<RouteLoadingFallback />}>
                     <CostHealthPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/admin/agent-quality"
+                element={
+                  <Suspense fallback={<RouteLoadingFallback />}>
+                    <AgentQualityPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/admin/agent-quality/alerts"
+                element={
+                  <Suspense fallback={<RouteLoadingFallback />}>
+                    <AgentQualityAlertsPage />
                   </Suspense>
                 }
               />
