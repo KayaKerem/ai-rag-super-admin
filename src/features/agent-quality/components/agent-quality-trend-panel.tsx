@@ -65,17 +65,26 @@ export function AgentQualityTrendPanel({
               <TrendSparkline
                 label="Guardrail Fire Rate"
                 data={pickPoints(data.series, 'guardrailFireRate')}
-                onPointClick={(date) => onBarClick(date, 'guardrail')}
+                onPointClick={(date, value) => {
+                  if (value == null) return
+                  onBarClick(date, 'guardrail')
+                }}
               />
               <TrendSparkline
                 label="Retry Exhausted Rate"
                 data={pickPoints(data.series, 'retryExhaustedRate')}
-                onPointClick={(date) => onBarClick(date, 'retry')}
+                onPointClick={(date, value) => {
+                  if (value == null) return
+                  onBarClick(date, 'retry')
+                }}
               />
               <TrendSparkline
-                label="Force Follow-Up Rate (?)"
+                label="Force Follow-Up Rate"
                 data={pickPoints(data.series, 'forceFollowUpRate')}
-                onPointClick={(date) => onBarClick(date, 'force_followup')}
+                onPointClick={(date, value) => {
+                  if (value == null) return
+                  onBarClick(date, 'force_followup')
+                }}
               />
               <TrendSparkline
                 label="Retrieval Quality"

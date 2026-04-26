@@ -100,8 +100,9 @@ export interface AgentQualityAlertRow {
   value: number
   threshold: number
   assistantTurns: number
-  firedAt: string
+  firedAt: string                  // ISO; UTC günü `firedAt.split('T')[0]` ile alert→trend nav'da kullanılır
   resolvedAt: string | null
+  cronRunId: string                // backend doc 19.md L39; UI'da şu an render edilmiyor (cron-health UI Phase G.1)
 }
 
 export interface AgentQualityAlertsFilters {

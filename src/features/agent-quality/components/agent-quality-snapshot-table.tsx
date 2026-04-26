@@ -20,7 +20,7 @@ export interface AgentQualitySnapshotTableProps {
 
 function pickPrimaryRole(costByRole: Record<string, number>): string {
   let best = ''
-  let max = -1
+  let max = 0
   for (const [role, value] of Object.entries(costByRole)) {
     if (value > max) {
       max = value
