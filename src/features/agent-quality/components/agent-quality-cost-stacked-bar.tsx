@@ -82,11 +82,12 @@ export function AgentQualityCostStackedBar({
                 <XAxis dataKey="date" fontSize={11} />
                 <YAxis fontSize={11} tickFormatter={(v: number) => `$${v}`} />
                 <Tooltip
-                  formatter={(v: number, name: string) => [
-                    formatCurrency(v),
-                    ROLE_LABEL[name] ?? name,
-                  ]}
-                  labelFormatter={(l: string) => l}
+                  formatter={(value, name) => {
+                    if (typeof value !== 'number') return ['—', String(name)]
+                    const key = String(name)
+                    return [formatCurrency(value), ROLE_LABEL[key] ?? key]
+                  }}
+                  labelFormatter={(label) => String(label ?? '')}
                 />
                 <Legend
                   formatter={(value: string) => ROLE_LABEL[value] ?? value}

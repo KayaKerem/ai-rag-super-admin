@@ -103,12 +103,13 @@ export function TrendSparkline({
             <XAxis dataKey="date" hide />
             <YAxis hide domain={[0, 'dataMax']} />
             <Tooltip
-              formatter={(v: number) =>
-                tooltipFormat
-                  ? tooltipFormat(v, '')
-                  : `${(v * 100).toFixed(2)}%`
-              }
-              labelFormatter={(lbl: string) => lbl}
+              formatter={(value) => {
+                if (typeof value !== 'number') return '—'
+                return tooltipFormat
+                  ? tooltipFormat(value, '')
+                  : `${(value * 100).toFixed(2)}%`
+              }}
+              labelFormatter={(label) => String(label ?? '')}
             />
             <Line
               type="monotone"
