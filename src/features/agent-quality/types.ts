@@ -127,11 +127,11 @@ export function clampWindowDays(value: number | undefined): WindowDaysOption {
     : 7
 }
 
+// Out-of-range pages snap to 1 per spec §3.6 (URL fuzzing safeguard, not "last valid").
 export function clampPage(value: number | undefined, max: number): number {
-  if (!Number.isFinite(value) || value === undefined) return 1
-  if (value < 1) return 1
-  if (value > max) return 1
-  return Math.floor(value)
+  if (!Number.isFinite(value)) return 1
+  if ((value as number) < 1 || (value as number) > max) return 1
+  return Math.floor(value as number)
 }
 
 export function isAgentQualityMetric(v: unknown): v is AgentQualityMetric {
@@ -143,6 +143,8 @@ export function isYmd(v: unknown): v is string {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return false
   const d = new Date(`${v}T00:00:00Z`)
   if (Number.isNaN(d.getTime())) return false
+  // Reject calendar-impossible dates (e.g. 2026-02-30 rolls to 2026-03-02).
+  if (d.toISOString().slice(0, 10) !== v) return false
   // Reject future dates (drill-down disallows future per 18.md).
   const todayUtc = new Date()
   todayUtc.setUTCHours(0, 0, 0, 0)
