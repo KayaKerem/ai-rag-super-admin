@@ -1,3 +1,8 @@
+import type {
+  AgentQualityMetric,
+  AgentQualityAlertsFilters,
+} from '@/features/agent-quality/types'
+
 export const queryKeys = {
   companies: {
     all: ['companies'] as const,
@@ -42,5 +47,25 @@ export const queryKeys = {
       fromIso: string | null
       toIso: string | null
     }) => ['admin', 'cost-health', params] as const,
+    agentQuality: {
+      all: ['admin', 'agent-quality'] as const,
+      snapshot: (windowDays: number) =>
+        ['admin', 'agent-quality', 'snapshot', windowDays] as const,
+      trend: (companyId: string, windowDays: number) =>
+        ['admin', 'agent-quality', 'trend', companyId, windowDays] as const,
+      turns: (params: {
+        companyId: string
+        metric: AgentQualityMetric
+        date: string
+        page: number
+        pageSize: number
+      }) => ['admin', 'agent-quality', 'turns', params] as const,
+    },
+    agentQualityAlerts: {
+      all: ['admin', 'agent-quality-alerts'] as const,
+      list: (filters: AgentQualityAlertsFilters) =>
+        ['admin', 'agent-quality-alerts', 'list', filters] as const,
+      count: () => ['admin', 'agent-quality-alerts', 'count'] as const,
+    },
   },
 }
