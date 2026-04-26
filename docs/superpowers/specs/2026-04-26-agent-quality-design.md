@@ -581,12 +581,11 @@ const platformItems = [
 
 ## 8. Test Yaklaşımı
 
-Repo'da otomatik test altyapısı şu an Vitest + Testing Library (cost-health'te query hook test pattern'i mevcut). Bu spec aynı patern'i takip eder:
+**Repo'da otomatik test altyapısı yok** (cost-health Sprint 7 konvansiyonu ile aynı). Doğrulama üç adımlı:
 
-- **Hook unit test'leri** (`*.test.ts`): mock fetch + TanStack Query test wrapper. `useAgentQualitySnapshot`, `useAgentQualityTrend`, `useAgentQualityTurns`, `useAgentQualityAlerts`, `useAgentQualityAlertCount` için success + error path.
-- **Component test'leri** (`*.test.tsx`): jsdom + Testing Library. Her ana component için bir golden path + bir error path.
-- **URL state test'leri:** memory router + `useUrlFilterState`; URL → state, state → URL roundtrip; trendDate+metric invariant.
-- **Manuel smoke** (dev server `npm run dev`):
+1. **`npx tsc --noEmit`** — tip güvenliği (her commit'ten önce)
+2. **`npx eslint`** — lint geçişi (her commit'ten önce)
+3. **Manuel smoke** — `npm run dev` ile aşağıdaki adımlar:
   1. `/admin/agent-quality` → snapshot tablo gelir
   2. Window 7d → 30d değişir, refetch olur
   3. Low-signal toggle aç/kapa → row sayısı değişir
