@@ -52,11 +52,21 @@ function serialize(value: AlertsUrlState): Record<string, string | undefined> {
 const URL_STATE_OPTS = { defaults: DEFAULTS, parse, serialize }
 
 function pickWindowForFire(firedAt: string): 7 | 30 | 90 {
-  const fired = new Date(firedAt)
+  // Normalize both to UTC-midnight day boundaries to avoid TZ-dependent
+  // off-by-one near midnight (firedAt is UTC ISO; new Date() is local clock).
+  const firedYmd = firedAt.slice(0, 10)
+  const fired = new Date(`${firedYmd}T00:00:00Z`)
   const now = new Date()
-  const days = Math.ceil((now.getTime() - fired.getTime()) / 86_400_000)
-  if (days <= 7) return 7
-  if (days <= 30) return 30
+  const todayUtc = new Date(
+    Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate()
+    )
+  )
+  const days = Math.round((todayUtc.getTime() - fired.getTime()) / 86_400_000)
+  if (days <= 6) return 7   // 7-day window covers today + 6 prior UTC days
+  if (days <= 29) return 30
   return 90
 }
 
