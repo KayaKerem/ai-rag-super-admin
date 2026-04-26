@@ -55,8 +55,18 @@ export function AgentQualityTrendPanel({
           </div>
         )}
         {isError && (
-          <div className="rounded-md border border-destructive/50 p-4 text-sm text-destructive">
-            Trend yüklenemedi. Şirket erişilebilir değil olabilir.
+          <div className="space-y-2 rounded-md border border-destructive/50 p-4 text-sm text-destructive">
+            <p>
+              Şirket erişilemez (silinmiş olabilir). Trend yüklenemedi.
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onClose}
+              className="text-foreground"
+            >
+              Tabloya geri dön
+            </Button>
           </div>
         )}
         {data && (

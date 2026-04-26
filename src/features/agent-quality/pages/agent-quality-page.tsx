@@ -24,6 +24,7 @@ interface AgentQualityUrlState {
   metric: AgentQualityMetric | null
   page: number
   showLowSignal: boolean
+  fireOutOfWindow: boolean        // NEW
 }
 
 const DEFAULTS: AgentQualityUrlState = {
@@ -33,6 +34,7 @@ const DEFAULTS: AgentQualityUrlState = {
   metric: null,
   page: 1,
   showLowSignal: false,
+  fireOutOfWindow: false,         // NEW
 }
 
 function parse(params: URLSearchParams): AgentQualityUrlState {
@@ -55,6 +57,7 @@ function parse(params: URLSearchParams): AgentQualityUrlState {
     metric: allThree ? (rawMetric as AgentQualityMetric) : null,
     page: allThree ? clampPage(rawPage, TURNS_PAGE_MAX) : 1,
     showLowSignal: params.get('lowSignal') === '1',
+    fireOutOfWindow: params.get('fireOutOfWindow') === '1',
   }
 }
 
@@ -69,6 +72,7 @@ function serialize(
     metric: drawerOpen ? value.metric ?? undefined : undefined,
     page: drawerOpen && value.page > 1 ? String(value.page) : undefined,
     lowSignal: value.showLowSignal ? '1' : undefined,
+    fireOutOfWindow: value.fireOutOfWindow ? '1' : undefined,
   }
 }
 
@@ -110,10 +114,24 @@ export function AgentQualityPage() {
         )}
       </header>
 
+      {state.fireOutOfWindow && state.company && (
+        <div className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200">
+          Bu alarm 90 günden daha eski bir tarihte fire'landı; drawer
+          otomatik açılmadı. Trend grafiğindeki bir noktaya tıklayarak
+          drill-down açabilirsiniz.
+        </div>
+      )}
+
       <AgentQualityFilters
         windowDays={state.windowDays}
         onWindowDaysChange={(v) =>
-          setState({ windowDays: v, trendDate: null, metric: null, page: 1 })
+          setState({
+            windowDays: v,
+            trendDate: null,
+            metric: null,
+            page: 1,
+            fireOutOfWindow: false,
+          })
         }
         showLowSignal={state.showLowSignal}
         onShowLowSignalChange={(v) => setState({ showLowSignal: v })}
@@ -142,6 +160,7 @@ export function AgentQualityPage() {
               trendDate: null,
               metric: null,
               page: 1,
+              fireOutOfWindow: false,
             })
           }
           showLowSignal={state.showLowSignal}
@@ -165,6 +184,7 @@ export function AgentQualityPage() {
               trendDate: null,
               metric: null,
               page: 1,
+              fireOutOfWindow: false,
             })
           }
         />

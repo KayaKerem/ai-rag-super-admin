@@ -108,6 +108,8 @@ export function AgentQualityAlertsPage() {
     if (fireWithinWindow) {
       params.set('trendDate', firedDay)
       params.set('metric', row.metric)
+    } else {
+      params.set('fireOutOfWindow', '1')
     }
     navigate(`/admin/agent-quality?${params.toString()}`)
   }
