@@ -1,9 +1,11 @@
 import { useState } from 'react'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { useUrlFilterState } from '@/lib/hooks/use-url-filter-state'
 import { useAgentRouteBindings } from '../hooks/use-agent-route-bindings'
 import { AgentRouteBindingsFilters } from '../components/agent-route-bindings-filters'
 import { AgentRouteBindingsTable } from '../components/agent-route-bindings-table'
+import { AgentRouteBindingDialog } from '../components/agent-route-binding-dialog'
 import type { AgentRouteBinding, AgentRouteBindingsFilters as Filters, PeerKind } from '../types'
 
 const URL_STATE_OPTS = {
@@ -25,8 +27,8 @@ const URL_STATE_OPTS = {
 
 export function AgentRouteBindingsPage() {
   const [filters, setFilters] = useUrlFilterState<Filters>(URL_STATE_OPTS)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_selected, setSelected] = useState<AgentRouteBinding | null>(null)
+  const [selected, setSelected] = useState<AgentRouteBinding | null>(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
   const { data, isLoading, isError, error, refetch } = useAgentRouteBindings(filters)
 
   function handleClearFilters() {
@@ -35,7 +37,12 @@ export function AgentRouteBindingsPage() {
 
   function handleRowClick(row: AgentRouteBinding) {
     setSelected(row)
-    // Dialog open will be wired in PR 3
+    setDialogOpen(true)
+  }
+
+  function handleCreate() {
+    setSelected(null)
+    setDialogOpen(true)
   }
 
   if (isError) {
@@ -85,6 +92,9 @@ export function AgentRouteBindingsPage() {
             {items.length} binding · agent + channel + peer eşlemesi
           </p>
         </div>
+        <Button size="sm" onClick={handleCreate}>
+          <Plus className="mr-1.5 h-4 w-4" /> Yeni
+        </Button>
       </div>
 
       <div className="mb-4">
@@ -102,6 +112,12 @@ export function AgentRouteBindingsPage() {
       ) : (
         <AgentRouteBindingsTable rows={items} onRowClick={handleRowClick} />
       )}
+
+      <AgentRouteBindingDialog
+        binding={selected}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
     </div>
   )
 }
