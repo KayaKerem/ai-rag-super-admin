@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Loader2, Plus } from 'lucide-react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { useUrlFilterState } from '@/lib/hooks/use-url-filter-state'
 import { useAgentRouteBindings } from '../hooks/use-agent-route-bindings'
@@ -30,6 +31,25 @@ export function AgentRouteBindingsPage() {
   const [selected, setSelected] = useState<AgentRouteBinding | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
   const { data, isLoading, isError, error, refetch } = useAgentRouteBindings(filters)
+
+  // Parent state contract (spec §7.4): when list refetches after a mutation,
+  // re-pick `selected` from the fresh list. Handles 409 version conflict refresh
+  // and concurrent DELETE edge case. setState in effect is intentional — this
+  // re-syncs an internal selection snapshot with the authoritative server list
+  // (an external source), which is the supported use of effects.
+  useEffect(() => {
+    if (!selected) return
+    const fresh = data?.items.find((b) => b.id === selected.id)
+    if (fresh && fresh.versionSeq !== selected.versionSeq) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelected(fresh)
+    } else if (!fresh && dialogOpen) {
+      setSelected(null)
+      setDialogOpen(false)
+      toast.error('Bu binding silinmiş. Liste yenilendi.')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, selected?.id])
 
   function handleClearFilters() {
     setFilters({ agentId: null, channel: null, peerKind: null })
