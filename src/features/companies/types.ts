@@ -40,6 +40,7 @@ export interface CompanyUser {
   companyId: string
   isActive: boolean
   isPlatformAdmin: boolean
+  avatarUrl: string | null
   createdAt: string
 }
 

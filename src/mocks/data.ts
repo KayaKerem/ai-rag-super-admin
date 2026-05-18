@@ -96,11 +96,11 @@ export function getPlatformSummary(numMonths: number) {
 // Users per company
 export const mockUsers: Record<string, any[]> = {
   [mockCompanies[0].id]: [
-    { id: 'u1', email: 'ali@firma-alpha.com', name: 'Ali Veli', role: 'owner', companyId: mockCompanies[0].id, isActive: true, isPlatformAdmin: false, createdAt: '2026-01-15T10:00:00Z' },
-    { id: 'u2', email: 'ayse@firma-alpha.com', name: 'Ayşe Yılmaz', role: 'admin', companyId: mockCompanies[0].id, isActive: true, isPlatformAdmin: false, createdAt: '2026-01-20T09:00:00Z' },
-    { id: 'u3', email: 'mehmet@firma-alpha.com', name: 'Mehmet Kaya', role: 'member', companyId: mockCompanies[0].id, isActive: true, isPlatformAdmin: false, createdAt: '2026-02-03T11:00:00Z' },
-    { id: 'u4', email: 'zeynep@firma-alpha.com', name: 'Zeynep Demir', role: 'member', companyId: mockCompanies[0].id, isActive: true, isPlatformAdmin: false, createdAt: '2026-02-15T14:00:00Z' },
-    { id: 'u5', email: 'can@firma-alpha.com', name: 'Can Öztürk', role: 'member', companyId: mockCompanies[0].id, isActive: true, isPlatformAdmin: false, createdAt: '2026-03-01T08:30:00Z' },
+    { id: 'u1', email: 'ali@firma-alpha.com', name: 'Ali Veli', role: 'owner', companyId: mockCompanies[0].id, isActive: true, isPlatformAdmin: false, avatarUrl: null, createdAt: '2026-01-15T10:00:00Z' },
+    { id: 'u2', email: 'ayse@firma-alpha.com', name: 'Ayşe Yılmaz', role: 'admin', companyId: mockCompanies[0].id, isActive: true, isPlatformAdmin: false, avatarUrl: null, createdAt: '2026-01-20T09:00:00Z' },
+    { id: 'u3', email: 'mehmet@firma-alpha.com', name: 'Mehmet Kaya', role: 'member', companyId: mockCompanies[0].id, isActive: true, isPlatformAdmin: false, avatarUrl: null, createdAt: '2026-02-03T11:00:00Z' },
+    { id: 'u4', email: 'zeynep@firma-alpha.com', name: 'Zeynep Demir', role: 'member', companyId: mockCompanies[0].id, isActive: true, isPlatformAdmin: false, avatarUrl: null, createdAt: '2026-02-15T14:00:00Z' },
+    { id: 'u5', email: 'can@firma-alpha.com', name: 'Can Öztürk', role: 'member', companyId: mockCompanies[0].id, isActive: true, isPlatformAdmin: false, avatarUrl: null, createdAt: '2026-03-01T08:30:00Z' },
   ],
 }
 // Generate users for other companies
@@ -115,6 +115,7 @@ mockCompanies.slice(1).forEach((c) => {
     companyId: c.id,
     isActive: true,
     isPlatformAdmin: false,
+    avatarUrl: null,
     createdAt: '2026-02-01T10:00:00Z',
   }))
 })

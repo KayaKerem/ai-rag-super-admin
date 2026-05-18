@@ -59,7 +59,16 @@ function RoleBadge({ role }: { role: CompanyUser['role'] }) {
   )
 }
 
-function UserAvatar({ name }: { name: string }) {
+function UserAvatar({ name, avatarUrl }: { name: string; avatarUrl: string | null }) {
+  if (avatarUrl) {
+    return (
+      <img
+        src={avatarUrl}
+        alt={name}
+        className="h-8 w-8 shrink-0 rounded-full object-cover"
+      />
+    )
+  }
   return (
     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground">
       {getInitials(name)}
@@ -183,13 +192,20 @@ export function UsersTab({ companyId }: UsersTabProps) {
               <TableRow key={user.id}>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <UserAvatar name={user.name} />
+                    <UserAvatar name={user.name} avatarUrl={user.avatarUrl} />
                     <span className="font-medium">{user.name}</span>
                   </div>
                 </TableCell>
                 <TableCell className="text-muted-foreground">{user.email}</TableCell>
                 <TableCell>
-                  <RoleBadge role={user.role} />
+                  <div className="flex items-center gap-1.5">
+                    <RoleBadge role={user.role} />
+                    {user.isPlatformAdmin && (
+                      <Badge className="bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800">
+                        Platform Admin
+                      </Badge>
+                    )}
+                  </div>
                 </TableCell>
                 <TableCell className="text-muted-foreground">
                   {formatDate(user.createdAt)}
