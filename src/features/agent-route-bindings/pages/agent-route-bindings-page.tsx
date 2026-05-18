@@ -1,7 +1,12 @@
 import { Loader2 } from 'lucide-react'
 import { useAgentRouteBindings } from '../hooks/use-agent-route-bindings'
+import type { AgentRouteBindingsFilters } from '../types'
 
-const EMPTY_FILTERS = { agentId: null, channel: null, peerKind: null }
+const EMPTY_FILTERS: AgentRouteBindingsFilters = {
+  agentId: null,
+  channel: null,
+  peerKind: null,
+}
 
 export function AgentRouteBindingsPage() {
   const { data, isLoading, isError } = useAgentRouteBindings(EMPTY_FILTERS)
