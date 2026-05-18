@@ -2,6 +2,7 @@ import type {
   AgentQualityMetric,
   AgentQualityAlertsFilters,
 } from '@/features/agent-quality/types'
+import type { AgentRouteBindingsFilters } from '@/features/agent-route-bindings/types'
 
 export const queryKeys = {
   companies: {
@@ -66,6 +67,11 @@ export const queryKeys = {
       list: (filters: AgentQualityAlertsFilters) =>
         ['admin', 'agent-quality-alerts', 'list', filters] as const,
       count: () => ['admin', 'agent-quality-alerts', 'count'] as const,
+    },
+    agentRouteBindings: {
+      all: ['admin', 'agent-route-bindings'] as const,
+      list: (filters: AgentRouteBindingsFilters) =>
+        ['admin', 'agent-route-bindings', 'list', filters] as const,
     },
   },
 }
