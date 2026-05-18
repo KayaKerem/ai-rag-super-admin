@@ -1,3 +1,4 @@
+import { Trash2 } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -7,15 +8,17 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { AgentLabel } from './agent-label'
 import type { AgentRouteBinding } from '../types'
 
 interface AgentRouteBindingsTableProps {
   rows: AgentRouteBinding[]
   onRowClick: (row: AgentRouteBinding) => void
+  onDelete: (row: AgentRouteBinding) => void
 }
 
-export function AgentRouteBindingsTable({ rows, onRowClick }: AgentRouteBindingsTableProps) {
+export function AgentRouteBindingsTable({ rows, onRowClick, onDelete }: AgentRouteBindingsTableProps) {
   if (rows.length === 0) {
     return (
       <div className="rounded-md border p-8 text-center text-sm text-muted-foreground">
@@ -35,6 +38,7 @@ export function AgentRouteBindingsTable({ rows, onRowClick }: AgentRouteBindings
             <TableHead>Peer ID</TableHead>
             <TableHead>Roller</TableHead>
             <TableHead className="text-right">Öncelik</TableHead>
+            <TableHead className="w-12" />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -72,6 +76,20 @@ export function AgentRouteBindingsTable({ rows, onRowClick }: AgentRouteBindings
                 )}
               </TableCell>
               <TableCell className="text-right tabular-nums">{row.priority}</TableCell>
+              <TableCell className="w-12">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onDelete(row)
+                  }}
+                  aria-label="Bindingi sil"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
