@@ -29,7 +29,7 @@ interface PlanFormData {
   maxFileSizeMb: string
   crawlMaxPages: string
   crawlMaxSources: string
-  allowedModels: Array<{ id: string; label: string }>
+  allowedModels: AllowedModel[]
   allowedTools: string[]
   allowedConnectors: string[]
   isActive: boolean
@@ -327,8 +327,8 @@ function PlanDialog({
             <h3 className="text-sm font-semibold">İzin Verilen Modeller</h3>
             <AllowedModelsEditor
               models={models}
-              value={form.allowedModels.map((m) => ({ ...m, isDefault: false }))}
-              onChange={(v: AllowedModel[]) => setField('allowedModels', v.map(({ id, label }) => ({ id, label: label ?? id })))}
+              value={form.allowedModels}
+              onChange={(v: AllowedModel[]) => setField('allowedModels', v)}
             />
           </div>
 

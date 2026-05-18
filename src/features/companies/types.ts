@@ -224,7 +224,7 @@ export interface PricingPlan {
   budgetDowngradeThresholdPct: number
   maxStorageGb: number
   maxFileSizeMb: number
-  allowedModels: Array<{ id: string; label: string }>
+  allowedModels: AllowedModel[]
   allowedTools: string[]
   allowedConnectors: string[]
   crawlMaxPages: number
@@ -247,7 +247,7 @@ export interface CreatePlanRequest {
   budgetDowngradeThresholdPct?: number
   maxStorageGb?: number
   maxFileSizeMb?: number
-  allowedModels?: Array<{ id: string; label: string }>
+  allowedModels?: AllowedModel[]
   allowedTools?: string[]
   allowedConnectors?: string[]
   crawlMaxPages?: number
