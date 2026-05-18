@@ -7,6 +7,7 @@ import { useAgentRouteBindings } from '../hooks/use-agent-route-bindings'
 import { AgentRouteBindingsFilters } from '../components/agent-route-bindings-filters'
 import { AgentRouteBindingsTable } from '../components/agent-route-bindings-table'
 import { AgentRouteBindingDialog } from '../components/agent-route-binding-dialog'
+import { AgentRouteBindingDeleteDialog } from '../components/agent-route-binding-delete-dialog'
 import type { AgentRouteBinding, AgentRouteBindingsFilters as Filters, PeerKind } from '../types'
 
 const URL_STATE_OPTS = {
@@ -30,6 +31,8 @@ export function AgentRouteBindingsPage() {
   const [filters, setFilters] = useUrlFilterState<Filters>(URL_STATE_OPTS)
   const [selected, setSelected] = useState<AgentRouteBinding | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState<AgentRouteBinding | null>(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const { data, isLoading, isError, error, refetch } = useAgentRouteBindings(filters)
 
   // Parent state contract (spec §7.4): when list refetches after a mutation,
@@ -63,6 +66,11 @@ export function AgentRouteBindingsPage() {
   function handleCreate() {
     setSelected(null)
     setDialogOpen(true)
+  }
+
+  function handleDelete(row: AgentRouteBinding) {
+    setDeleteTarget(row)
+    setDeleteDialogOpen(true)
   }
 
   if (isError) {
@@ -130,13 +138,19 @@ export function AgentRouteBindingsPage() {
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
       ) : (
-        <AgentRouteBindingsTable rows={items} onRowClick={handleRowClick} />
+        <AgentRouteBindingsTable rows={items} onRowClick={handleRowClick} onDelete={handleDelete} />
       )}
 
       <AgentRouteBindingDialog
         binding={selected}
         open={dialogOpen}
         onOpenChange={setDialogOpen}
+      />
+
+      <AgentRouteBindingDeleteDialog
+        binding={deleteTarget}
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
       />
     </div>
   )
