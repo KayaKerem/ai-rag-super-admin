@@ -3,10 +3,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ShieldCheck } from 'lucide-react'
-import { toast } from 'sonner'
 import { formatDate } from '@/lib/utils'
-import { useActivityLog, useVerifyActivityLogIntegrity } from '../hooks/use-activity-log'
+import { useActivityLog } from '../hooks/use-activity-log'
 import type { ActivityCategory } from '../types'
 
 interface ActivityLogTabProps {
@@ -73,21 +71,6 @@ export function ActivityLogTab({ companyId }: ActivityLogTabProps) {
     offset,
   })
 
-  const verifyIntegrity = useVerifyActivityLogIntegrity(companyId)
-
-  function handleVerify() {
-    verifyIntegrity.mutate(undefined, {
-      onSuccess: (res) => {
-        if (res.valid) {
-          toast.success(`Butunluk dogrulandi (${res.totalEntries} kayit)`)
-        } else {
-          toast.error('Butunluk hatasi tespit edildi!')
-        }
-      },
-      onError: () => toast.error('Dogrulama basarisiz'),
-    })
-  }
-
   const total = data?.total ?? 0
   const items = data?.items ?? []
   const from = total === 0 ? 0 : offset + 1
@@ -115,15 +98,6 @@ export function ActivityLogTab({ companyId }: ActivityLogTabProps) {
               ))}
             </SelectContent>
           </Select>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleVerify}
-            disabled={verifyIntegrity.isPending}
-          >
-            <ShieldCheck className="mr-1 h-3.5 w-3.5" />
-            {verifyIntegrity.isPending ? 'Dogrulaniyor...' : 'Butunluk Kontrolu'}
-          </Button>
         </div>
         <span className="text-sm text-muted-foreground">
           {total === 0 ? 'Kayit yok' : `${from}-${to} / ${total}`}

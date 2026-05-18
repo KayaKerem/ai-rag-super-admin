@@ -608,13 +608,6 @@ export const handlers = [
     return HttpResponse.json({ items, total })
   }),
 
-  http.post(`${BASE}/platform/companies/:id/activity-log/verify-integrity`, async ({ params }) => {
-    await delay(300)
-    const id = params.id as string
-    const items = mockActivityLog[id] ?? []
-    return HttpResponse.json({ valid: true, totalEntries: items.length })
-  }),
-
   // ─── Proactive Insights ────────────────────────────
   http.get(`${BASE}/platform/companies/:id/insights/summary`, async ({ params }) => {
     await delay(100)
