@@ -10,6 +10,7 @@ import type {
   AgentRouteBindingListResponse,
   AgentRouteBindingsFilters,
   CreateAgentRouteBindingRequest,
+  UpdateAgentRouteBindingRequest,
 } from '../types'
 
 export function useAgentRouteBindings(filters: AgentRouteBindingsFilters) {
@@ -33,6 +34,19 @@ export function useCreateAgentRouteBinding() {
   return useMutation({
     mutationFn: async (body: CreateAgentRouteBindingRequest): Promise<AgentRouteBinding> => {
       const { data } = await apiClient.post('/platform/admin/agent-route-bindings', body)
+      return agentRouteBindingSchema.parse(data)
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.admin.agentRouteBindings.all })
+    },
+  })
+}
+
+export function useUpdateAgentRouteBinding(id: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (body: UpdateAgentRouteBindingRequest): Promise<AgentRouteBinding> => {
+      const { data } = await apiClient.patch(`/platform/admin/agent-route-bindings/${id}`, body)
       return agentRouteBindingSchema.parse(data)
     },
     onSuccess: () => {
