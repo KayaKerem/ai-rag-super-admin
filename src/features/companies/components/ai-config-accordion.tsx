@@ -10,6 +10,8 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { configBlockSchemas, type ConfigBlockKey } from '@/lib/validations'
 import { AllowedModelsEditor } from './allowed-models-editor'
+import { SystemModelsGrid } from './system-models-grid'
+import { SYSTEM_MODEL_ROLES, type SystemModelRole, type SystemModels } from '../types'
 import type { PlatformModel, AllowedModel } from '../types'
 import type { ZodTypeAny } from 'zod'
 
@@ -48,7 +50,8 @@ export function AiConfigAccordion({ currentValues, models, modelOptions: _modelO
 
   function handleSubmit(values: Record<string, unknown>) {
     const cleaned = Object.fromEntries(
-      Object.entries(values).filter(([, v]) => {
+      Object.entries(values).filter(([key, v]) => {
+        if (key === 'systemModels') return false
         if (v === '' || v === undefined || v === null) return false
         if (typeof v === 'string' && v.includes('****')) return false
         if (typeof v === 'number' && isNaN(v)) return false
@@ -57,6 +60,15 @@ export function AiConfigAccordion({ currentValues, models, modelOptions: _modelO
     )
     if (allowedModels.length > 0) {
       cleaned.allowedModels = allowedModels
+    }
+    if (form.formState.dirtyFields.systemModels) {
+      const raw = (values.systemModels ?? {}) as Record<string, string | null | undefined>
+      const systemModels: Record<string, string | null> = {}
+      for (const key of SYSTEM_MODEL_ROLES) {
+        const v = raw[key]
+        systemModels[key] = v === '' || v == null ? null : v
+      }
+      cleaned.systemModels = systemModels
     }
     onSave('aiConfig', cleaned)
   }
@@ -214,6 +226,13 @@ export function AiConfigAccordion({ currentValues, models, modelOptions: _modelO
             </Select>
           </div>
 
+          <SystemModelsGrid
+            models={models}
+            value={(form.watch('systemModels') ?? {}) as SystemModels}
+            onChange={(role: SystemModelRole, modelId: string) =>
+              form.setValue(`systemModels.${role}` as `systemModels.${SystemModelRole}`, modelId === '' ? null : modelId, { shouldDirty: true })
+            }
+          />
           </div>
 
           {/* Allowed Models Section */}
