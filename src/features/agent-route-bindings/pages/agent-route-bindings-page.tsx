@@ -150,7 +150,10 @@ export function AgentRouteBindingsPage() {
       <AgentRouteBindingDeleteDialog
         binding={deleteTarget}
         open={deleteDialogOpen}
-        onOpenChange={setDeleteDialogOpen}
+        onOpenChange={(next) => {
+          setDeleteDialogOpen(next)
+          if (!next) setDeleteTarget(null)
+        }}
       />
     </div>
   )
