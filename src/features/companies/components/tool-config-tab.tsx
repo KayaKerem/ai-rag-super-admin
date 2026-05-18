@@ -70,7 +70,8 @@ export function ToolConfigTab({ companyId }: ToolConfigTabProps) {
   const CATEGORY_LABELS: Record<string, string> = {
     search: 'Arama',
     template: 'Şablon',
-    notes: 'Notlar',
+    action: 'Aksiyon',
+    crm: 'CRM',
   }
 
   return (
