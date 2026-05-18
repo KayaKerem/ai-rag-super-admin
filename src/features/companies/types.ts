@@ -239,6 +239,9 @@ export interface AgentAlert {
 
 // ─── Pricing Plans ────────────────────────────────
 
+export type CapEnforcementMode = 'disabled' | 'log_only' | 'enforce'
+export type SandboxQuotaEnforcementMode = 'log_only' | 'enforce' | 'bypass'
+
 export interface PricingPlan {
   id: string
   name: string
@@ -256,6 +259,10 @@ export interface PricingPlan {
   allowedConnectors: string[]
   crawlMaxPages: number
   crawlMaxSources: number
+  maxAgentPlaybooks?: number
+  capEnforcementMode?: CapEnforcementMode
+  sandboxQuotaPerDay?: number | null
+  sandboxQuotaEnforcementMode?: SandboxQuotaEnforcementMode
   isActive: boolean
   sortOrder: number
   companyCount: number
@@ -279,6 +286,10 @@ export interface CreatePlanRequest {
   allowedConnectors?: string[]
   crawlMaxPages?: number
   crawlMaxSources?: number
+  maxAgentPlaybooks?: number
+  capEnforcementMode?: CapEnforcementMode
+  sandboxQuotaPerDay?: number | null
+  sandboxQuotaEnforcementMode?: SandboxQuotaEnforcementMode
   isActive?: boolean
   sortOrder?: number
 }

@@ -13,8 +13,9 @@ import { usePlatformModels } from '@/features/companies/hooks/use-platform-model
 import { useToolPlans } from '@/features/companies/hooks/use-tool-plans'
 import { useDataSourceTypes } from '@/features/companies/hooks/use-data-sources'
 import { AllowedModelsEditor } from '@/features/companies/components/allowed-models-editor'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { formatCurrencyTry } from '@/lib/utils'
-import type { PricingPlan, CreatePlanRequest, AllowedModel, PlatformModel, RegisteredTool, DataSourceType, DeletePlanResponse } from '@/features/companies/types'
+import type { PricingPlan, CreatePlanRequest, AllowedModel, PlatformModel, RegisteredTool, DataSourceType, DeletePlanResponse, CapEnforcementMode, SandboxQuotaEnforcementMode } from '@/features/companies/types'
 
 interface PlanFormData {
   name: string
@@ -29,6 +30,10 @@ interface PlanFormData {
   maxFileSizeMb: string
   crawlMaxPages: string
   crawlMaxSources: string
+  maxAgentPlaybooks: string
+  capEnforcementMode: CapEnforcementMode
+  sandboxQuotaPerDay: string
+  sandboxQuotaEnforcementMode: SandboxQuotaEnforcementMode
   allowedModels: AllowedModel[]
   allowedTools: string[]
   allowedConnectors: string[]
@@ -42,6 +47,8 @@ const emptyForm: PlanFormData = {
   budgetUsd: '10', budgetDowngradeThresholdPct: '80',
   maxStorageGb: '5', maxFileSizeMb: '25',
   crawlMaxPages: '50', crawlMaxSources: '2',
+  maxAgentPlaybooks: '4', capEnforcementMode: 'log_only',
+  sandboxQuotaPerDay: '', sandboxQuotaEnforcementMode: 'log_only',
   allowedModels: [], allowedTools: [], allowedConnectors: [],
   isActive: true, sortOrder: '0',
 }
@@ -56,6 +63,10 @@ function planToForm(p: PricingPlan): PlanFormData {
     budgetDowngradeThresholdPct: String(p.budgetDowngradeThresholdPct),
     maxStorageGb: String(p.maxStorageGb), maxFileSizeMb: String(p.maxFileSizeMb),
     crawlMaxPages: String(p.crawlMaxPages), crawlMaxSources: String(p.crawlMaxSources),
+    maxAgentPlaybooks: p.maxAgentPlaybooks != null ? String(p.maxAgentPlaybooks) : '4',
+    capEnforcementMode: p.capEnforcementMode ?? 'log_only',
+    sandboxQuotaPerDay: p.sandboxQuotaPerDay != null ? String(p.sandboxQuotaPerDay) : '',
+    sandboxQuotaEnforcementMode: p.sandboxQuotaEnforcementMode ?? 'log_only',
     allowedModels: p.allowedModels, allowedTools: p.allowedTools, allowedConnectors: p.allowedConnectors,
     isActive: p.isActive, sortOrder: String(p.sortOrder),
   }
@@ -66,7 +77,19 @@ function clamp(v: number, min: number, fallback: number): number {
   return isNaN(n) ? fallback : Math.max(min, n)
 }
 
+// Backend allows -1 (unlimited) or positive integer; rejects 0.
+// Returns the parsed int or undefined when the form field is empty.
+// Throws on 0 — caller must validate before calling.
+function intOrUnlimited(value: string): number | undefined {
+  if (value === '') return undefined
+  const n = Math.trunc(Number(value))
+  if (isNaN(n)) return undefined
+  return n
+}
+
 function formToRequest(f: PlanFormData): CreatePlanRequest {
+  const maxAgentPlaybooks = intOrUnlimited(f.maxAgentPlaybooks)
+  const sandboxQuotaPerDay = f.sandboxQuotaPerDay === '' ? null : intOrUnlimited(f.sandboxQuotaPerDay)
   return {
     name: f.name, slug: f.slug,
     description: f.description || undefined,
@@ -77,9 +100,24 @@ function formToRequest(f: PlanFormData): CreatePlanRequest {
     budgetDowngradeThresholdPct: Math.min(100, Math.max(1, Number(f.budgetDowngradeThresholdPct) || 80)),
     maxStorageGb: clamp(Number(f.maxStorageGb), 0, 5), maxFileSizeMb: clamp(Number(f.maxFileSizeMb), 0, 25),
     crawlMaxPages: clamp(Number(f.crawlMaxPages), 0, 50), crawlMaxSources: clamp(Number(f.crawlMaxSources), 0, 2),
+    ...(maxAgentPlaybooks !== undefined ? { maxAgentPlaybooks } : {}),
+    capEnforcementMode: f.capEnforcementMode,
+    sandboxQuotaPerDay,
+    sandboxQuotaEnforcementMode: f.sandboxQuotaEnforcementMode,
     allowedModels: f.allowedModels, allowedTools: f.allowedTools, allowedConnectors: f.allowedConnectors,
     isActive: f.isActive, sortOrder: Math.max(0, Number(f.sortOrder) || 0),
   }
+}
+
+// Validators (0 is rejected by backend); returns first error message or null.
+function validatePlanForm(f: PlanFormData): string | null {
+  if (f.maxAgentPlaybooks !== '' && Math.trunc(Number(f.maxAgentPlaybooks)) === 0) {
+    return 'Max Agent Playbooks 0 olamaz (-1 = sınırsız veya pozitif tamsayı).'
+  }
+  if (f.sandboxQuotaPerDay !== '' && Math.trunc(Number(f.sandboxQuotaPerDay)) === 0) {
+    return 'Sandbox Quota / Gün 0 olamaz (boş = env default, -1 = sınırsız veya pozitif tamsayı).'
+  }
+  return null
 }
 
 export function PricingPlansSection() {
@@ -231,6 +269,11 @@ function PlanDialog({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    const validationError = validatePlanForm(form)
+    if (validationError) {
+      toast.error(validationError)
+      return
+    }
     const body = formToRequest(form)
     if (isEdit) {
       const { slug: _, ...updateBody } = body
@@ -296,6 +339,61 @@ function PlanDialog({
               <div><Label>Maks Dosya (MB)</Label><Input type="number" min={0} value={form.maxFileSizeMb} onChange={(e) => setField('maxFileSizeMb', e.target.value)} /></div>
               <div><Label>Crawler Maks Sayfa</Label><Input type="number" min={0} value={form.crawlMaxPages} onChange={(e) => setField('crawlMaxPages', e.target.value)} /></div>
               <div><Label>Crawler Maks Kaynak</Label><Input type="number" min={0} value={form.crawlMaxSources} onChange={(e) => setField('crawlMaxSources', e.target.value)} /></div>
+            </div>
+          </div>
+
+          {/* Phase 10 Limitleri */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold">Phase 10 Limitleri</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Max Agent Playbooks</Label>
+                <Input
+                  type="number"
+                  value={form.maxAgentPlaybooks}
+                  onChange={(e) => setField('maxAgentPlaybooks', e.target.value)}
+                  placeholder="-1 = sınırsız"
+                />
+                <p className="mt-1 text-[10px] text-muted-foreground">Per-intent. Boş = plan default. -1 = sınırsız. 0 geçersizdir.</p>
+              </div>
+              <div>
+                <Label>Cap Enforcement Mode</Label>
+                <Select value={form.capEnforcementMode} onValueChange={(v: string | null) => setField('capEnforcementMode', (v as CapEnforcementMode) ?? 'log_only')}>
+                  <SelectTrigger className="mt-1 w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="disabled">Disabled (cap detection kapalı)</SelectItem>
+                    <SelectItem value="log_only">Log Only (audit, conversation pause yok)</SelectItem>
+                    <SelectItem value="enforce">Enforce (audit + pause)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="mt-1 text-[10px] text-muted-foreground">Plan-tier cap enforcement default. Firma override edebilir.</p>
+              </div>
+              <div>
+                <Label>Sandbox Quota / Gün</Label>
+                <Input
+                  type="number"
+                  value={form.sandboxQuotaPerDay}
+                  onChange={(e) => setField('sandboxQuotaPerDay', e.target.value)}
+                  placeholder="Boş = env default"
+                />
+                <p className="mt-1 text-[10px] text-muted-foreground">Boş = env default (100). -1 = sınırsız. 0 geçersizdir.</p>
+              </div>
+              <div>
+                <Label>Sandbox Mode</Label>
+                <Select value={form.sandboxQuotaEnforcementMode} onValueChange={(v: string | null) => setField('sandboxQuotaEnforcementMode', (v as SandboxQuotaEnforcementMode) ?? 'log_only')}>
+                  <SelectTrigger className="mt-1 w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="log_only">Log Only (warn, 429 yok)</SelectItem>
+                    <SelectItem value="enforce">Enforce (eşikte 429)</SelectItem>
+                    <SelectItem value="bypass">Bypass (counter touch yok)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="mt-1 text-[10px] text-muted-foreground">Sandbox quota runtime davranışı.</p>
+              </div>
             </div>
           </div>
 
