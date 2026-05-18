@@ -92,8 +92,7 @@ export function AgentRouteBindingDialog({
       (values.notes ?? '').trim() === '' ? null : (values.notes ?? '').trim()
 
     if (isEdit) {
-      // Edit handler wired in PR 4. Should not be reached in PR 3.
-      toast.error('Edit henüz aktif değil (PR 4)')
+      toast.error('Düzenleme yakında aktif olacak')
       return
     }
 
