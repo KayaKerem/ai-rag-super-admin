@@ -54,3 +54,15 @@ export function useUpdateAgentRouteBinding(id: string) {
     },
   })
 }
+
+export function useDeleteAgentRouteBinding() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: string): Promise<void> => {
+      await apiClient.delete(`/platform/admin/agent-route-bindings/${id}`)
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.admin.agentRouteBindings.all })
+    },
+  })
+}
