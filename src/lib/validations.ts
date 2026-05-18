@@ -33,6 +33,31 @@ export const mailConfigSchema = z.object({
   replyTo: z.string().optional(),
 })
 
+// Empty string from <ModelSelect> X-clear → null on the wire.
+// String value → kept as-is. Backend validates model id against its catalog.
+const nullableModel = z.preprocess(
+  (v) => (v === '' || v === undefined ? null : v),
+  z.string().nullable(),
+)
+
+export const systemModelsSchema = z.object({
+  channel: nullableModel,
+  quote: nullableModel,
+  retry: nullableModel,
+  toolStep: nullableModel,
+  title: nullableModel,
+  summary: nullableModel,
+  compaction: nullableModel,
+  qualityEval: nullableModel,
+  autoTag: nullableModel,
+  research: nullableModel,
+  memoryExtract: nullableModel,
+  freshness: nullableModel,
+  intentClassification: nullableModel,
+  channelSummary: nullableModel,
+  languageDetect: nullableModel,
+}).optional()
+
 export const aiConfigSchema = z.object({
   apiKey: z.string().optional(),
   language: z.enum(['tr', 'en']).optional(),
@@ -47,6 +72,7 @@ export const aiConfigSchema = z.object({
   rerankModel: z.string().optional(),
   exaApiKey: z.string().optional(),
   webSearchTier: z.enum(['basic', 'deep', 'deep_reasoning']).optional(),
+  systemModels: systemModelsSchema,
 })
 
 export const embeddingConfigSchema = z.object({
