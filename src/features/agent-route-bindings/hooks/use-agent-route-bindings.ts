@@ -19,5 +19,6 @@ export function useAgentRouteBindings(filters: AgentRouteBindingsFilters) {
       // Runtime parse — fails loudly if backend drifts (peerId object vs string, etc.)
       return agentRouteBindingListSchema.parse(data)
     },
+    staleTime: 30_000,
   })
 }
