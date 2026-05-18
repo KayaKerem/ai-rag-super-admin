@@ -305,6 +305,57 @@ Smoke çıktısına göre parser tek-path olarak yazılır. **Olası iki shape:*
 { "statusCode": 409, "message": "binding_duplicate", "error": "Conflict" }
 ```
 
+### 5.2.1.1 Smoke Bulgu (2026-05-18, Task 16)
+
+Prod (`api.edfu.ai`) curl smoke: **backend her iki shape'i de kullanıyor**, ama farklı code'lar için farklı shape:
+
+**binding_duplicate (409 POST aynı natkey):**
+```json
+{
+  "error": "binding_duplicate",
+  "conflict": {
+    "agentId": "00000000-0000-4000-8000-000000000002",
+    "channel": "test-dup-1779135267",
+    "peerKind": "user",
+    "peerId": null,
+    "priority": 0
+  }
+}
+```
+- Discriminator: `body.error === 'binding_duplicate'` (top-level)
+- `body.conflict` **`{natkey: string}` değil** — tam breakdown objesi (5 alan).
+- `body.message` yok, `body.statusCode` yok.
+
+**binding_version_conflict (409 PATCH yanlış expectedVersionSeq):**
+```json
+{
+  "message": "binding_version_conflict",
+  "error": "Conflict",
+  "statusCode": 409
+}
+```
+- Discriminator: `body.message === 'binding_version_conflict'` (Nest HttpException default)
+- `body.error` HTTP status adı ("Conflict"), kod değil.
+- `body.conflict` yok.
+
+**Karar:** Parser tek-yol değil, **iki kaynaklı tek-pass**: önce `body.error`'a bak (KNOWN_CODES içinde varsa onu kullan), yoksa `body.message`'a bak (KNOWN_CODES içinde varsa onu kullan), yoksa `unknown`. Bu defensive duplikasyon değil — backend deliberate olarak iki shape üretiyor. Plan Task 17 Variant A ve B birleştirilip Variant C (hybrid) olarak yazıldı.
+
+**ParsedError.conflict type düzeltmesi:** `{natkey: string}` yerine full breakdown:
+```typescript
+conflict?: {
+  agentId: string
+  channel: string
+  peerKind: 'customer' | 'user'
+  peerId: string | null
+  priority: number
+}
+```
+
+**Toast message güncelleme (§7.4 handleMutationError):** `parsed.conflict?.natkey` yerine alan-alan format:
+```typescript
+`Aynı kombinasyon mevcut: agent=${getAgentLabel(ctx.agentId)} · ${ctx.channel} · ${ctx.peerKind}${ctx.peerId ? `:${ctx.peerId}` : ''} · öncelik ${ctx.priority}`
+```
+
 ### 5.2.2 Error Parser (Single Path)
 
 ```typescript
