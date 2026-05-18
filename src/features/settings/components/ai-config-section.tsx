@@ -5,8 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { FieldLabel } from '@/components/ui/field-label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { ModelSelect } from '@/components/ui/model-select'
-import { Switch } from '@/components/ui/switch'
 import { Separator } from '@/components/ui/separator'
 import { configBlockSchemas, type ConfigBlockKey } from '@/lib/validations'
 import { AllowedModelsEditor } from '@/features/companies/components/allowed-models-editor'
@@ -54,13 +52,6 @@ export function AiConfigSection({ currentValues, models, modelOptions: _modelOpt
     return typeof value === 'string' && value.includes('****')
   }
 
-  const modelFields: { key: string; label: string; hint: string; required?: boolean }[] = [
-    { key: 'model', label: 'Model', hint: 'Ana AI modeli. OpenRouter model ID formatinda', required: true },
-    { key: 'compactionModel', label: 'Compaction Model', hint: 'Uzun sohbet gecmisini ozetlemek icin kullanilan model' },
-    { key: 'titleModel', label: 'Title Model', hint: 'Sohbet basligi otomatik uretimi icin kullanilan hafif model' },
-    { key: 'summaryModel', label: 'Özet Modeli', hint: 'Dokuman ozetleme modeli (default: openai/gpt-4o-mini)' },
-  ]
-
   const numberFields: { key: string; label: string; hint: string; required?: boolean }[] = [
     { key: 'requestTimeoutMs', label: 'Timeout (ms)', hint: 'AI istegi icin maksimum bekleme suresi (milisaniye)' },
     { key: 'budgetUsd', label: 'Budget (USD)', hint: 'Aylik AI harcama limiti ($). Asilirsa model downgrade edilir', required: true },
@@ -79,20 +70,6 @@ export function AiConfigSection({ currentValues, models, modelOptions: _modelOpt
 
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <div className="grid grid-cols-2 gap-4">
-          {modelFields.map((field) => {
-            const watchedValue = form.watch(field.key) as string | undefined
-            return (
-              <div key={field.key}>
-                <FieldLabel label={field.label} hint={field.hint} required={field.required} />
-                <ModelSelect
-                  models={models}
-                  value={watchedValue ?? ''}
-                  onChange={(v) => form.setValue(field.key, v)}
-                />
-              </div>
-            )
-          })}
-
           <div>
             <FieldLabel label="OpenRouter API Key" hint="OpenRouter API anahtari. Tum AI istekleri bu key uzerinden yonlendirilir" required />
             <Input
@@ -149,24 +126,6 @@ export function AiConfigSection({ currentValues, models, modelOptions: _modelOpt
               />
             </div>
           ))}
-
-          {/* Quality Eval */}
-          <div className="flex items-center justify-between rounded-md border px-3 py-2">
-            <FieldLabel label="Quality Eval" hint="Otomatik kalite degerlendirme. Her AI cevabi sonrasi groundedness ve relevance olculur" />
-            <Switch
-              checked={(form.watch('qualityEvalEnabled') as boolean) ?? false}
-              onCheckedChange={(v: boolean) => form.setValue('qualityEvalEnabled', v)}
-            />
-          </div>
-
-          <div>
-            <FieldLabel label="Quality Eval Model" hint="Degerlendirme icin kullanilan model. Ucuz model onerilir" />
-            <ModelSelect
-              models={models}
-              value={(form.watch('qualityEvalModel') as string) ?? ''}
-              onChange={(v) => form.setValue('qualityEvalModel', v)}
-            />
-          </div>
 
           {/* Reranking Section */}
           <div className="col-span-2">
@@ -234,19 +193,6 @@ export function AiConfigSection({ currentValues, models, modelOptions: _modelOpt
             </Select>
           </div>
 
-          {/* Advanced Section */}
-          <div className="col-span-2">
-            <Separator className="my-3" />
-            <p className="mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Gelişmiş</p>
-          </div>
-
-          <div className="flex items-center justify-between rounded-md border px-3 py-2">
-            <FieldLabel label="Multi-Model Step" hint="Tool step'lerinde ucuz model kullan (maliyet optimizasyonu)" />
-            <Switch
-              checked={(form.watch('multiModelStepEnabled') as boolean) ?? false}
-              onCheckedChange={(v: boolean) => form.setValue('multiModelStepEnabled', v)}
-            />
-          </div>
         </div>
 
         {models.length > 0 && (

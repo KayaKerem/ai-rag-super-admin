@@ -351,11 +351,8 @@ export const mockDataSources = [
 export const mockCompanyConfigs: Record<string, any> = {
   [mockCompanies[0].id]: {
     aiConfig: {
-      model: 'anthropic/claude-sonnet-4.6',
-      compactionModel: 'anthropic/claude-haiku-4-5-20251001',
       apiKey: 'sk-or-a****wxyz',
       language: 'tr',
-      summaryModel: 'openai/gpt-4o-mini',
       budgetUsd: 100,
       budgetDowngradeThresholdPct: 80,
     },
@@ -385,7 +382,6 @@ export const mockCompanyConfigs: Record<string, any> = {
   },
   [mockCompanies[1].id]: {
     aiConfig: {
-      model: 'openai/gpt-4o',
       apiKey: 'sk-or-o****mnop',
       budgetUsd: 50,
     },
@@ -395,12 +391,8 @@ export const mockCompanyConfigs: Record<string, any> = {
 // Platform defaults
 export const mockPlatformDefaults: any = {
   aiConfig: {
-    model: 'anthropic/claude-sonnet-4.6',
-    compactionModel: 'anthropic/claude-haiku-4-5-20251001',
-    titleModel: 'openai/gpt-4o-mini',
     apiKey: 'sk-or-p****efgh',
     language: 'tr',
-    summaryModel: 'openai/gpt-4o-mini',
     requestTimeoutMs: 30000,
     budgetUsd: 200,
     budgetDowngradeThresholdPct: 80,
@@ -408,13 +400,10 @@ export const mockPlatformDefaults: any = {
     hybridRrfK: 60,
     maxOutputTokensRetryCap: 4096,
     vectorSimilarityThreshold: 0.5,
-    qualityEvalEnabled: true,
-    qualityEvalModel: 'openai/gpt-4o-mini',
     rerankApiKey: 'cohe****abcd',
     rerankModel: 'rerank-v3.5',
     exaApiKey: 'exa-a****wxyz',
     webSearchTier: 'basic',
-    multiModelStepEnabled: true,
   },
   s3Config: {
     bucket: 'platform-default-bucket',

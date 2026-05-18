@@ -34,12 +34,8 @@ export const mailConfigSchema = z.object({
 })
 
 export const aiConfigSchema = z.object({
-  model: z.string().optional(),
-  compactionModel: z.string().optional(),
-  titleModel: z.string().optional(),
   apiKey: z.string().optional(),
   language: z.enum(['tr', 'en']).optional(),
-  summaryModel: z.string().optional(),
   requestTimeoutMs: posNum,
   budgetUsd: posNum,
   budgetDowngradeThresholdPct: posNum,
@@ -47,16 +43,10 @@ export const aiConfigSchema = z.object({
   hybridRrfK: posNum,
   maxOutputTokensRetryCap: posNum,
   vectorSimilarityThreshold: optNum,
-  qualityEvalEnabled: z.boolean().optional(),
-  qualityEvalModel: z.string().optional(),
-  // Phase 2: Reranking
   rerankApiKey: z.string().optional(),
   rerankModel: z.string().optional(),
-  // Phase 2: Web Search
   exaApiKey: z.string().optional(),
   webSearchTier: z.enum(['basic', 'deep', 'deep_reasoning']).optional(),
-  // Phase 2: Advanced
-  multiModelStepEnabled: z.boolean().optional(),
 })
 
 export const embeddingConfigSchema = z.object({
