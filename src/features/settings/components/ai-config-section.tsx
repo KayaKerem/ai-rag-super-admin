@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
@@ -32,6 +32,12 @@ export function AiConfigSection({ currentValues, models, modelOptions: _modelOpt
     resolver: zodResolver(schema as any),
     defaultValues: (currentValues as Record<string, unknown>) ?? {},
   })
+
+  useEffect(() => {
+    if (currentValues) {
+      form.reset(currentValues as Record<string, unknown>)
+    }
+  }, [currentValues, form])
 
   function handleSubmit(values: Record<string, unknown>) {
     const cleaned = Object.fromEntries(
