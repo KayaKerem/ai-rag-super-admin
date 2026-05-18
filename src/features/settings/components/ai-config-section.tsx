@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator'
 import { configBlockSchemas, type ConfigBlockKey } from '@/lib/validations'
 import { AllowedModelsEditor } from '@/features/companies/components/allowed-models-editor'
+import { SystemModelsGrid } from '@/features/companies/components/system-models-grid'
+import { SYSTEM_MODEL_ROLES, type SystemModelRole, type SystemModels } from '@/features/companies/types'
 import type { PlatformModel, AllowedModel } from '@/features/companies/types'
 import type { ZodTypeAny } from 'zod'
 
@@ -41,7 +43,8 @@ export function AiConfigSection({ currentValues, models, modelOptions: _modelOpt
 
   function handleSubmit(values: Record<string, unknown>) {
     const cleaned = Object.fromEntries(
-      Object.entries(values).filter(([, v]) => {
+      Object.entries(values).filter(([key, v]) => {
+        if (key === 'systemModels') return false
         if (v === '' || v === undefined || v === null) return false
         if (typeof v === 'string' && v.includes('****')) return false
         if (typeof v === 'number' && isNaN(v)) return false
@@ -50,6 +53,15 @@ export function AiConfigSection({ currentValues, models, modelOptions: _modelOpt
     )
     if (allowedModels.length > 0) {
       cleaned.allowedModels = allowedModels
+    }
+    if (form.formState.dirtyFields.systemModels) {
+      const raw = (values.systemModels ?? {}) as Record<string, string | null | undefined>
+      const systemModels: Record<string, string | null> = {}
+      for (const key of SYSTEM_MODEL_ROLES) {
+        const v = raw[key]
+        systemModels[key] = v === '' || v == null ? null : v
+      }
+      cleaned.systemModels = systemModels
     }
     onSave('aiConfig', cleaned)
   }
@@ -199,6 +211,13 @@ export function AiConfigSection({ currentValues, models, modelOptions: _modelOpt
             </Select>
           </div>
 
+          <SystemModelsGrid
+            models={models}
+            value={(form.watch('systemModels') ?? {}) as SystemModels}
+            onChange={(role: SystemModelRole, modelId: string) =>
+              form.setValue(`systemModels.${role}` as `systemModels.${SystemModelRole}`, modelId === '' ? null : modelId, { shouldDirty: true })
+            }
+          />
         </div>
 
         {models.length > 0 && (
