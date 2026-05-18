@@ -77,6 +77,32 @@ export interface AllowedModel {
   isDefault?: boolean
 }
 
+// ─── System Models (per-role AI overrides) ─────────────
+
+export const SYSTEM_MODEL_ROLES = [
+  'channel',
+  'quote',
+  'retry',
+  'toolStep',
+  'title',
+  'summary',
+  'compaction',
+  'qualityEval',
+  'autoTag',
+  'research',
+  'memoryExtract',
+  'freshness',
+  'intentClassification',
+  'channelSummary',
+  'languageDetect',
+] as const
+
+export type SystemModelRole = typeof SYSTEM_MODEL_ROLES[number]
+
+// GET responses for older tenants may omit keys; handleSubmit materializes
+// the full 15-key object on the wire when the section is dirty.
+export type SystemModels = Partial<Record<SystemModelRole, string | null>>
+
 // ─── Tool Governance ────────────────────────────────
 
 export interface RegisteredTool {
