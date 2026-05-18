@@ -58,6 +58,14 @@ export const systemModelsSchema = z.object({
   languageDetect: nullableModel,
 }).optional()
 
+export const temperatureWeightsSchema = z.object({
+  activity: optNum,
+  progression: optNum,
+  quote: optNum,
+  engagement: optNum,
+  recency: optNum,
+}).optional()
+
 export const aiConfigSchema = z.object({
   apiKey: z.string().optional(),
   language: z.enum(['tr', 'en']).optional(),
@@ -73,6 +81,8 @@ export const aiConfigSchema = z.object({
   exaApiKey: z.string().optional(),
   webSearchTier: z.enum(['basic', 'deep', 'deep_reasoning']).optional(),
   systemModels: systemModelsSchema,
+  fallbackChain: z.array(z.string()).optional(),
+  temperatureWeights: temperatureWeightsSchema,
 })
 
 export const embeddingConfigSchema = z.object({

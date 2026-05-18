@@ -11,8 +11,17 @@ import { Separator } from '@/components/ui/separator'
 import { configBlockSchemas, type ConfigBlockKey } from '@/lib/validations'
 import { AllowedModelsEditor } from './allowed-models-editor'
 import { SystemModelsGrid } from './system-models-grid'
+import { FallbackChainEditor } from './fallback-chain-editor'
 import { SYSTEM_MODEL_ROLES, type SystemModelRole, type SystemModels } from '../types'
 import type { PlatformModel, AllowedModel } from '../types'
+
+const TEMP_WEIGHT_FIELDS: { key: string; label: string; hint: string }[] = [
+  { key: 'activity', label: 'Aktivite', hint: 'Son 7 gün aktivite ağırlığı (default: 30)' },
+  { key: 'progression', label: 'Pipeline İlerleme', hint: 'Pipeline ilerleme ağırlığı (default: 20)' },
+  { key: 'quote', label: 'Teklif', hint: 'Teklif engagement ağırlığı (default: 25)' },
+  { key: 'engagement', label: 'Mesaj Uzunluğu', hint: 'Mesaj uzunluğu ağırlığı (default: 15)' },
+  { key: 'recency', label: 'Yakınlık', hint: 'Son iletişim zamanı ağırlığı (default: 10)' },
+]
 import type { ZodTypeAny } from 'zod'
 
 interface AiConfigAccordionProps {
@@ -52,6 +61,8 @@ export function AiConfigAccordion({ currentValues, models, modelOptions: _modelO
     const cleaned = Object.fromEntries(
       Object.entries(values).filter(([key, v]) => {
         if (key === 'systemModels') return false
+        if (key === 'fallbackChain') return false
+        if (key === 'temperatureWeights') return false
         if (v === '' || v === undefined || v === null) return false
         if (typeof v === 'string' && v.includes('****')) return false
         if (typeof v === 'number' && isNaN(v)) return false
@@ -69,6 +80,18 @@ export function AiConfigAccordion({ currentValues, models, modelOptions: _modelO
         systemModels[key] = v === '' || v == null ? null : v
       }
       cleaned.systemModels = systemModels
+    }
+    if (form.formState.dirtyFields.fallbackChain) {
+      cleaned.fallbackChain = (values.fallbackChain as string[] | undefined) ?? []
+    }
+    if (form.formState.dirtyFields.temperatureWeights) {
+      const raw = (values.temperatureWeights ?? {}) as Record<string, unknown>
+      const weights: Record<string, number> = {}
+      for (const { key } of TEMP_WEIGHT_FIELDS) {
+        const n = Number(raw[key])
+        if (!isNaN(n)) weights[key] = n
+      }
+      cleaned.temperatureWeights = weights
     }
     onSave('aiConfig', cleaned)
   }
@@ -225,6 +248,34 @@ export function AiConfigAccordion({ currentValues, models, modelOptions: _modelO
               </SelectContent>
             </Select>
           </div>
+
+          <div className="col-span-2">
+            <Separator className="my-3" />
+            <p className="mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Fallback Zinciri</p>
+          </div>
+
+          <FallbackChainEditor
+            models={models}
+            value={((form.watch('fallbackChain') as string[] | undefined) ?? [])}
+            onChange={(chain) => form.setValue('fallbackChain', chain, { shouldDirty: true })}
+          />
+
+          <div className="col-span-2">
+            <Separator className="my-3" />
+            <p className="mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sıcaklık Ağırlıkları</p>
+          </div>
+
+          {TEMP_WEIGHT_FIELDS.map((field) => (
+            <div key={field.key}>
+              <FieldLabel label={field.label} hint={field.hint} />
+              <Input
+                {...form.register(`temperatureWeights.${field.key}`)}
+                type="number"
+                step="any"
+                className="mt-1"
+              />
+            </div>
+          ))}
 
           <SystemModelsGrid
             models={models}
