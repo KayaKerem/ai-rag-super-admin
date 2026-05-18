@@ -359,7 +359,7 @@ export function AgentRouteBindingDialog({
           {isEdit && binding && (
             <div className="rounded-md border bg-muted/30 p-2 text-xs text-muted-foreground">
               versionSeq: <code className="text-foreground">{binding.versionSeq}</code> ·
-              Son güncelleme: <code className="text-foreground">{binding.updatedAt}</code>
+              Son güncelleme: <code className="text-foreground">{new Date(binding.updatedAt).toLocaleString('tr-TR')}</code>
             </div>
           )}
 

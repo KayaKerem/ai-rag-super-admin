@@ -43,7 +43,7 @@ export function AgentRouteBindingsPage() {
     if (fresh && fresh.versionSeq !== selected.versionSeq) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelected(fresh)
-    } else if (!fresh && dialogOpen) {
+    } else if (!fresh && dialogOpen && data !== undefined) {
       setSelected(null)
       setDialogOpen(false)
       toast.error('Bu binding silinmiş. Liste yenilendi.')
