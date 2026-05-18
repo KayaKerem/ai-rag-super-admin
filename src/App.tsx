@@ -29,6 +29,11 @@ const AgentQualityAlertsPage = lazy(() =>
     (m) => ({ default: m.AgentQualityAlertsPage })
   )
 )
+const AgentRouteBindingsPage = lazy(() =>
+  import('@/features/agent-route-bindings/pages/agent-route-bindings-page').then(
+    (m) => ({ default: m.AgentRouteBindingsPage })
+  )
+)
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -75,6 +80,14 @@ function App() {
                 element={
                   <Suspense fallback={<RouteLoadingFallback />}>
                     <AgentQualityAlertsPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/admin/agent-route-bindings"
+                element={
+                  <Suspense fallback={<RouteLoadingFallback />}>
+                    <AgentRouteBindingsPage />
                   </Suspense>
                 }
               />
