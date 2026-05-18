@@ -13,8 +13,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { useCreateAgentRouteBinding } from '../hooks/use-agent-route-bindings'
+import { useQueryClient } from '@tanstack/react-query'
+import {
+  useCreateAgentRouteBinding,
+  useUpdateAgentRouteBinding,
+} from '../hooks/use-agent-route-bindings'
 import { parseRouteBindingError } from '../lib/parse-error'
+import { queryKeys } from '@/lib/query-keys'
 import {
   routeBindingFormSchema,
   type RouteBindingFormValues,
@@ -68,6 +73,8 @@ export function AgentRouteBindingDialog({
 }: AgentRouteBindingDialogProps) {
   const isEdit = binding !== null
   const createMutation = useCreateAgentRouteBinding()
+  const updateMutation = useUpdateAgentRouteBinding(binding?.id ?? '')
+  const queryClient = useQueryClient()
 
   const form = useForm<RouteBindingFormValues>({
     resolver: zodResolver(routeBindingFormSchema),
@@ -86,13 +93,75 @@ export function AgentRouteBindingDialog({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [binding, open])
 
+  function handleMutationError(err: unknown, ctx: { isEdit: boolean }) {
+    const parsed = parseRouteBindingError(err)
+
+    if (parsed.status === 409 && parsed.code === 'binding_version_conflict' && ctx.isEdit) {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.agentRouteBindings.all,
+      })
+      toast.warning(
+        'Bu kayıt başkası tarafından değiştirildi. Form yenilendi — değişikliklerini gözden geçirip tekrar kaydet.'
+      )
+      return
+    }
+
+    if (parsed.status === 409 && parsed.code === 'binding_duplicate') {
+      const c = parsed.conflict
+      if (c) {
+        toast.error(
+          `Aynı kombinasyon mevcut: ${getAgentLabel(c.agentId)} · ${c.channel} · ${c.peerKind}${c.peerId ? `:${c.peerId}` : ''} · öncelik ${c.priority}`
+        )
+      } else {
+        toast.error(
+          'Aynı kombinasyon mevcut: (agentId, channel, peerKind, peerId, priority) eşsiz olmalı.'
+        )
+      }
+      return
+    }
+
+    if (parsed.status === 400 && parsed.code === 'invalid_agent_id') {
+      toast.error('Geçersiz agent ID — agent veritabanında bulunamadı.')
+      return
+    }
+
+    if (parsed.status === 404) {
+      toast.error('Binding bulunamadı — silinmiş olabilir. Liste yenileniyor.')
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.agentRouteBindings.all,
+      })
+      onOpenChange(false)
+      return
+    }
+
+    toast.error(ctx.isEdit ? 'Güncelleme başarısız' : 'Oluşturma başarısız')
+  }
+
   function onSubmit(values: RouteBindingFormValues) {
     const peerIdNorm = normalizePeerId(values.peerId ?? '')
     const notesNorm =
       (values.notes ?? '').trim() === '' ? null : (values.notes ?? '').trim()
 
     if (isEdit) {
-      toast.error('Düzenleme yakında aktif olacak')
+      updateMutation.mutate(
+        {
+          expectedVersionSeq: binding!.versionSeq,
+          agentId: values.agentId,
+          channel: values.channel,
+          peerKind: values.peerKind,
+          peerId: peerIdNorm,
+          roles: values.roles,
+          priority: values.priority,
+          notes: notesNorm,
+        },
+        {
+          onSuccess: () => {
+            toast.success('Binding güncellendi')
+            onOpenChange(false)
+          },
+          onError: (err) => handleMutationError(err, { isEdit: true }),
+        }
+      )
       return
     }
 
@@ -111,30 +180,12 @@ export function AgentRouteBindingDialog({
           toast.success('Binding oluşturuldu')
           onOpenChange(false)
         },
-        onError: (err) => {
-          const parsed = parseRouteBindingError(err)
-          if (parsed.status === 409 && parsed.code === 'binding_duplicate') {
-            const ctx = parsed.conflict
-            if (ctx) {
-              toast.error(
-                `Aynı kombinasyon mevcut: ${getAgentLabel(ctx.agentId)} · ${ctx.channel} · ${ctx.peerKind}${ctx.peerId ? `:${ctx.peerId}` : ''} · öncelik ${ctx.priority}`
-              )
-            } else {
-              toast.error('Aynı kombinasyon mevcut: (agentId, channel, peerKind, peerId, priority) eşsiz olmalı.')
-            }
-            return
-          }
-          if (parsed.status === 400 && parsed.code === 'invalid_agent_id') {
-            toast.error('Geçersiz agent ID — agent veritabanında bulunamadı.')
-            return
-          }
-          toast.error('Oluşturma başarısız')
-        },
+        onError: (err) => handleMutationError(err, { isEdit: false }),
       }
     )
   }
 
-  const isPending = createMutation.isPending
+  const isPending = createMutation.isPending || updateMutation.isPending
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -304,6 +355,13 @@ export function AgentRouteBindingDialog({
               placeholder="Operator memo (max 1000 karakter)"
             />
           </div>
+
+          {isEdit && binding && (
+            <div className="rounded-md border bg-muted/30 p-2 text-xs text-muted-foreground">
+              versionSeq: <code className="text-foreground">{binding.versionSeq}</code> ·
+              Son güncelleme: <code className="text-foreground">{binding.updatedAt}</code>
+            </div>
+          )}
 
           <div className="flex justify-end gap-2 border-t pt-3">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
