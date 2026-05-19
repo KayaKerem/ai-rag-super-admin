@@ -25,6 +25,7 @@ import {
   getProactiveInsightSummary,
   mockCompanyLeads,
   mockServiceAccounts,
+  mockAgentRouteBindings,
 } from './data'
 
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -720,5 +721,69 @@ export const handlers = [
     if (idx === -1) return HttpResponse.json({ message: 'Not found' }, { status: 404 })
     mockServiceAccounts.splice(idx, 1)
     return HttpResponse.json({ deleted: true })
+  }),
+
+  // ─── Agent Route Bindings (Sprint 9) ───────────────
+  http.get(`${BASE}/platform/admin/agent-route-bindings`, async ({ request }) => {
+    await delay(200)
+    const url = new URL(request.url)
+    const agentId = url.searchParams.get('agentId')
+    const channel = url.searchParams.get('channel')
+    const peerKind = url.searchParams.get('peerKind')
+    let items = mockAgentRouteBindings.slice()
+    if (agentId) items = items.filter((b) => b.agentId === agentId)
+    if (channel) items = items.filter((b) => b.channel === channel)
+    if (peerKind) items = items.filter((b) => b.peerKind === peerKind)
+    return HttpResponse.json({ items, total: items.length })
+  }),
+
+  http.post(`${BASE}/platform/admin/agent-route-bindings`, async ({ request }) => {
+    await delay(200)
+    const body = (await request.json()) as any
+    const now = new Date().toISOString()
+    const created = {
+      id: `b-${Math.random().toString(36).slice(2, 10)}`,
+      agentId: body.agentId,
+      channel: body.channel,
+      peerKind: body.peerKind,
+      peerId: body.peerId ?? null,
+      roles: body.roles ?? [],
+      priority: body.priority ?? 100,
+      notes: body.notes ?? null,
+      versionSeq: 1,
+      createdByUserId: null,
+      createdAt: now,
+      updatedAt: now,
+    }
+    mockAgentRouteBindings.unshift(created)
+    return HttpResponse.json(created, { status: 201 })
+  }),
+
+  http.patch(`${BASE}/platform/admin/agent-route-bindings/:id`, async ({ params, request }) => {
+    await delay(200)
+    const body = (await request.json()) as any
+    const binding = mockAgentRouteBindings.find((b) => b.id === params.id)
+    if (!binding) return HttpResponse.json({ message: 'Not found' }, { status: 404 })
+    if (typeof body.expectedVersionSeq === 'number' && body.expectedVersionSeq !== binding.versionSeq) {
+      return HttpResponse.json({ message: 'version_conflict' }, { status: 409 })
+    }
+    if (body.agentId !== undefined) binding.agentId = body.agentId
+    if (body.channel !== undefined) binding.channel = body.channel
+    if (body.peerKind !== undefined) binding.peerKind = body.peerKind
+    if (body.peerId !== undefined) binding.peerId = body.peerId
+    if (body.roles !== undefined) binding.roles = body.roles
+    if (body.priority !== undefined) binding.priority = body.priority
+    if (body.notes !== undefined) binding.notes = body.notes
+    binding.versionSeq += 1
+    binding.updatedAt = new Date().toISOString()
+    return HttpResponse.json(binding)
+  }),
+
+  http.delete(`${BASE}/platform/admin/agent-route-bindings/:id`, async ({ params }) => {
+    await delay(200)
+    const idx = mockAgentRouteBindings.findIndex((b) => b.id === params.id)
+    if (idx === -1) return HttpResponse.json({ message: 'Not found' }, { status: 404 })
+    mockAgentRouteBindings.splice(idx, 1)
+    return new HttpResponse(null, { status: 204 })
   }),
 ]

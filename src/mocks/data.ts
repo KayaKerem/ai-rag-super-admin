@@ -556,6 +556,28 @@ export const mockServiceAccounts: any[] = [
   { id: 'sa-10', serviceName: 'GitHub', url: 'https://github.com', email: 'admin@edfu.ai', encryptedPassword: '****', authMethod: 'email_password', notes: 'Source code', createdAt: '2026-04-01T10:00:00Z', updatedAt: '2026-04-01T10:00:00Z' },
 ]
 
+// Agent Route Bindings (Sprint 9). Well-known agent IDs from features/agent-route-bindings/types.ts
+export const mockAgentRouteBindings: Array<{
+  id: string
+  agentId: string
+  channel: string
+  peerKind: 'customer' | 'user'
+  peerId: string | null
+  roles: string[]
+  priority: number
+  notes: string | null
+  versionSeq: number
+  createdByUserId: string | null
+  createdAt: string
+  updatedAt: string
+}> = [
+  { id: 'b-1', agentId: '00000000-0000-4000-8000-000000000001', channel: 'whatsapp',  peerKind: 'customer', peerId: null, roles: ['default'], priority: 100, notes: 'Default Conversation agent on WhatsApp for all customers', versionSeq: 1, createdByUserId: null, createdAt: '2026-04-10T09:00:00Z', updatedAt: '2026-04-10T09:00:00Z' },
+  { id: 'b-2', agentId: '00000000-0000-4000-8000-000000000002', channel: 'whatsapp',  peerKind: 'customer', peerId: null, roles: ['quote'],   priority: 50,  notes: 'Quote agent for pricing inquiries',                              versionSeq: 2, createdByUserId: null, createdAt: '2026-04-12T10:30:00Z', updatedAt: '2026-04-15T11:00:00Z' },
+  { id: 'b-3', agentId: '00000000-0000-4000-8000-000000000003', channel: 'dashboard', peerKind: 'user',     peerId: null, roles: ['search'],  priority: 100, notes: 'Internal team search via dashboard',                            versionSeq: 1, createdByUserId: null, createdAt: '2026-04-15T14:00:00Z', updatedAt: '2026-04-15T14:00:00Z' },
+  { id: 'b-4', agentId: '00000000-0000-4000-8000-000000000004', channel: 'dashboard', peerKind: 'user',     peerId: null, roles: ['rag'],     priority: 100, notes: 'Internal RAG agent for knowledge base queries',                 versionSeq: 1, createdByUserId: null, createdAt: '2026-04-15T14:05:00Z', updatedAt: '2026-04-15T14:05:00Z' },
+  { id: 'b-5', agentId: '00000000-0000-4000-8000-000000000001', channel: 'telegram',  peerKind: 'customer', peerId: null, roles: ['default'], priority: 100, notes: 'Conversation agent on Telegram',                                versionSeq: 1, createdByUserId: null, createdAt: '2026-05-01T08:00:00Z', updatedAt: '2026-05-01T08:00:00Z' },
+]
+
 // Leads per company
 export const mockCompanyLeads: Record<string, any[]> = {
   [mockCompanies[0].id]: [
