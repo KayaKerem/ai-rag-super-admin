@@ -786,4 +786,31 @@ export const handlers = [
     mockAgentRouteBindings.splice(idx, 1)
     return new HttpResponse(null, { status: 204 })
   }),
+
+  // ─── Playbook Admin (Faz 4) ────────────────────────
+  http.post(`${BASE}/admin/playbooks/recompute-status`, async ({ request }) => {
+    await delay(300)
+    const body = (await request.json().catch(() => ({}))) as { playbookId?: string; companyId?: string }
+    if (body.playbookId) {
+      return HttpResponse.json({
+        playbookId: body.playbookId,
+        sectionStatuses: {
+          conversation_rules: 'active',
+          pricing_rules: 'active',
+          escalation_rules: 'needs_review',
+          discount_tiers: 'active',
+          tone_guide: 'draft',
+        },
+      })
+    }
+    return HttpResponse.json(
+      { triggerRunId: `trg-${Math.random().toString(36).slice(2, 10)}` },
+      { status: 202 },
+    )
+  }),
+
+  http.post(`${BASE}/platform/companies/:companyId/seed-playbook`, async () => {
+    await delay(400)
+    return HttpResponse.json({ message: 'Playbook seeded successfully' }, { status: 201 })
+  }),
 ]
