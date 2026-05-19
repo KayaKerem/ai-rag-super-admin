@@ -4,9 +4,10 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
-import { Pencil, Trash2 } from 'lucide-react'
+import { Pencil, Trash2, BookMarked } from 'lucide-react'
 import { getInitials, formatDate } from '@/lib/utils'
 import { useUpdateCompany, useDeleteCompany } from '../hooks/use-company'
+import { PlaybookSeedDialog } from '@/features/playbook-admin/components/playbook-seed-dialog'
 import { toast } from 'sonner'
 import type { Company } from '../types'
 
@@ -19,6 +20,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
   const [editing, setEditing] = useState(false)
   const [editName, setEditName] = useState(company.name)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [seedOpen, setSeedOpen] = useState(false)
   const updateCompany = useUpdateCompany(company.id)
   const deleteCompany = useDeleteCompany()
 
@@ -82,10 +84,20 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
         <Button variant="outline" size="sm" onClick={() => { setEditName(company.name); setEditing(true) }}>
           <Pencil className="mr-1 h-3 w-3" /> Düzenle
         </Button>
+        <Button variant="outline" size="sm" onClick={() => setSeedOpen(true)}>
+          <BookMarked className="mr-1 h-3 w-3" /> Playbook Seed
+        </Button>
         <Button variant="outline" size="sm" className="border-destructive/50 text-destructive hover:bg-destructive/10" onClick={() => setDeleteOpen(true)}>
           <Trash2 className="mr-1 h-3 w-3" /> Sil
         </Button>
       </div>
+
+      <PlaybookSeedDialog
+        companyId={company.id}
+        companyName={company.name}
+        open={seedOpen}
+        onOpenChange={setSeedOpen}
+      />
 
       <Dialog open={deleteOpen} onOpenChange={(open) => setDeleteOpen(open)}>
         <DialogContent>
