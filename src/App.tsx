@@ -34,6 +34,11 @@ const AgentRouteBindingsPage = lazy(() =>
     (m) => ({ default: m.AgentRouteBindingsPage })
   )
 )
+const PlaybookAdminPage = lazy(() =>
+  import('@/features/playbook-admin/pages/playbook-admin-page').then((m) => ({
+    default: m.PlaybookAdminPage,
+  }))
+)
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -88,6 +93,14 @@ function App() {
                 element={
                   <Suspense fallback={<RouteLoadingFallback />}>
                     <AgentRouteBindingsPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/admin/playbooks/recompute"
+                element={
+                  <Suspense fallback={<RouteLoadingFallback />}>
+                    <PlaybookAdminPage />
                   </Suspense>
                 }
               />
