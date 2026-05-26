@@ -39,7 +39,14 @@ export function EmailTemplateEditDialog({ template, open, onOpenChange }: EmailT
           toast.success('Şablon güncellendi')
           onOpenChange(false)
         },
-        onError: () => toast.error('Güncelleme başarısız'),
+        onError: (err: unknown) => {
+          const axiosErr = err as { response?: { status?: number; data?: { code?: string } } }
+          if (axiosErr.response?.status === 400 && axiosErr.response?.data?.code === 'readonly_template') {
+            toast.error('Bu şablon readonly, değiştirilemez')
+            return
+          }
+          toast.error('Güncelleme başarısız')
+        },
       }
     )
   }

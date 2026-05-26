@@ -99,17 +99,21 @@ export function EmailTemplateTable({ data, isLoading, onSelect }: EmailTemplateT
                 <TableCell colSpan={columns.length} className="text-center text-muted-foreground">Şablon bulunamadı.</TableCell>
               </TableRow>
             ) : (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  className="cursor-pointer"
-                  onClick={() => onSelect(row.original)}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                  ))}
-                </TableRow>
-              ))
+              table.getRowModel().rows.map((row) => {
+                const isReadonly = row.original.slug === 'platform_alert_digest'
+                return (
+                  <TableRow
+                    key={row.id}
+                    className={isReadonly ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                    title={isReadonly ? 'Sistem yönetimi (readonly)' : undefined}
+                    onClick={isReadonly ? undefined : () => onSelect(row.original)}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    ))}
+                  </TableRow>
+                )
+              })
             )}
           </TableBody>
         </Table>
