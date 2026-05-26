@@ -3,7 +3,7 @@ import { apiClient } from '@/lib/api-client'
 import { queryKeys } from '@/lib/query-keys'
 import type { Company } from '../types'
 
-export type UpdateCompanyPayload = Partial<Pick<Company, 'name' | 'customerAgentTrustLevel' | 'autoApproveQuoteThreshold' | 'approvalTimeoutMinutes' | 'approvalTimeoutAction' | 'customerOperationsBudgetUsd'>>
+export type UpdateCompanyPayload = Partial<Pick<Company, 'name' | 'customerAgentTrustLevel' | 'autoApproveQuoteThreshold' | 'approvalTimeoutMinutes' | 'approvalTimeoutAction' | 'customerOperationsBudgetUsd' | 'brandColor' | 'logoUrl' | 'timezone'>>
 
 export function useCompany(id: string) {
   return useQuery({

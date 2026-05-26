@@ -128,6 +128,9 @@ export const handlers = [
     if (body.approvalTimeoutMinutes !== undefined) company.approvalTimeoutMinutes = body.approvalTimeoutMinutes
     if (body.approvalTimeoutAction !== undefined) company.approvalTimeoutAction = body.approvalTimeoutAction
     if (body.customerOperationsBudgetUsd !== undefined) company.customerOperationsBudgetUsd = body.customerOperationsBudgetUsd
+    if (body.brandColor !== undefined) company.brandColor = body.brandColor
+    if (body.logoUrl !== undefined) company.logoUrl = body.logoUrl
+    if (body.timezone !== undefined) company.timezone = body.timezone
     company.updatedAt = new Date().toISOString()
     return HttpResponse.json(company)
   }),

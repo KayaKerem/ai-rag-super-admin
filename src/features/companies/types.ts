@@ -16,6 +16,8 @@ export interface Company {
   id: string
   name: string
   logoUrl: string | null
+  brandColor?: string | null
+  timezone?: string | null
   planId: string | null
   plan: CompanyPlanSummary | null
   pendingPlanId: string | null
