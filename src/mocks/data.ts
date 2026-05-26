@@ -18,27 +18,13 @@ function generateUsageMonth(month: string, scale: number) {
   const storageCost = +((storageBytes / 1e9) * 0.0245).toFixed(2)
   const taskCount = Math.floor((100 + Math.random() * 400) * scale)
   const triggerCost = +(taskCount * 0.0001).toFixed(4)
-  const rerankCount = Math.floor((50 + Math.random() * 300) * scale)
-  const rerankCost = +(rerankCount * 0.0025).toFixed(2)
-  const webSearchCount = Math.floor((10 + Math.random() * 50) * scale)
-  const webSearchCost = +(webSearchCount * 0.010).toFixed(2)
-  const proactiveRuns = Math.floor((30 + Math.random() * 150) * scale)
-  const proactiveInsights = Math.floor(proactiveRuns * 0.07)
-  const proactiveCost = +(proactiveRuns * 0.004).toFixed(2)
-  const cacheHitCount = Math.floor((20 + Math.random() * 300) * scale)
   const totalTurns = Math.floor(aiTokens / 15000)
-  const cacheHitRate = totalTurns > 0 ? +(cacheHitCount / (totalTurns + cacheHitCount)).toFixed(2) : 0
-  const cacheSavings = +(cacheHitCount * 0.01).toFixed(2)
   return {
     month,
     ai: { totalTokens: aiTokens, turnCount: totalTurns, costUsd: aiCost },
-    rerank: { searchCount: rerankCount, documentCount: rerankCount * 5, costUsd: rerankCost },
-    webSearch: { searchCount: webSearchCount, resultCount: webSearchCount * 3, costUsd: webSearchCost },
-    proactive: { runCount: proactiveRuns, insightCount: proactiveInsights, costUsd: proactiveCost },
-    cacheHits: { hitCount: cacheHitCount, hitRate: cacheHitRate, estimatedSavingsUsd: cacheSavings },
     storage: { currentBytes: storageBytes, costUsd: storageCost },
     trigger: { taskCount, costUsd: triggerCost },
-    totalCostUsd: +(aiCost + storageCost + triggerCost + rerankCost + webSearchCost + proactiveCost).toFixed(2),
+    totalCostUsd: +(aiCost + storageCost + triggerCost).toFixed(2),
   }
 }
 
@@ -68,18 +54,6 @@ export function getPlatformSummary(numMonths: number) {
       storage: {
         totalBytes: allCompanyMonths.reduce((s, u) => s + u.storage.currentBytes, 0),
         costUsd: +allCompanyMonths.reduce((s, u) => s + u.storage.costUsd, 0).toFixed(2),
-      },
-      rerank: {
-        searchCount: allCompanyMonths.reduce((s, u) => s + u.rerank.searchCount, 0),
-        costUsd: +allCompanyMonths.reduce((s, u) => s + u.rerank.costUsd, 0).toFixed(2),
-      },
-      webSearch: {
-        searchCount: allCompanyMonths.reduce((s, u) => s + u.webSearch.searchCount, 0),
-        costUsd: +allCompanyMonths.reduce((s, u) => s + u.webSearch.costUsd, 0).toFixed(2),
-      },
-      proactive: {
-        runCount: allCompanyMonths.reduce((s, u) => s + u.proactive.runCount, 0),
-        costUsd: +allCompanyMonths.reduce((s, u) => s + u.proactive.costUsd, 0).toFixed(2),
       },
       trigger: {
         taskCount: allCompanyMonths.reduce((s, u) => s + u.trigger.taskCount, 0),
