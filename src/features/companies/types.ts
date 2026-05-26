@@ -349,6 +349,11 @@ export interface UpdateCompanyStatusRequest {
   status: 'active' | 'suspended' | 'cancelled'
 }
 
+export interface UpdateCompanyStatusPayload {
+  status: 'active' | 'suspended' | 'cancelled'
+  planId?: string
+}
+
 export interface UpdateCompanyStatusResponse {
   id: string
   subscriptionStatus: SubscriptionStatus

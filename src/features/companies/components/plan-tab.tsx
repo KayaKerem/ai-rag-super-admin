@@ -29,6 +29,9 @@ export function PlanTab({ companyId, company }: PlanTabProps) {
   const [removeOpen, setRemoveOpen] = useState(false)
   const [statusValue, setStatusValue] = useState<string>('')
   const [statusConfirmOpen, setStatusConfirmOpen] = useState(false)
+  const [reactivatePlanId, setReactivatePlanId] = useState<string>('')
+
+  const needsPlan = statusValue === 'active' && company.subscriptionStatus === 'cancelled'
 
   function handleAssign() {
     if (!selectedPlanId) return
@@ -70,14 +73,28 @@ export function PlanTab({ companyId, company }: PlanTabProps) {
 
   function handleStatusChange() {
     if (!statusValue) return
-    updateStatus.mutate(statusValue as 'active' | 'suspended' | 'cancelled', {
-      onSuccess: () => {
-        setStatusConfirmOpen(false)
-        setStatusValue('')
-        toast.success('Abonelik durumu güncellendi')
+    updateStatus.mutate(
+      {
+        status: statusValue as 'active' | 'suspended' | 'cancelled',
+        planId: needsPlan ? reactivatePlanId : undefined,
       },
-      onError: () => toast.error('Durum güncellenemedi'),
-    })
+      {
+        onSuccess: () => {
+          setStatusConfirmOpen(false)
+          setStatusValue('')
+          setReactivatePlanId('')
+          toast.success('Abonelik durumu güncellendi')
+        },
+        onError: (err: unknown) => {
+          const code = (err as { response?: { data?: { code?: string } } })?.response?.data?.code
+          if (code === 'reactivation_requires_plan') {
+            toast.error('Plan seçimi gerekli')
+          } else {
+            toast.error('Durum güncellenemedi')
+          }
+        },
+      },
+    )
   }
 
   return (
@@ -306,12 +323,25 @@ export function PlanTab({ companyId, company }: PlanTabProps) {
               {statusValue === 'active' && 'Firma aktif duruma getirilecek. API erişimi açılacaktır.'}
             </DialogDescription>
           </DialogHeader>
+          {needsPlan && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Plan Seç (cancelled→active için zorunlu)</label>
+              <Select value={reactivatePlanId} onValueChange={(v) => setReactivatePlanId(v ?? '')}>
+                <SelectTrigger><SelectValue placeholder="Plan seç" /></SelectTrigger>
+                <SelectContent>
+                  {plans?.map((p) => (
+                    <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => setStatusConfirmOpen(false)}>İptal</Button>
             <Button
               variant={statusValue === 'active' ? 'default' : 'destructive'}
               onClick={handleStatusChange}
-              disabled={updateStatus.isPending}
+              disabled={updateStatus.isPending || (needsPlan && !reactivatePlanId)}
             >
               {updateStatus.isPending ? 'Güncelleniyor...' : 'Onayla'}
             </Button>

@@ -1,13 +1,16 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api-client'
 import { queryKeys } from '@/lib/query-keys'
-import type { UpdateCompanyStatusResponse, BillingEvent } from '../types'
+import type { UpdateCompanyStatusResponse, UpdateCompanyStatusPayload, BillingEvent } from '../types'
 
 export function useUpdateCompanyStatus(companyId: string) {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: async (status: 'active' | 'suspended' | 'cancelled'): Promise<UpdateCompanyStatusResponse> => {
-      const { data } = await apiClient.patch(`/platform/companies/${companyId}/status`, { status })
+    mutationFn: async (payload: UpdateCompanyStatusPayload): Promise<UpdateCompanyStatusResponse> => {
+      const body = payload.planId
+        ? { status: payload.status, planId: payload.planId }
+        : { status: payload.status }
+      const { data } = await apiClient.patch(`/platform/companies/${companyId}/status`, body)
       return data
     },
     onSuccess: () => {
