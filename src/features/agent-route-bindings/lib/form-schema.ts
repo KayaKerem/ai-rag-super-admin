@@ -6,7 +6,7 @@ export const routeBindingFormSchema = z.object({
   channel: z
     .string()
     .regex(CHANNEL_REGEX, 'Lowercase a-z ile başlamalı; sadece a-z, 0-9, _, - (max 50 karakter)'),
-  peerKind: z.enum(['customer', 'user']),
+  peerKind: z.enum(['customer', 'user', 'system']),
   peerId: z.string().max(500, 'En fazla 500 karakter').nullable(),
   roles: z
     .array(z.string().regex(ROLE_REGEX, 'Sadece A-Z, a-z, 0-9, _, -'))

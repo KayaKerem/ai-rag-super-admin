@@ -4,7 +4,7 @@ export const agentRouteBindingSchema = z.object({
   id: z.string(),
   agentId: z.string(),
   channel: z.string(),
-  peerKind: z.enum(['customer', 'user']),
+  peerKind: z.enum(['customer', 'user', 'system']),
   peerId: z.string().nullable(),
   roles: z.array(z.string()),
   priority: z.number(),

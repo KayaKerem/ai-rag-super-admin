@@ -1,4 +1,4 @@
-export type PeerKind = 'customer' | 'user'
+export type PeerKind = 'customer' | 'user' | 'system'
 
 export interface AgentRouteBinding {
   id: string
@@ -64,6 +64,7 @@ export type KnownChannel = (typeof KNOWN_CHANNELS)[number]
 export const PEER_KIND_OPTIONS: { value: PeerKind; label: string }[] = [
   { value: 'customer', label: 'Customer' },
   { value: 'user', label: 'User' },
+  { value: 'system', label: 'Sistem' },
 ]
 
 export const ROLE_REGEX = /^[A-Za-z0-9_-]{1,50}$/

@@ -17,7 +17,7 @@ const URL_STATE_OPTS = {
     return {
       agentId: params.get('agentId'),
       channel: params.get('channel'),
-      peerKind: pk === 'customer' || pk === 'user' ? (pk as PeerKind) : null,
+      peerKind: pk === 'customer' || pk === 'user' || pk === 'system' ? (pk as PeerKind) : null,
     }
   },
   serialize: (v: Filters) => ({
