@@ -397,12 +397,18 @@ export interface ServiceAccount {
   serviceName: string
   url: string | null
   email: string | null
-  encryptedPassword: string
   decryptedPassword?: string
   authMethod: AuthMethod | null
   notes: string | null
   createdAt: string
   updatedAt: string
+}
+
+export interface RevealResponse {
+  id: string
+  serviceName: string
+  decryptedPassword: string
+  revealedAt: string
 }
 
 export interface CreateServiceAccountRequest {

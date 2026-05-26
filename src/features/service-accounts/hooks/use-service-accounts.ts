@@ -13,15 +13,6 @@ export function useServiceAccounts() {
   })
 }
 
-export function useRevealPassword(id: string) {
-  return useMutation({
-    mutationFn: async (): Promise<ServiceAccount> => {
-      const { data } = await apiClient.get(`/platform/service-accounts/${id}/reveal`)
-      return data
-    },
-  })
-}
-
 export function useCreateServiceAccount() {
   const qc = useQueryClient()
   return useMutation({

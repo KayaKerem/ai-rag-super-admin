@@ -673,7 +673,12 @@ export const handlers = [
     await delay(300)
     const account = mockServiceAccounts.find((a: any) => a.id === params.id)
     if (!account) return HttpResponse.json({ message: 'Not found' }, { status: 404 })
-    return HttpResponse.json({ ...account, decryptedPassword: 'mock-decrypted-password-123' })
+    return HttpResponse.json({
+      id: account.id,
+      serviceName: account.serviceName,
+      decryptedPassword: 'mock-decrypted-password-123',
+      revealedAt: new Date().toISOString(),
+    })
   }),
 
   http.get(`${BASE}/platform/service-accounts/:id`, async ({ params }) => {
@@ -691,7 +696,6 @@ export const handlers = [
       serviceName: body.serviceName,
       url: body.url ?? null,
       email: body.email ?? null,
-      encryptedPassword: '****',
       authMethod: body.authMethod ?? null,
       notes: body.notes ?? null,
       createdAt: new Date().toISOString(),

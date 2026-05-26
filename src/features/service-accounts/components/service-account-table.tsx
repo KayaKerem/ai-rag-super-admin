@@ -10,10 +10,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Eye, EyeOff, Pencil, Trash2, ExternalLink } from 'lucide-react'
+import { EyeOff, Pencil, Trash2, ExternalLink } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDate } from '@/lib/utils'
-import { useRevealPassword, useDeleteServiceAccount } from '../hooks/use-service-accounts'
+import { useDeleteServiceAccount } from '../hooks/use-service-accounts'
+import { useRevealPassword } from '../hooks/use-reveal-password'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import type { ServiceAccount } from '@/features/companies/types'
 
@@ -36,30 +37,19 @@ export function ServiceAccountTable({ data, isLoading, onEdit }: ServiceAccountT
   const [revealingId, setRevealingId] = useState<string | null>(null)
   const [revealedPassword, setRevealedPassword] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<ServiceAccount | null>(null)
+  const [lockoutId, setLockoutId] = useState<string | null>(null)
   const deleteAccount = useDeleteServiceAccount()
+  const reveal = useRevealPassword()
 
-  function RevealButton({ accountId }: { accountId: string }) {
-    const reveal = useRevealPassword(accountId)
-    return (
-      <Button
-        variant="ghost"
-        size="sm"
-        className="h-7 w-7 p-0"
-        onClick={(e) => {
-          e.stopPropagation()
-          reveal.mutate(undefined, {
-            onSuccess: (data) => {
-              setRevealingId(accountId)
-              setRevealedPassword(data.decryptedPassword ?? null)
-            },
-            onError: () => toast.error('Sifre gosterilemedi'),
-          })
-        }}
-        disabled={reveal.isPending}
-      >
-        <Eye className="h-3.5 w-3.5" />
-      </Button>
-    )
+  function handleReveal(id: string) {
+    reveal.mutate(id, {
+      onSuccess: (res) => {
+        setRevealingId(id)
+        setRevealedPassword(res.decryptedPassword)
+        setLockoutId(id)
+        setTimeout(() => setLockoutId(null), 3000)
+      },
+    })
   }
 
   const columns: ColumnDef<ServiceAccount>[] = [
@@ -106,13 +96,20 @@ export function ServiceAccountTable({ data, isLoading, onEdit }: ServiceAccountT
       },
     },
     {
-      accessorKey: 'encryptedPassword',
+      id: 'password',
       header: 'Sifre',
       cell: ({ row }) => (
-        <div className="flex items-center gap-1">
-          <span className="text-muted-foreground">****</span>
-          <RevealButton accountId={row.original.id} />
-        </div>
+        <Button
+          size="sm"
+          variant="ghost"
+          disabled={reveal.isPending || lockoutId === row.original.id}
+          onClick={(e) => {
+            e.stopPropagation()
+            handleReveal(row.original.id)
+          }}
+        >
+          {lockoutId === row.original.id ? 'Az önce gösterildi' : 'Göster'}
+        </Button>
       ),
     },
     {
