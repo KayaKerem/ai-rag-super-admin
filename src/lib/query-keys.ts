@@ -25,6 +25,7 @@ export const queryKeys = {
     proactiveInsightSummary: (id: string) =>
       ['companies', id, 'proactive-insights', 'summary'] as const,
     leads: (id: string) => ['companies', id, 'leads'] as const,
+    verifyChain: (id: string) => ['companies', id, 'verify-chain'] as const,
   },
   platform: {
     summary: (months: number) => ['platform', 'summary', months] as const,

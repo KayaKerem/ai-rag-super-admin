@@ -595,6 +595,16 @@ export const handlers = [
     return HttpResponse.json(generateSearchAnalytics(windowDays))
   }),
 
+  // ─── Activity Log Verify-Chain ────────────────────
+  http.get(`${BASE}/platform/companies/:companyId/activity-log/verify-chain`, ({ request }) => {
+    const url = new URL(request.url)
+    const fromSeq = Number(url.searchParams.get('fromSeq') || '0')
+    if (fromSeq >= 60 && fromSeq <= 70) {
+      return HttpResponse.json({ valid: false, brokenAt: 67, totalChecked: 67 })
+    }
+    return HttpResponse.json({ valid: true, totalChecked: 142 })
+  }),
+
   // ─── Activity Log ─────────────────────────────────
   http.get(`${BASE}/platform/companies/:id/activity-log`, async ({ params, request }) => {
     await delay(200)

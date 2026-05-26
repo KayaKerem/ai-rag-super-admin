@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { formatDate } from '@/lib/utils'
 import { useActivityLog } from '../hooks/use-activity-log'
 import type { ActivityCategory } from '../types'
+import { VerifyChainDialog } from './verify-chain-dialog'
 
 interface ActivityLogTabProps {
   companyId: string
@@ -66,6 +67,7 @@ const categoryOptions: { value: string; label: string }[] = [
 export function ActivityLogTab({ companyId }: ActivityLogTabProps) {
   const [category, setCategory] = useState<string>('all')
   const [offset, setOffset] = useState(0)
+  const [chainOpen, setChainOpen] = useState(false)
   const limit = 20
 
   const { data, isLoading } = useActivityLog(companyId, {
@@ -102,9 +104,14 @@ export function ActivityLogTab({ companyId }: ActivityLogTabProps) {
             </SelectContent>
           </Select>
         </div>
-        <span className="text-sm text-muted-foreground">
-          {total === 0 ? 'Kayit yok' : `${from}-${to} / ${total}`}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            {total === 0 ? 'Kayit yok' : `${from}-${to} / ${total}`}
+          </span>
+          <Button variant="outline" size="sm" onClick={() => setChainOpen(true)}>
+            Zincir Doğrula
+          </Button>
+        </div>
       </div>
 
       <Table>
@@ -163,6 +170,12 @@ export function ActivityLogTab({ companyId }: ActivityLogTabProps) {
           </Button>
         </div>
       )}
+
+      <VerifyChainDialog
+        companyId={companyId}
+        open={chainOpen}
+        onOpenChange={setChainOpen}
+      />
     </div>
   )
 }
