@@ -4,9 +4,25 @@ import { apiClient } from '@/lib/api-client'
 import { queryKeys } from '@/lib/query-keys'
 import { CompanyTable, type CompanyWithUsage } from '../components/company-table'
 import { CreateCompanyDialog } from '../components/create-company-dialog'
+import { useUrlFilterState } from '@/lib/hooks/use-url-filter-state'
+import { Button } from '@/components/ui/button'
+
+const LIMIT = 50
+
+const URL_STATE_OPTS = {
+  defaults: { page: 0 },
+  parse: (p: URLSearchParams) => ({ page: Number(p.get('page')) || 0 }),
+  serialize: (v: { page: number }): Record<string, string | undefined> => ({
+    page: v.page > 0 ? String(v.page) : undefined,
+  }),
+}
 
 export function CompaniesPage() {
-  const { data: companies, isLoading: companiesLoading } = useCompanies()
+  const [filters, setFilters] = useUrlFilterState(URL_STATE_OPTS)
+  const { data: companies, isLoading: companiesLoading } = useCompanies({
+    limit: LIMIT,
+    offset: filters.page * LIMIT,
+  })
 
   const usageQueries = useQueries({
     queries: (companies ?? []).map((c) => ({
@@ -40,6 +56,25 @@ export function CompaniesPage() {
         <CreateCompanyDialog />
       </div>
       <CompanyTable data={tableData} isLoading={companiesLoading} />
+      <div className="flex items-center justify-end gap-2 mt-4 text-sm">
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={filters.page === 0}
+          onClick={() => setFilters({ page: filters.page - 1 })}
+        >
+          ← Önceki
+        </Button>
+        <span className="text-muted-foreground">Sayfa {filters.page + 1}</span>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={(companies?.length ?? 0) < LIMIT}
+          onClick={() => setFilters({ page: filters.page + 1 })}
+        >
+          Sonraki →
+        </Button>
+      </div>
     </div>
   )
 }
