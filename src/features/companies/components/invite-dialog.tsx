@@ -22,30 +22,23 @@ export function InviteDialog({ companyId }: InviteDialogProps) {
   const [open, setOpen] = useState(false)
   const [email, setEmail] = useState('')
   const [role, setRole] = useState<'owner' | 'admin' | 'member'>('member')
+  const [expiresInDays, setExpiresInDays] = useState<string>('')
   const inviteUser = useInviteUser(companyId)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!email.trim()) return
-    inviteUser.mutate(
-      { email: email.trim(), role },
-      {
-        onSuccess: () => {
-          toast.success('Kullanıcı davet edildi')
-          setEmail('')
-          setRole('member')
-          setOpen(false)
-        },
-        onError: (err: unknown) => {
-          const anyErr = err as { response?: { data?: { code?: string } } }
-          if (anyErr?.response?.data?.code === 'email_already_registered') {
-            toast.error('Bu e-posta adresi zaten kayıtlı')
-          } else {
-            toast.error('Davet gönderilemedi')
-          }
-        },
-      }
-    )
+    const payload: { email: string; role: string; expiresInDays?: number } = { email: email.trim(), role }
+    const days = Number(expiresInDays)
+    if (Number.isInteger(days) && days >= 1 && days <= 30) payload.expiresInDays = days
+    inviteUser.mutate(payload as { email: string; role: 'owner' | 'admin' | 'member'; expiresInDays?: number }, {
+      onSuccess: () => {
+        toast.success('Davet gönderildi')
+        setOpen(false)
+        setEmail(''); setRole('member'); setExpiresInDays('')
+      },
+      onError: () => toast.error('Davet gönderilemedi'),
+    })
   }
 
   return (
@@ -82,6 +75,17 @@ export function InviteDialog({ companyId }: InviteDialogProps) {
                 <SelectItem value="member">Üye (Member)</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div className="space-y-1">
+            <label className="text-sm">Geçerlilik (gün, opsiyonel)</label>
+            <Input
+              type="number"
+              min={1}
+              max={30}
+              placeholder="7"
+              value={expiresInDays}
+              onChange={(e) => setExpiresInDays(e.target.value)}
+            />
           </div>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>

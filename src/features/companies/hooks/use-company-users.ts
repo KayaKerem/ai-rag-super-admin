@@ -30,8 +30,10 @@ export function useCreateUser(companyId: string) {
 export function useInviteUser(companyId: string) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (body: { email: string; role: 'owner' | 'admin' | 'member' }) => {
-      const { data } = await apiClient.post(`/platform/companies/${companyId}/users/invite`, body)
+    mutationFn: async (body: { email: string; role: 'owner' | 'admin' | 'member'; expiresInDays?: number }): Promise<{ id: string; email: string; role: string; token: string; expiresAt: string }> => {
+      const payload: { email: string; role: string; expiresInDays?: number } = { email: body.email, role: body.role }
+      if (body.expiresInDays !== undefined) payload.expiresInDays = body.expiresInDays
+      const { data } = await apiClient.post(`/platform/companies/${companyId}/users/invite`, payload)
       return data
     },
     onSuccess: () => {
