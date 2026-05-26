@@ -5,14 +5,17 @@ import type { AgentQualityTrendResponse } from '../types'
 
 export function useAgentQualityTrend(
   companyId: string | null,
-  windowDays: number
+  windowDays: number,
+  agentId?: string
 ) {
   return useQuery<AgentQualityTrendResponse>({
-    queryKey: queryKeys.admin.agentQuality.trend(companyId ?? '', windowDays),
+    queryKey: queryKeys.admin.agentQuality.trend(companyId ?? '', windowDays, agentId),
     queryFn: async () => {
+      const params: Record<string, string | number> = { windowDays }
+      if (agentId) params.agentId = agentId
       const { data } = await apiClient.get<AgentQualityTrendResponse>(
         `/platform/admin/agent-quality/${companyId}/trend`,
-        { params: { windowDays } }
+        { params }
       )
       return data
     },

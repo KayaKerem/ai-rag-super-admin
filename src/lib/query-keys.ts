@@ -50,10 +50,10 @@ export const queryKeys = {
     }) => ['admin', 'cost-health', params] as const,
     agentQuality: {
       all: ['admin', 'agent-quality'] as const,
-      snapshot: (windowDays: number) =>
-        ['admin', 'agent-quality', 'snapshot', windowDays] as const,
-      trend: (companyId: string, windowDays: number) =>
-        ['admin', 'agent-quality', 'trend', companyId, windowDays] as const,
+      snapshot: (windowDays: number, agentId?: string) =>
+        ['admin', 'agent-quality', 'snapshot', windowDays, agentId ?? ''] as const,
+      trend: (companyId: string, windowDays: number, agentId?: string) =>
+        ['admin', 'agent-quality', 'trend', companyId, windowDays, agentId ?? ''] as const,
       turns: (params: {
         companyId: string
         metric: AgentQualityMetric

@@ -1,6 +1,16 @@
 import { useEffect, useMemo } from 'react'
 import { Loader2 } from 'lucide-react'
 import { useUrlFilterState } from '@/lib/hooks/use-url-filter-state'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Label } from '@/components/ui/label'
+import { useAgentRouteBindings } from '@/features/agent-route-bindings/hooks/use-agent-route-bindings'
+import { getAgentLabel } from '@/features/agent-route-bindings/types'
 import { AgentQualityFilters } from '../components/agent-quality-filters'
 import { AgentQualitySnapshotTable } from '../components/agent-quality-snapshot-table'
 import { AgentQualityTrendPanel } from '../components/agent-quality-trend-panel'
@@ -20,6 +30,7 @@ import {
 interface AgentQualityUrlState {
   windowDays: WindowDaysOption
   company: string | null
+  agentId: string | null
   trendDate: string | null
   metric: AgentQualityMetric | null
   page: number
@@ -30,6 +41,7 @@ interface AgentQualityUrlState {
 const DEFAULTS: AgentQualityUrlState = {
   windowDays: 7,
   company: null,
+  agentId: null,
   trendDate: null,
   metric: null,
   page: 1,
@@ -40,6 +52,7 @@ const DEFAULTS: AgentQualityUrlState = {
 function parse(params: URLSearchParams): AgentQualityUrlState {
   const windowDays = clampWindowDays(Number(params.get('windowDays')))
   const company = params.get('company') || null
+  const agentId = params.get('agentId') || null
 
   const rawDate = params.get('trendDate')
   const rawMetric = params.get('metric')
@@ -53,6 +66,7 @@ function parse(params: URLSearchParams): AgentQualityUrlState {
   return {
     windowDays,
     company,
+    agentId,
     trendDate: allThree ? rawDate : null,
     metric: allThree ? (rawMetric as AgentQualityMetric) : null,
     page: allThree ? clampPage(rawPage, TURNS_PAGE_MAX) : 1,
@@ -68,6 +82,7 @@ function serialize(
   return {
     windowDays: value.windowDays === 7 ? undefined : String(value.windowDays),
     company: value.company ?? undefined,
+    agentId: value.agentId ?? undefined,
     trendDate: drawerOpen ? value.trendDate ?? undefined : undefined,
     metric: drawerOpen ? value.metric ?? undefined : undefined,
     page: drawerOpen && value.page > 1 ? String(value.page) : undefined,
@@ -82,8 +97,20 @@ export function AgentQualityPage() {
   const [state, setState] =
     useUrlFilterState<AgentQualityUrlState>(URL_STATE_OPTS)
 
-  const snapshot = useAgentQualitySnapshot(state.windowDays)
-  const trend = useAgentQualityTrend(state.company, state.windowDays)
+  const { data: bindingsData } = useAgentRouteBindings({
+    agentId: null,
+    channel: null,
+    peerKind: null,
+  })
+
+  const agentIds = useMemo(() => {
+    const set = new Set<string>()
+    bindingsData?.items.forEach((b) => b.agentId && set.add(b.agentId))
+    return Array.from(set).sort()
+  }, [bindingsData])
+
+  const snapshot = useAgentQualitySnapshot(state.windowDays, state.agentId ?? undefined)
+  const trend = useAgentQualityTrend(state.company, state.windowDays, state.agentId ?? undefined)
 
   const selectedRow = useMemo(
     () =>
@@ -139,6 +166,32 @@ export function AgentQualityPage() {
           snapshot.data?.tenantsBelowSignalThreshold ?? 0
         }
       />
+
+      {agentIds.length > 0 && (
+        <div className="flex items-center gap-2">
+          <Label htmlFor="agent-filter" className="text-sm">
+            Agent
+          </Label>
+          <Select
+            value={state.agentId ?? 'all'}
+            onValueChange={(v) =>
+              setState({ agentId: v === 'all' ? null : v })
+            }
+          >
+            <SelectTrigger id="agent-filter" className="w-48">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tümü</SelectItem>
+              {agentIds.map((id) => (
+                <SelectItem key={id} value={id}>
+                  {getAgentLabel(id)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       {snapshot.isLoading && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
