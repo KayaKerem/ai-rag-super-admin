@@ -123,7 +123,7 @@ export function FiyatlandirmaGelir() {
         <CardContent className="py-4 text-sm text-muted-foreground">
           <div className="font-semibold text-amber-400">⏰ Otomatik Downgrade Cron</div>
           <div className="mt-2">
-            <code className="rounded bg-muted px-1 py-0.5 text-xs">POST /internal/process-downgrades</code> endpoint'i yeni fatura dönemi başladığında <code className="rounded bg-muted px-1 py-0.5 text-xs">pendingPlanId</code> olan firmaların downgrade'ini uygular. <code className="rounded bg-muted px-1 py-0.5 text-xs">X-AI-Internal-Key</code> header ile korunur. Önerilen zamanlama: <strong>her gün 01:00 UTC</strong>.
+            <code className="rounded bg-muted px-1 py-0.5 text-xs">POST /internal/platform/process-downgrades</code> endpoint'i yeni fatura dönemi başladığında <code className="rounded bg-muted px-1 py-0.5 text-xs">pendingPlanId</code> olan firmaların downgrade'ini uygular. <code className="rounded bg-muted px-1 py-0.5 text-xs">X-AI-Internal-Key</code> header ile korunur. Önerilen zamanlama: <strong>her gün 01:00 UTC</strong>.
           </div>
         </CardContent>
       </Card>
