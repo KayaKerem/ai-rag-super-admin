@@ -206,13 +206,13 @@ function resolveTools(plan: string, overrides: Record<string, boolean>) {
     let source: string
     if (hasOverride) {
       enabled = overrides[tool.id]
-      source = 'override'
+      source = 'company-override'
     } else if (inPlan) {
       enabled = true
       source = 'plan'
     } else {
       enabled = false
-      source = 'not_in_plan'
+      source = 'denied'
     }
     return { id: tool.id, label: tool.label, category: tool.category, requiresApproval: tool.requiresApproval, enabled, source }
   })

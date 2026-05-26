@@ -38,10 +38,10 @@ export function ToolConfigTab({ companyId }: ToolConfigTabProps) {
     } else if (source === 'plan' && !currentEnabled) {
       // Re-enabling (remove override)
       delete next[toolId]
-    } else if (source === 'not_in_plan' && !currentEnabled) {
+    } else if (source === 'denied' && !currentEnabled) {
       // Enabling a non-plan tool -> override true
       next[toolId] = true
-    } else if (source === 'override') {
+    } else if (source === 'company-override') {
       // Toggle off override -> remove it
       delete next[toolId]
     } else {
@@ -121,7 +121,7 @@ export function ToolConfigTab({ companyId }: ToolConfigTabProps) {
                   <div className="flex items-center gap-2">
                     <Switch
                       checked={localEnabled}
-                      onCheckedChange={() => handleToggle(tool.id, localEnabled, hasOverride ? 'override' : tool.source)}
+                      onCheckedChange={() => handleToggle(tool.id, localEnabled, hasOverride ? 'company-override' : tool.source)}
                     />
                     <div>
                       <span className="text-xs font-medium">{tool.label}</span>
@@ -130,12 +130,18 @@ export function ToolConfigTab({ companyId }: ToolConfigTabProps) {
                       )}
                     </div>
                   </div>
-                  <Badge
-                    variant="secondary"
-                    className="text-[9px]"
-                  >
-                    {hasOverride ? 'override' : tool.source}
-                  </Badge>
+                  {(() => {
+                    const displaySource = hasOverride ? 'company-override' : tool.source
+                    const badgeVariant =
+                      displaySource === 'denied' ? 'destructive' :
+                      displaySource === 'company-override' ? 'secondary' :
+                      'default'
+                    return (
+                      <Badge variant={badgeVariant} className="text-[9px]">
+                        {displaySource}
+                      </Badge>
+                    )
+                  })()}
                 </div>
               )
             })}

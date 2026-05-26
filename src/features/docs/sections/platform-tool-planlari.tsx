@@ -21,8 +21,8 @@ interface SourceRow {
 
 const SOURCE_VALUES: SourceRow[] = [
   { value: 'plan',        meaning: 'Tool seçili plan içinde tanımlı' },
-  { value: 'override',    meaning: 'Firma override\'ı ile açıldı veya kapatıldı' },
-  { value: 'not_in_plan', meaning: 'Planda yok — UI\'de toggle için gösterilir' },
+  { value: 'company-override', meaning: 'Firma override etti' },
+  { value: 'denied',           meaning: 'Plan\'da yok / reddedildi' },
 ]
 
 interface ValidationRow {

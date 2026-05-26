@@ -132,7 +132,7 @@ export interface ResolvedTool {
   category: string
   requiresApproval: boolean
   enabled: boolean
-  source: 'plan' | 'override' | 'not_in_plan'
+  source: 'plan' | 'company-override' | 'denied'
 }
 
 export interface CompanyToolConfig {
