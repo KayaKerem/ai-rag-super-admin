@@ -20,7 +20,7 @@ export interface CompanyComboboxProps {
 
 export function CompanyCombobox({ value, onChange }: CompanyComboboxProps) {
   const [open, setOpen] = useState(false)
-  const { data: companies, isLoading } = useCompanies()
+  const { data: companies, isLoading } = useCompanies({ limit: 200, offset: 0 })
 
   const selected = companies?.find((c) => c.id === value) ?? null
   const label = selected?.name ?? 'Tüm Şirketler'

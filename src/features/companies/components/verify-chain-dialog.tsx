@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -36,16 +36,18 @@ export function VerifyChainDialog({ companyId, open, onOpenChange }: VerifyChain
     if (!enabled) {
       setEnabled(true)
     } else {
-      void query.refetch().then((result) => {
-        if (result.data?.valid) {
-          toast.success(`Zincir bütün — ${result.data.totalChecked} kayıt doğrulandı`)
-        }
-      })
+      void query.refetch()
     }
   }
 
-  // When enabled changes to true, the query fires automatically; watch data changes
   const data = query.data
+
+  // Fire success toast once per fresh fetch result (covers both first-click and re-verify)
+  useEffect(() => {
+    if (data?.valid === true) {
+      toast.success(`Zincir bütün — ${data.totalChecked} kayıt doğrulandı`)
+    }
+  }, [data?.valid, data?.totalChecked])
 
   function handleClose(v: boolean) {
     if (!v) {
@@ -103,7 +105,7 @@ export function VerifyChainDialog({ companyId, open, onOpenChange }: VerifyChain
           <p className="text-sm text-muted-foreground">Doğrulanıyor…</p>
         )}
 
-        {data && !query.isFetching && data.valid && (
+        {enabled && data && !query.isFetching && data.valid && (
           <Card className="border-green-500">
             <CardContent className="flex items-center gap-3 p-4">
               <CheckCircle2 className="h-5 w-5 shrink-0 text-green-600" />
@@ -117,7 +119,7 @@ export function VerifyChainDialog({ companyId, open, onOpenChange }: VerifyChain
           </Card>
         )}
 
-        {data && !query.isFetching && !data.valid && (
+        {enabled && data && !query.isFetching && !data.valid && (
           <Card className="border-yellow-500">
             <CardContent className="flex items-center gap-3 p-4">
               <AlertTriangle className="h-5 w-5 shrink-0 text-yellow-600" />

@@ -29,8 +29,15 @@ export function InviteDialog({ companyId }: InviteDialogProps) {
     e.preventDefault()
     if (!email.trim()) return
     const payload: { email: string; role: string; expiresInDays?: number } = { email: email.trim(), role }
-    const days = Number(expiresInDays)
-    if (Number.isInteger(days) && days >= 1 && days <= 30) payload.expiresInDays = days
+    const trimmedDays = expiresInDays.trim()
+    if (trimmedDays) {
+      const days = Number(trimmedDays)
+      if (!Number.isInteger(days) || days < 1 || days > 30) {
+        toast.error('Geçerlilik süresi 1-30 gün arasında olmalı')
+        return
+      }
+      payload.expiresInDays = days
+    }
     inviteUser.mutate(payload as { email: string; role: 'owner' | 'admin' | 'member'; expiresInDays?: number }, {
       onSuccess: () => {
         toast.success('Davet gönderildi')

@@ -38,17 +38,21 @@ export function ServiceAccountTable({ data, isLoading, onEdit }: ServiceAccountT
   const [revealedPassword, setRevealedPassword] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<ServiceAccount | null>(null)
   const [lockoutId, setLockoutId] = useState<string | null>(null)
+  const [pendingId, setPendingId] = useState<string | null>(null)
   const deleteAccount = useDeleteServiceAccount()
   const reveal = useRevealPassword()
 
   function handleReveal(id: string) {
+    setPendingId(id)
     reveal.mutate(id, {
       onSuccess: (res) => {
         setRevealingId(id)
         setRevealedPassword(res.decryptedPassword)
         setLockoutId(id)
         setTimeout(() => setLockoutId(null), 3000)
+        setPendingId(null)
       },
+      onError: () => setPendingId(null),
     })
   }
 
@@ -102,7 +106,7 @@ export function ServiceAccountTable({ data, isLoading, onEdit }: ServiceAccountT
         <Button
           size="sm"
           variant="ghost"
-          disabled={reveal.isPending || lockoutId === row.original.id}
+          disabled={pendingId === row.original.id || lockoutId === row.original.id}
           onClick={(e) => {
             e.stopPropagation()
             handleReveal(row.original.id)
