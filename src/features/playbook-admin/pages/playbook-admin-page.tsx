@@ -10,14 +10,18 @@ import { Copy } from 'lucide-react'
 import { useRecomputePlaybookStatus } from '../hooks/use-playbook-admin'
 import { isSyncRecomputeResponse, type RecomputePlaybookResponse } from '../types'
 import { useUrlFilterState } from '@/lib/hooks/use-url-filter-state'
+import { CapViolationsTab } from '../components/cap-violations-tab'
 
-type AdminTab = 'single' | 'batch'
+type AdminTab = 'single' | 'batch' | 'cap-violations'
 
 const TAB_FILTER = {
   defaults: { tab: 'single' as AdminTab },
-  parse: (p: URLSearchParams): { tab: AdminTab } => ({
-    tab: p.get('tab') === 'batch' ? 'batch' : 'single',
-  }),
+  parse: (p: URLSearchParams): { tab: AdminTab } => {
+    const raw = p.get('tab')
+    if (raw === 'batch') return { tab: 'batch' }
+    if (raw === 'cap-violations') return { tab: 'cap-violations' }
+    return { tab: 'single' }
+  },
   serialize: (v: { tab: AdminTab }): Record<string, string | undefined> => ({
     tab: v.tab === 'single' ? undefined : v.tab,
   }),
@@ -45,12 +49,16 @@ export function PlaybookAdminPage() {
         <TabsList>
           <TabsTrigger value="single">Tek Playbook</TabsTrigger>
           <TabsTrigger value="batch">Batch</TabsTrigger>
+          <TabsTrigger value="cap-violations">Cap Violations</TabsTrigger>
         </TabsList>
         <TabsContent value="single" className="mt-4">
           <SinglePlaybookTab />
         </TabsContent>
         <TabsContent value="batch" className="mt-4">
           <BatchTab />
+        </TabsContent>
+        <TabsContent value="cap-violations" className="mt-4">
+          <CapViolationsTab />
         </TabsContent>
       </Tabs>
     </div>

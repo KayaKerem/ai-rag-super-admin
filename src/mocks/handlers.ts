@@ -830,4 +830,18 @@ export const handlers = [
     await delay(400)
     return HttpResponse.json({ message: 'Playbook seeded successfully' }, { status: 201 })
   }),
+
+  // ─── Cap Violations Aggregate ─────────────────────
+  http.get(`${BASE}/platform/cap-violations/aggregate`, ({ request }) => {
+    const url = new URL(request.url)
+    const companyId = url.searchParams.get('companyId')
+    return HttpResponse.json({
+      rows: [
+        { capKind: 'monthly_token_cap', source: 'tenant', count: 12, lastViolationAt: new Date(Date.now() - 86_400_000).toISOString() },
+        { capKind: 'request_rate', source: 'agent', count: 3, lastViolationAt: new Date(Date.now() - 3 * 86_400_000).toISOString() },
+        { capKind: 'storage_quota', source: 'tenant', count: 1, lastViolationAt: new Date(Date.now() - 7 * 86_400_000).toISOString() },
+      ],
+      effectiveModeByCompany: companyId ? { [companyId]: 'enforced' } : {},
+    })
+  }),
 ]

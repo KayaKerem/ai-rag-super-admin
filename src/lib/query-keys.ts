@@ -74,5 +74,12 @@ export const queryKeys = {
       list: (filters: AgentRouteBindingsFilters) =>
         ['admin', 'agent-route-bindings', 'list', filters] as const,
     },
+    capViolationsAggregate: (params: {
+      from?: string
+      to?: string
+      companyId?: string
+      capKind?: string
+      source?: string
+    }) => ['admin', 'cap-violations', params] as const,
   },
 }
