@@ -25,6 +25,7 @@ const categoryLabels: Record<ActivityCategory, string> = {
   playbook: 'Playbook',
   quote: 'Teklif',
   channel: 'Kanal',
+  security: 'Güvenlik',
 }
 
 const categoryColors: Record<ActivityCategory, string> = {
@@ -41,6 +42,7 @@ const categoryColors: Record<ActivityCategory, string> = {
   playbook: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300',
   quote: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300',
   channel: 'bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-300',
+  security: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
 }
 
 const categoryOptions: { value: string; label: string }[] = [
@@ -58,6 +60,7 @@ const categoryOptions: { value: string; label: string }[] = [
   { value: 'playbook', label: 'Playbook' },
   { value: 'quote', label: 'Teklif' },
   { value: 'channel', label: 'Kanal' },
+  { value: 'security', label: 'Güvenlik' },
 ]
 
 export function ActivityLogTab({ companyId }: ActivityLogTabProps) {
