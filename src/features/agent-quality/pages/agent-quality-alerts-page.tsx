@@ -1,6 +1,14 @@
 import { useMemo } from 'react'
-import { Loader2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { useUrlFilterState } from '@/lib/hooks/use-url-filter-state'
 import { Button } from '@/components/ui/button'
 import { AgentQualityAlertsFilters } from '../components/agent-quality-alerts-filters'
@@ -144,8 +152,29 @@ export function AgentQualityAlertsPage() {
       />
 
       {query.isLoading && (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin" /> Yükleniyor…
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                {Array.from({ length: 6 }).map((_, j) => (
+                  <TableHead key={j}>
+                    <Skeleton className="h-4 w-full" />
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  {Array.from({ length: 6 }).map((_, j) => (
+                    <TableCell key={j}>
+                      <Skeleton className="h-4 w-full" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       )}
       {query.isError && (

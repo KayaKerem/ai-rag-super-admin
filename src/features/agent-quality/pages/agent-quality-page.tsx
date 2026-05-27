@@ -1,6 +1,14 @@
 import { useEffect, useMemo } from 'react'
-import { Loader2 } from 'lucide-react'
 import { useUrlFilterState } from '@/lib/hooks/use-url-filter-state'
+import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import {
   Select,
   SelectContent,
@@ -194,8 +202,29 @@ export function AgentQualityPage() {
       )}
 
       {snapshot.isLoading && (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin" /> Snapshot yükleniyor…
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                {Array.from({ length: 8 }).map((_, j) => (
+                  <TableHead key={j}>
+                    <Skeleton className="h-4 w-full" />
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  {Array.from({ length: 8 }).map((_, j) => (
+                    <TableCell key={j}>
+                      <Skeleton className="h-4 w-full" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       )}
       {snapshot.isError && (

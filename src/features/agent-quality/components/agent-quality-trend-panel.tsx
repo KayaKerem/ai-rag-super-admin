@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Loader2, X } from 'lucide-react'
+import { X } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
 import { TrendSparkline, type TrendSparklinePoint } from './trend-sparkline'
 import { AgentQualityCostStackedBar } from './agent-quality-cost-stacked-bar'
 import type {
@@ -50,8 +51,11 @@ export function AgentQualityTrendPanel({
       </CardHeader>
       <CardContent className="space-y-4">
         {isLoading && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin" /> Trend yükleniyor…
+          <div className="space-y-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-20 w-full" />
+            ))}
+            <Skeleton className="h-32 w-full" />
           </div>
         )}
         {isError && (
