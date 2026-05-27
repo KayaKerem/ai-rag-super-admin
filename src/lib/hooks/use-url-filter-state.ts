@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 export interface UseUrlFilterStateOptions<T> {
@@ -14,16 +14,21 @@ export function useUrlFilterState<T extends object>(
 ): [T, (updater: Updater<T>) => void] {
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const value = useMemo(() => opts.parse(searchParams), [searchParams, opts])
+  // Capture opts in a ref so unstable inline object literals don't bust memo
+  const optsRef = useRef(opts)
+  optsRef.current = opts
+
+  const value = useMemo(() => optsRef.current.parse(searchParams), [searchParams])
 
   const setValue = useCallback(
     (updater: Updater<T>) => {
+      const current = optsRef.current.parse(searchParams)
       const next =
         typeof updater === 'function'
-          ? updater(value)
-          : { ...value, ...updater }
+          ? updater(current)
+          : { ...current, ...updater }
 
-      const serialized = opts.serialize(next)
+      const serialized = optsRef.current.serialize(next)
       const nextParams = new URLSearchParams(searchParams)
       for (const [key, val] of Object.entries(serialized)) {
         if (val === undefined || val === '') {
@@ -34,7 +39,7 @@ export function useUrlFilterState<T extends object>(
       }
       setSearchParams(nextParams, { replace: true })
     },
-    [value, opts, searchParams, setSearchParams]
+    [searchParams, setSearchParams]
   )
 
   return [value, setValue]
