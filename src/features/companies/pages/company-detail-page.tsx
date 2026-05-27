@@ -15,6 +15,7 @@ import { SearchAnalyticsTab } from '../components/search-analytics-tab'
 import { ProactiveInsightsTab } from '../components/proactive-insights-tab'
 import { LeadsTab } from '../components/leads-tab'
 import { AgentSettingsCard } from '../components/agent-settings-card'
+import { WebChatTab } from '../components/webchat-tab'
 
 export function CompanyDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -42,6 +43,7 @@ export function CompanyDetailPage() {
           <TabsTrigger value="search-analytics">Arama Analitigi</TabsTrigger>
           <TabsTrigger value="leads">Lead&apos;ler</TabsTrigger>
           <TabsTrigger value="proactive">Proaktif</TabsTrigger>
+          <TabsTrigger value="webchat">WebChat</TabsTrigger>
         </TabsList>
         <TabsContent value="usage" className="mt-4">
           {activeTab === 'usage' && <UsageTab companyId={id!} />}
@@ -75,6 +77,9 @@ export function CompanyDetailPage() {
         </TabsContent>
         <TabsContent value="proactive" className="mt-4">
           {activeTab === 'proactive' && <ProactiveInsightsTab companyId={id!} />}
+        </TabsContent>
+        <TabsContent value="webchat" className="mt-4">
+          <WebChatTab company={company} />
         </TabsContent>
       </Tabs>
     </div>

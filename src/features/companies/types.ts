@@ -15,6 +15,7 @@ export type ApprovalTimeoutAction = 'REMIND' | 'AUTO_SEND' | 'HOLD'
 export interface Company {
   id: string
   name: string
+  slug: string
   logoUrl: string | null
   brandColor?: string | null
   timezone?: string | null
