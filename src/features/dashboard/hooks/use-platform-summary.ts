@@ -8,7 +8,7 @@ interface UsageMonth {
   ai: { totalTokens: number; costUsd: number }
   research?: { callCount: number; costUsd: number }
   quotePrepare?: { callCount: number; costUsd: number }
-  storage: { totalBytes: number; costUsd: number }
+  storage: { currentBytes: number; costUsd: number }
   trigger: { taskCount: number; costUsd: number }
   totalCostUsd: number
   satisfactionRate?: number
