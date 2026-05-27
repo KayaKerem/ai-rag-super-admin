@@ -82,4 +82,7 @@ export const queryKeys = {
       source?: string
     }) => ['admin', 'cap-violations', params] as const,
   },
+  public: {
+    wpPluginVersion: ['public', 'wp-plugin-version'] as const,
+  },
 }

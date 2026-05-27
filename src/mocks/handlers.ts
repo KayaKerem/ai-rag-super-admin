@@ -844,4 +844,16 @@ export const handlers = [
       effectiveModeByCompany: companyId ? { [companyId]: 'enforced' } : {},
     })
   }),
+
+  // ─── WP Plugin Version (no-auth public)
+  http.get(`${BASE}/public/wp-plugin/version.json`, () => {
+    return HttpResponse.json({
+      version: '1.0.0',
+      tested_up_to: '6.9',
+      requires_at_least: '6.2',
+      downloadUrlTemplate: `${BASE}/public/wp-plugin/by-slug/{slug}/edfu-chat.zip`,
+      embedScriptUrlTemplate: `${BASE}/public/wp-plugin/by-slug/{slug}/edfu-chat.js`,
+      available: true,
+    })
+  }),
 ]
