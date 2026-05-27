@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from '@/components/ui/sonner'
 import { AuthGuard } from '@/components/layout/auth-guard'
+import { PlatformAdminGuard } from '@/components/layout/platform-admin-guard'
 import { AppLayout } from '@/components/layout/app-layout'
 import { RouteLoadingFallback } from '@/components/layout/route-loading-fallback'
 import { LoginPage } from '@/features/auth/pages/login-page'
@@ -91,54 +92,56 @@ function App() {
                   </Suspense>
                 }
               />
-              <Route
-                path="/admin/cost-health"
-                element={
-                  <Suspense fallback={<RouteLoadingFallback />}>
-                    <CostHealthPage />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/admin/agent-quality"
-                element={
-                  <Suspense fallback={<RouteLoadingFallback />}>
-                    <AgentQualityPage />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/admin/agent-quality/alerts"
-                element={
-                  <Suspense fallback={<RouteLoadingFallback />}>
-                    <AgentQualityAlertsPage />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/admin/agent-route-bindings"
-                element={
-                  <Suspense fallback={<RouteLoadingFallback />}>
-                    <AgentRouteBindingsPage />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/admin/playbooks/recompute"
-                element={
-                  <Suspense fallback={<RouteLoadingFallback />}>
-                    <PlaybookAdminPage />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/admin/platform-ops"
-                element={
-                  <Suspense fallback={<RouteLoadingFallback />}>
-                    <PlatformOpsPage />
-                  </Suspense>
-                }
-              />
+              <Route element={<PlatformAdminGuard />}>
+                <Route
+                  path="/admin/cost-health"
+                  element={
+                    <Suspense fallback={<RouteLoadingFallback />}>
+                      <CostHealthPage />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/admin/agent-quality"
+                  element={
+                    <Suspense fallback={<RouteLoadingFallback />}>
+                      <AgentQualityPage />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/admin/agent-quality/alerts"
+                  element={
+                    <Suspense fallback={<RouteLoadingFallback />}>
+                      <AgentQualityAlertsPage />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/admin/agent-route-bindings"
+                  element={
+                    <Suspense fallback={<RouteLoadingFallback />}>
+                      <AgentRouteBindingsPage />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/admin/playbooks/recompute"
+                  element={
+                    <Suspense fallback={<RouteLoadingFallback />}>
+                      <PlaybookAdminPage />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/admin/platform-ops"
+                  element={
+                    <Suspense fallback={<RouteLoadingFallback />}>
+                      <PlatformOpsPage />
+                    </Suspense>
+                  }
+                />
+              </Route>
             </Route>
           </Route>
         </Routes>

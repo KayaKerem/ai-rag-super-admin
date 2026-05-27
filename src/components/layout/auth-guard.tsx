@@ -2,9 +2,9 @@ import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '@/features/auth/hooks/use-auth'
 
 export function AuthGuard() {
-  const { isAuthenticated, user } = useAuth()
+  const { isAuthenticated } = useAuth()
 
-  if (!isAuthenticated || !user?.isPlatformAdmin) {
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />
   }
 
