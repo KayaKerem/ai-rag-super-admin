@@ -9,11 +9,19 @@ import { LoginPage } from '@/features/auth/pages/login-page'
 import { DashboardPage } from '@/features/dashboard/pages/dashboard-page'
 import { CompaniesPage } from '@/features/companies/pages/companies-page'
 import { CompanyDetailPage } from '@/features/companies/pages/company-detail-page'
-import { SettingsPage } from '@/features/settings/pages/settings-page'
 import { EmailTemplatesPage } from '@/features/email-templates/pages/email-templates-page'
 import { ServiceAccountsPage } from '@/features/service-accounts/pages/service-accounts-page'
-import { DocsPage } from '@/features/docs/pages/docs-page'
 
+const DocsPage = lazy(() =>
+  import('@/features/docs/pages/docs-page').then((m) => ({
+    default: m.DocsPage,
+  }))
+)
+const SettingsPage = lazy(() =>
+  import('@/features/settings/pages/settings-page').then((m) => ({
+    default: m.SettingsPage,
+  }))
+)
 const CostHealthPage = lazy(() =>
   import('@/features/cost-health/pages/cost-health-page').then((m) => ({
     default: m.CostHealthPage,
@@ -65,10 +73,24 @@ function App() {
               <Route path="/" element={<DashboardPage />} />
               <Route path="/companies" element={<CompaniesPage />} />
               <Route path="/companies/:id" element={<CompanyDetailPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
+              <Route
+                path="/settings"
+                element={
+                  <Suspense fallback={<RouteLoadingFallback />}>
+                    <SettingsPage />
+                  </Suspense>
+                }
+              />
               <Route path="/email-templates" element={<EmailTemplatesPage />} />
               <Route path="/service-accounts" element={<ServiceAccountsPage />} />
-              <Route path="/docs" element={<DocsPage />} />
+              <Route
+                path="/docs"
+                element={
+                  <Suspense fallback={<RouteLoadingFallback />}>
+                    <DocsPage />
+                  </Suspense>
+                }
+              />
               <Route
                 path="/admin/cost-health"
                 element={
