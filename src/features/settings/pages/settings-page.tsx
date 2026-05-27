@@ -9,6 +9,7 @@ import { QuotePipelineSection } from '../components/quote-pipeline-section'
 import { usePlatformDefaults, useUpdatePlatformDefaults } from '../hooks/use-platform-defaults'
 import { WorkingHoursSection } from '../components/working-hours-section'
 import { WhatsAppConfigSection } from '../components/whatsapp-config-section'
+import { WebChannelSection } from '../components/web-channel-section'
 import { usePlatformModels } from '@/features/companies/hooks/use-platform-models'
 import type { ConfigBlockKey } from '@/lib/validations'
 
@@ -252,6 +253,8 @@ export function SettingsPage() {
             onSave={handleSave}
             isSaving={isPending}
           />
+        ) : activeSection === 'webChannel' ? (
+          <WebChannelSection key="webChannel" />
         ) : meta ? (
           <ConfigSection
             key={activeSection}
