@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Loader2, Plus } from 'lucide-react'
+import { AlertTriangle, Loader2, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { useUrlFilterState } from '@/lib/hooks/use-url-filter-state'
 import { useAgentRouteBindings } from '../hooks/use-agent-route-bindings'
 import { AgentRouteBindingsFilters } from '../components/agent-route-bindings-filters'
@@ -81,30 +82,33 @@ export function AgentRouteBindingsPage() {
 
     return (
       <div>
-        <h1 className="mb-2 text-xl font-bold">Agent Routing</h1>
-        <div className="rounded-md border border-destructive/40 bg-destructive/5 p-6 text-sm">
-          {isForbidden ? (
-            <p className="text-destructive">
-              Bu sayfayı görmek için platform admin yetkisi gerekli.
+        <h1 className="mb-4 text-xl font-bold">Agent Routing</h1>
+        <Card className="max-w-md">
+          <CardContent className="flex flex-col items-center gap-3 p-6 text-center">
+            <AlertTriangle className="h-5 w-5 text-destructive" />
+            <h2 className="text-base font-semibold">
+              {isForbidden
+                ? 'Bu sayfayı görmek için platform admin yetkisi gerekli.'
+                : isZodParseError
+                  ? 'Veri formatı beklenmedik'
+                  : 'Binding\'ler yüklenemedi'}
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {isForbidden
+                ? null
+                : isZodParseError
+                  ? 'Backend response Zod parse\'tan geçmedi. Devops uyarıldı mı?'
+                  : status > 0
+                    ? `HTTP ${status}`
+                    : 'Bir hata oluştu. Lütfen tekrar deneyin.'}
             </p>
-          ) : isZodParseError ? (
-            <p className="text-destructive">
-              Veri formatı beklenmedik — backend response Zod parse'tan geçmedi. Devops uyarıldı mı?
-            </p>
-          ) : (
-            <div className="space-y-3">
-              <p className="text-destructive">
-                Binding'ler yüklenemedi. {status > 0 && `(HTTP ${status})`}
-              </p>
-              <button
-                onClick={() => refetch()}
-                className="text-xs underline hover:text-foreground"
-              >
+            {!isForbidden && !isZodParseError && (
+              <Button variant="outline" onClick={() => refetch()}>
                 Tekrar Dene
-              </button>
-            </div>
-          )}
-        </div>
+              </Button>
+            )}
+          </CardContent>
+        </Card>
       </div>
     )
   }
@@ -134,8 +138,9 @@ export function AgentRouteBindingsPage() {
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center p-12">
+        <div className="flex items-center justify-center py-12">
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <span className="ml-2 text-sm text-muted-foreground">Yükleniyor…</span>
         </div>
       ) : (
         <AgentRouteBindingsTable rows={items} onRowClick={handleRowClick} onDelete={handleDelete} />
