@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Building2, Settings, LogOut, Mail, KeyRound, BookOpen, Activity, Gauge, Bell, Network, BookOpenCheck } from 'lucide-react'
+import { LayoutDashboard, Building2, Settings, LogOut, Mail, KeyRound, BookOpen, Activity, Gauge, Bell, Network, BookOpenCheck, Cpu } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useAuth } from '@/features/auth/hooks/use-auth'
 import { apiClient } from '@/lib/api-client'
@@ -31,6 +31,7 @@ const platformItems: Array<{
   },
   { to: '/admin/agent-route-bindings', icon: Network, label: 'Agent Routing' },
   { to: '/admin/playbooks/recompute', icon: BookOpenCheck, label: 'Playbook Admin' },
+  { to: '/admin/platform-ops', icon: Cpu, label: 'Platform Ops' },
 ]
 
 export function Sidebar() {

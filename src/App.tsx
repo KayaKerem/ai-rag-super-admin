@@ -39,6 +39,11 @@ const PlaybookAdminPage = lazy(() =>
     default: m.PlaybookAdminPage,
   }))
 )
+const PlatformOpsPage = lazy(() =>
+  import('@/features/platform-ops/pages/platform-ops-page').then((m) => ({
+    default: m.PlatformOpsPage,
+  }))
+)
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -101,6 +106,14 @@ function App() {
                 element={
                   <Suspense fallback={<RouteLoadingFallback />}>
                     <PlaybookAdminPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/admin/platform-ops"
+                element={
+                  <Suspense fallback={<RouteLoadingFallback />}>
+                    <PlatformOpsPage />
                   </Suspense>
                 }
               />
