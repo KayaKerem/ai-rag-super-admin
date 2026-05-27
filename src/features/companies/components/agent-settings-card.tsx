@@ -39,8 +39,6 @@ export function AgentSettingsCard({ company }: AgentSettingsCardProps) {
   const [timeoutMinutes, setTimeoutMinutes] = useState(company.approvalTimeoutMinutes.toString())
   const [timeoutAction, setTimeoutAction] = useState(company.approvalTimeoutAction)
   const [budget, setBudget] = useState(company.customerOperationsBudgetUsd?.toString() ?? '')
-  const [brandColor, setBrandColor] = useState(company.brandColor ?? '#000000')
-  const [logoUrl, setLogoUrl] = useState(company.logoUrl ?? '')
   const [timezone, setTimezone] = useState(company.timezone ?? 'Europe/Istanbul')
   const updateCompany = useUpdateCompany(company.id)
 
@@ -50,8 +48,6 @@ export function AgentSettingsCard({ company }: AgentSettingsCardProps) {
     setTimeoutMinutes(company.approvalTimeoutMinutes.toString())
     setTimeoutAction(company.approvalTimeoutAction)
     setBudget(company.customerOperationsBudgetUsd?.toString() ?? '')
-    setBrandColor(company.brandColor ?? '#000000')
-    setLogoUrl(company.logoUrl ?? '')
     setTimezone(company.timezone ?? 'Europe/Istanbul')
   }, [
     company.customerAgentTrustLevel,
@@ -59,8 +55,6 @@ export function AgentSettingsCard({ company }: AgentSettingsCardProps) {
     company.approvalTimeoutMinutes,
     company.approvalTimeoutAction,
     company.customerOperationsBudgetUsd,
-    company.brandColor,
-    company.logoUrl,
     company.timezone,
   ])
 
@@ -72,8 +66,6 @@ export function AgentSettingsCard({ company }: AgentSettingsCardProps) {
     timeoutMinutes !== company.approvalTimeoutMinutes.toString() ||
     timeoutAction !== company.approvalTimeoutAction ||
     toNullable(budget) !== (company.customerOperationsBudgetUsd?.toString() ?? null) ||
-    brandColor !== (company.brandColor ?? '#000000') ||
-    logoUrl !== (company.logoUrl ?? '') ||
     timezone !== (company.timezone ?? 'Europe/Istanbul')
 
   function handleSave() {
@@ -84,8 +76,6 @@ export function AgentSettingsCard({ company }: AgentSettingsCardProps) {
         approvalTimeoutMinutes: Math.max(1, Number(timeoutMinutes) || 30),
         approvalTimeoutAction: timeoutAction,
         customerOperationsBudgetUsd: budget !== '' ? Math.max(0, Number(budget) || 0) : null,
-        brandColor: brandColor || null,
-        logoUrl: logoUrl !== '' ? logoUrl : null,
         timezone: timezone || null,
       },
       {
@@ -101,8 +91,6 @@ export function AgentSettingsCard({ company }: AgentSettingsCardProps) {
     setTimeoutMinutes(company.approvalTimeoutMinutes.toString())
     setTimeoutAction(company.approvalTimeoutAction)
     setBudget(company.customerOperationsBudgetUsd?.toString() ?? '')
-    setBrandColor(company.brandColor ?? '#000000')
-    setLogoUrl(company.logoUrl ?? '')
     setTimezone(company.timezone ?? 'Europe/Istanbul')
   }
 
@@ -195,26 +183,6 @@ export function AgentSettingsCard({ company }: AgentSettingsCardProps) {
                 onChange={(e) => setBudget(e.target.value)}
               />
               <p className="text-[11px] text-muted-foreground">Aylık müşteri operasyonları bütçe limiti</p>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label className="text-xs">Marka Rengi</Label>
-              <Input
-                type="color"
-                value={brandColor}
-                onChange={(e) => setBrandColor(e.target.value)}
-                className="h-9 w-full cursor-pointer px-2"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <Label className="text-xs">Logo URL</Label>
-              <Input
-                type="url"
-                placeholder="https://..."
-                value={logoUrl}
-                onChange={(e) => setLogoUrl(e.target.value)}
-              />
             </div>
 
             <div className="space-y-1.5">
