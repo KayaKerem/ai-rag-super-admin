@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AlertTriangle } from 'lucide-react'
 import type { Company } from '../types'
 import { WebChatConfigCard } from './webchat-config-card'
+import { WpPluginSection } from './wp-plugin-section'
 
 interface WebChatTabProps {
   company: Company
@@ -26,8 +27,8 @@ export function WebChatTab({ company }: WebChatTabProps) {
       {/* Brand + Logo card */}
       <WebChatConfigCard company={company} />
 
-      {/* WP plugin section placeholder (filled in Task 5) */}
-      <div data-placeholder="wp-plugin-section">{/* Task 5 */}</div>
+      {/* WP plugin section */}
+      <WpPluginSection slug={company.slug} />
 
       {/* Universal embed section placeholder (filled in Task 6) */}
       <div data-placeholder="universal-embed-section">{/* Task 6 */}</div>
