@@ -3,6 +3,7 @@ import { AlertTriangle } from 'lucide-react'
 import type { Company } from '../types'
 import { WebChatConfigCard } from './webchat-config-card'
 import { WpPluginSection } from './wp-plugin-section'
+import { UniversalEmbedSection } from './universal-embed-section'
 
 interface WebChatTabProps {
   company: Company
@@ -30,8 +31,8 @@ export function WebChatTab({ company }: WebChatTabProps) {
       {/* WP plugin section */}
       <WpPluginSection slug={company.slug} />
 
-      {/* Universal embed section placeholder (filled in Task 6) */}
-      <div data-placeholder="universal-embed-section">{/* Task 6 */}</div>
+      {/* Universal embed section */}
+      <UniversalEmbedSection slug={company.slug} />
 
       {/* B17 cross-link banner */}
       <div className="flex items-start gap-2 rounded-lg border border-blue-500/30 bg-blue-500/5 p-3 text-sm">
