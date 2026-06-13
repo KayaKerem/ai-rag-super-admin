@@ -37,7 +37,6 @@ interface PlanFormData {
   allowedModels: AllowedModel[]
   allowedTools: string[]
   allowedConnectors: string[]
-  isActive: boolean
   sortOrder: string
 }
 
@@ -50,7 +49,7 @@ const emptyForm: PlanFormData = {
   maxAgentPlaybooks: '4', capEnforcementMode: 'log_only',
   sandboxQuotaPerDay: '', sandboxQuotaEnforcementMode: 'log_only',
   allowedModels: [], allowedTools: [], allowedConnectors: [],
-  isActive: true, sortOrder: '0',
+  sortOrder: '0',
 }
 
 function planToForm(p: PricingPlan): PlanFormData {
@@ -68,7 +67,7 @@ function planToForm(p: PricingPlan): PlanFormData {
     sandboxQuotaPerDay: p.sandboxQuotaPerDay != null ? String(p.sandboxQuotaPerDay) : '',
     sandboxQuotaEnforcementMode: p.sandboxQuotaEnforcementMode ?? 'log_only',
     allowedModels: p.allowedModels, allowedTools: p.allowedTools, allowedConnectors: p.allowedConnectors,
-    isActive: p.isActive, sortOrder: String(p.sortOrder),
+    sortOrder: String(p.sortOrder),
   }
 }
 
@@ -96,16 +95,18 @@ function formToRequest(f: PlanFormData): CreatePlanRequest {
     monthlyPriceTry: f.monthlyPriceTry ? clamp(Number(f.monthlyPriceTry), 0, 0) : null,
     includedUsers: clamp(Number(f.includedUsers), 1, 1),
     extraUserPriceTry: f.extraUserPriceTry ? clamp(Number(f.extraUserPriceTry), 0, 0) : null,
-    budgetUsd: clamp(Number(f.budgetUsd), 0, 10),
+    // DTO minimumlari: budgetUsd/maxStorageGb >= 0.01, maxFileSizeMb/crawlMaxPages/crawlMaxSources >= 1
+    budgetUsd: clamp(Number(f.budgetUsd), 0.01, 10),
     budgetDowngradeThresholdPct: Math.min(100, Math.max(1, Number(f.budgetDowngradeThresholdPct) || 80)),
-    maxStorageGb: clamp(Number(f.maxStorageGb), 0, 5), maxFileSizeMb: clamp(Number(f.maxFileSizeMb), 0, 25),
-    crawlMaxPages: clamp(Number(f.crawlMaxPages), 0, 50), crawlMaxSources: clamp(Number(f.crawlMaxSources), 0, 2),
+    maxStorageGb: clamp(Number(f.maxStorageGb), 0.01, 5), maxFileSizeMb: clamp(Number(f.maxFileSizeMb), 1, 25),
+    crawlMaxPages: clamp(Number(f.crawlMaxPages), 1, 50), crawlMaxSources: clamp(Number(f.crawlMaxSources), 1, 2),
     ...(maxAgentPlaybooks !== undefined ? { maxAgentPlaybooks } : {}),
     capEnforcementMode: f.capEnforcementMode,
     sandboxQuotaPerDay,
     sandboxQuotaEnforcementMode: f.sandboxQuotaEnforcementMode,
     allowedModels: f.allowedModels, allowedTools: f.allowedTools, allowedConnectors: f.allowedConnectors,
-    isActive: f.isActive, sortOrder: Math.max(0, Number(f.sortOrder) || 0),
+    // isActive DTO'da yok (forbidNonWhitelisted -> 400); yeni plan aktif dogar, deaktif etme DELETE ile
+    sortOrder: Math.max(0, Number(f.sortOrder) || 0),
   }
 }
 
@@ -116,6 +117,12 @@ function validatePlanForm(f: PlanFormData): string | null {
   }
   if (f.sandboxQuotaPerDay !== '' && Math.trunc(Number(f.sandboxQuotaPerDay)) === 0) {
     return 'Sandbox Quota / Gün 0 olamaz (boş = env default, -1 = sınırsız veya pozitif tamsayı).'
+  }
+  if (f.allowedModels.length === 0) {
+    return 'En az 1 model seçilmeli.'
+  }
+  if (f.allowedModels.filter((m) => m.isDefault).length !== 1) {
+    return 'Modellerden tam 1 tanesi Default işaretli olmalı.'
   }
   return null
 }
@@ -333,12 +340,12 @@ function PlanDialog({
           <div className="space-y-3">
             <h3 className="text-sm font-semibold">Limitler</h3>
             <div className="grid grid-cols-3 gap-3">
-              <div><Label>AI Bütçe (USD)</Label><Input type="number" min={0} value={form.budgetUsd} onChange={(e) => setField('budgetUsd', e.target.value)} /></div>
+              <div><Label>AI Bütçe (USD)</Label><Input type="number" min={0.01} step="any" value={form.budgetUsd} onChange={(e) => setField('budgetUsd', e.target.value)} /></div>
               <div><Label>Bütçe Uyarı %</Label><Input type="number" min={1} max={100} value={form.budgetDowngradeThresholdPct} onChange={(e) => setField('budgetDowngradeThresholdPct', e.target.value)} /></div>
-              <div><Label>Maks Depolama (GB)</Label><Input type="number" min={0} value={form.maxStorageGb} onChange={(e) => setField('maxStorageGb', e.target.value)} /></div>
-              <div><Label>Maks Dosya (MB)</Label><Input type="number" min={0} value={form.maxFileSizeMb} onChange={(e) => setField('maxFileSizeMb', e.target.value)} /></div>
-              <div><Label>Crawler Maks Sayfa</Label><Input type="number" min={0} value={form.crawlMaxPages} onChange={(e) => setField('crawlMaxPages', e.target.value)} /></div>
-              <div><Label>Crawler Maks Kaynak</Label><Input type="number" min={0} value={form.crawlMaxSources} onChange={(e) => setField('crawlMaxSources', e.target.value)} /></div>
+              <div><Label>Maks Depolama (GB)</Label><Input type="number" min={0.01} step="any" value={form.maxStorageGb} onChange={(e) => setField('maxStorageGb', e.target.value)} /></div>
+              <div><Label>Maks Dosya (MB)</Label><Input type="number" min={1} value={form.maxFileSizeMb} onChange={(e) => setField('maxFileSizeMb', e.target.value)} /></div>
+              <div><Label>Crawler Maks Sayfa</Label><Input type="number" min={1} value={form.crawlMaxPages} onChange={(e) => setField('crawlMaxPages', e.target.value)} /></div>
+              <div><Label>Crawler Maks Kaynak</Label><Input type="number" min={1} value={form.crawlMaxSources} onChange={(e) => setField('crawlMaxSources', e.target.value)} /></div>
             </div>
           </div>
 
@@ -446,13 +453,9 @@ function PlanDialog({
             </div>
           </div>
 
-          {/* Sıralama & Durum */}
+          {/* Sıralama — isActive API'den set edilemez: yeni plan aktif doğar, deaktif etme "Deaktif Et" (DELETE) ile */}
           <div className="grid grid-cols-2 gap-3">
             <div><Label>Sıralama</Label><Input type="number" value={form.sortOrder} onChange={(e) => setField('sortOrder', e.target.value)} /></div>
-            <div className="flex items-end gap-2">
-              <Label>Aktif</Label>
-              <Switch checked={form.isActive} onCheckedChange={(c) => setField('isActive', c)} />
-            </div>
           </div>
 
           {/* Actions */}

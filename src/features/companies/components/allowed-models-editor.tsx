@@ -44,22 +44,28 @@ export function AllowedModelsEditor({ models, value, onChange }: AllowedModelsEd
     items: filtered.filter((m) => m.tier === tier),
   })).filter((g) => g.items.length > 0)
 
+  // Backend kurali: allowedModels icinde TAM 1 uye isDefault:true olmali (aksi 400).
+  // Default secimi radio gibi davranir; default uye cikarilirsa ilk kalan uyeye devredilir.
   function toggleModel(model: PlatformModel) {
     const next = new Map(selected)
     if (next.has(model.id)) {
+      const wasDefault = next.get(model.id)?.isDefault
       next.delete(model.id)
+      if (wasDefault && next.size > 0) {
+        const [firstId, first] = next.entries().next().value as [string, AllowedModel]
+        next.set(firstId, { ...first, isDefault: true })
+      }
     } else {
-      next.set(model.id, { id: model.id, label: model.label, tier: model.tier })
+      next.set(model.id, { id: model.id, label: model.label, tier: model.tier, isDefault: next.size === 0 })
     }
     setSelected(next)
     onChange(Array.from(next.values()))
   }
 
   function toggleDefault(modelId: string) {
-    const next = new Map(selected)
-    const existing = next.get(modelId)
-    if (!existing) return
-    next.set(modelId, { ...existing, isDefault: !existing.isDefault })
+    if (!selected.has(modelId)) return
+    const next = new Map<string, AllowedModel>()
+    selected.forEach((m, id) => next.set(id, { ...m, isDefault: id === modelId }))
     setSelected(next)
     onChange(Array.from(next.values()))
   }

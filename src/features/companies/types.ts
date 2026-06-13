@@ -289,7 +289,7 @@ export interface CreatePlanRequest {
   capEnforcementMode?: CapEnforcementMode
   sandboxQuotaPerDay?: number | null
   sandboxQuotaEnforcementMode?: SandboxQuotaEnforcementMode
-  isActive?: boolean
+  // isActive DTO'da yok — gonderilirse forbidNonWhitelisted 400; deaktif etme DELETE /platform/plans/:id
   sortOrder?: number
 }
 
