@@ -8,9 +8,11 @@ interface WhatsAppConfigAccordionProps {
   currentValues: WhatsAppConfig | undefined
   onSave: (blockKey: ConfigBlockKey, values: Record<string, unknown>) => void
   isSaving: boolean
+  readOnly?: boolean
+  readOnlyNote?: string
 }
 
-export function WhatsAppConfigAccordion({ currentValues, onSave, isSaving }: WhatsAppConfigAccordionProps) {
+export function WhatsAppConfigAccordion({ currentValues, onSave, isSaving, readOnly, readOnlyNote }: WhatsAppConfigAccordionProps) {
   const hasConfig = currentValues && Object.keys(currentValues).length > 0
 
   return (
@@ -25,7 +27,7 @@ export function WhatsAppConfigAccordion({ currentValues, onSave, isSaving }: Wha
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-4 pb-4 pt-2">
-        <WhatsAppConfigForm currentValues={currentValues} onSave={onSave} isSaving={isSaving} />
+        <WhatsAppConfigForm currentValues={currentValues} onSave={onSave} isSaving={isSaving} readOnly={readOnly} readOnlyNote={readOnlyNote} />
       </AccordionContent>
     </AccordionItem>
   )

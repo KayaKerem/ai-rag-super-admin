@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { ModelSelect } from '@/components/ui/model-select'
+import { Lock } from 'lucide-react'
 import { configBlockSchemas, type ConfigBlockKey } from '@/lib/validations'
 import type { ZodTypeAny } from 'zod'
 
@@ -31,9 +32,12 @@ interface ConfigAccordionProps {
   onSave: (blockKey: ConfigBlockKey, values: Record<string, unknown>) => void
   isSaving: boolean
   models?: import('@/features/companies/types').PlatformModel[]
+  /** Backend bu bloğu PUT /config'ten kabul etmiyor (whitelist dışı → 400) — sadece görüntüle */
+  readOnly?: boolean
+  readOnlyNote?: string
 }
 
-export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, onSave, isSaving, models }: ConfigAccordionProps) {
+export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, onSave, isSaving, models, readOnly, readOnlyNote }: ConfigAccordionProps) {
   const schema = configBlockSchemas[blockKey] as ZodTypeAny
   const hasConfig = currentValues && Object.keys(currentValues).length > 0
 
@@ -93,8 +97,14 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-4 pb-4 pt-2">
+        {readOnly && (
+          <div className="mb-3 flex items-start gap-2 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2">
+            <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
+            <span className="text-xs text-muted-foreground">{readOnlyNote ?? 'Bu blok salt-okunurdur.'}</span>
+          </div>
+        )}
         <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <div className="grid grid-cols-2 gap-3">
+          <div className={`grid grid-cols-2 gap-3 ${readOnly ? 'pointer-events-none opacity-60' : ''}`}>
             {fields.map((field) => {
               if (field.type === 'boolean') {
                 const watchedValue = form.watch(field.key) as boolean | undefined
@@ -186,11 +196,13 @@ export function ConfigAccordion({ blockKey, label, icon, fields, currentValues, 
               )
             })}
           </div>
-          <div className="mt-4 flex justify-end border-t pt-3">
-            <Button type="submit" size="sm" disabled={isSaving}>
-              {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
-            </Button>
-          </div>
+          {!readOnly && (
+            <div className="mt-4 flex justify-end border-t pt-3">
+              <Button type="submit" size="sm" disabled={isSaving}>
+                {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
+              </Button>
+            </div>
+          )}
         </form>
       </AccordionContent>
     </AccordionItem>

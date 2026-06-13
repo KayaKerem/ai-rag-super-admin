@@ -7,6 +7,7 @@ import { FieldLabel } from '@/components/ui/field-label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { ModelSelect } from '@/components/ui/model-select'
+import { Lock } from 'lucide-react'
 import { configBlockSchemas, type ConfigBlockKey } from '@/lib/validations'
 import type { PlatformModel } from '@/features/companies/types'
 import type { ZodTypeAny } from 'zod'
@@ -30,6 +31,9 @@ interface ConfigSectionProps {
   onSave: (blockKey: ConfigBlockKey, values: Record<string, unknown>) => void
   isSaving: boolean
   models?: PlatformModel[]
+  /** Backend bu bloğu PUT /config/defaults'tan kabul etmiyor (whitelist dışı → 400) — sadece görüntüle */
+  readOnly?: boolean
+  readOnlyNote?: string
 }
 
 export function ConfigSection({
@@ -41,6 +45,8 @@ export function ConfigSection({
   onSave,
   isSaving,
   models,
+  readOnly,
+  readOnlyNote,
 }: ConfigSectionProps) {
   const schema = configBlockSchemas[blockKey] as ZodTypeAny
 
@@ -84,8 +90,14 @@ export function ConfigSection({
         <p className="mt-1 text-sm text-muted-foreground">{description}</p>
       </div>
 
+      {readOnly && (
+        <div className="mb-4 flex items-start gap-2 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2">
+          <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
+          <span className="text-xs text-muted-foreground">{readOnlyNote ?? 'Bu blok salt-okunurdur.'}</span>
+        </div>
+      )}
       <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <div className="grid grid-cols-2 gap-4">
+        <div className={`grid grid-cols-2 gap-4 ${readOnly ? 'pointer-events-none opacity-60' : ''}`}>
           {fields.map((field) => {
             if (field.type === 'boolean') {
               const watchedValue = form.watch(field.key) as boolean | undefined
@@ -177,11 +189,13 @@ export function ConfigSection({
           })}
         </div>
 
-        <div className="mt-6 flex justify-end border-t pt-4">
-          <Button type="submit" disabled={isSaving}>
-            {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
-          </Button>
-        </div>
+        {!readOnly && (
+          <div className="mt-6 flex justify-end border-t pt-4">
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
+            </Button>
+          </div>
+        )}
       </form>
     </div>
   )

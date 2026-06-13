@@ -458,7 +458,7 @@ export const mockPlatformDefaults: any = {
     embeddingBatchSize: 100,
     historyTokenBudget: 100000,
     compactionTriggerTokens: 80000,
-    searchDefaultLimit: 10,
+    defaultSearchLimit: 10,
     batchMaxFiles: 50,
     batchMaxTotalSizeMb: 500,
     singleFileMaxSizeMb: 25,
@@ -500,7 +500,7 @@ export const mockPlatformDefaults: any = {
     monthlyBudgetUsd: 2.00,
     notifyEmail: false,
   },
-  whatsAppConfig: {
+  whatsappConfig: {
     defaultTemplateName: 'hello_world',
     defaultTemplateLanguage: 'tr',
     typingIndicatorEnabled: false,

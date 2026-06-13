@@ -27,6 +27,10 @@ interface SectionMeta {
   title: string
   description: string
   fields: FieldConfig[]
+  // PUT /platform/config/defaults aynı UpdateConfigDto whitelist'ini kullanır (10 blok);
+  // dışındaki bloklar forbidNonWhitelisted ile 400 döner — salt-okunur gösterilir.
+  readOnly?: boolean
+  readOnlyNote?: string
 }
 
 const sectionMeta: Record<string, SectionMeta> = {
@@ -43,9 +47,9 @@ const sectionMeta: Record<string, SectionMeta> = {
     title: 'Embedding Config',
     description: 'Varsayılan embedding model ayarları',
     fields: [
-      { key: 'model', label: 'Model', type: 'select', options: ['openai/text-embedding-3-small', 'openai/text-embedding-3-large', 'openai/text-embedding-ada-002', 'cohere/embed-multilingual-v3.0', 'cohere/embed-english-v3.0'], hint: 'Metin gomme (embedding) modeli. Dokumanlari vektore cevirir', required: true },
+      { key: 'model', label: 'Model', type: 'select', options: ['google/gemini-embedding-2', 'google/gemini-embedding-2-preview', 'openai/text-embedding-3-small', 'openai/text-embedding-3-large', 'cohere/embed-multilingual-v3.0', 'cohere/embed-english-v3.0'], hint: 'Metin gomme (embedding) modeli (OpenRouter). Platform default: google/gemini-embedding-2 (3072-dim)', required: true },
       { key: 'apiKey', label: 'API Key', type: 'text', hint: 'Embedding API anahtari', required: true },
-      { key: 'dimensions', label: 'Dimensions', type: 'number', hint: 'Embedding vektor boyutu. Model ile uyumlu olmali (or: 1536)' },
+      { key: 'dimensions', label: 'Dimensions', type: 'number', hint: 'Embedding vektor boyutu. Model ile uyumlu olmali (default: 3072)' },
     ],
   },
   langfuseConfig: {
@@ -109,7 +113,7 @@ const sectionMeta: Record<string, SectionMeta> = {
       { key: 'embeddingBatchSize', label: 'Embedding Batch Size', type: 'number', hint: 'Embedding isleminde batch boyutu. Yuksek = hizli ama daha fazla bellek' },
       { key: 'historyTokenBudget', label: 'History Token Budget', type: 'number', hint: 'Sohbet gecmisi icin ayrilan token butcesi' },
       { key: 'compactionTriggerTokens', label: 'Compaction Trigger Tokens', type: 'number', hint: 'Bu token sayisi asilinca gecmis otomatik ozetlenir' },
-      { key: 'searchDefaultLimit', label: 'Search Default Limit', type: 'number', hint: 'Arama sonuclari varsayilan limit' },
+      { key: 'defaultSearchLimit', label: 'Default Search Limit', type: 'number', hint: 'Arama sonuclari varsayilan limit (effective default: 3). Eski ad searchDefaultLimit gecersiz' },
       { key: 'batchMaxFiles', label: 'Batch Max Files', type: 'number', hint: 'Toplu yukleme: maksimum dosya sayisi' },
       { key: 'batchMaxTotalSizeMb', label: 'Batch Max Total Size (MB)', type: 'number', hint: 'Toplu yukleme: maksimum toplam boyut (MB)' },
       { key: 'singleFileMaxSizeMb', label: 'Single File Max Size (MB)', type: 'number', hint: 'Toplu yuklemede tek dosya maks boyut (MB)' },
@@ -144,6 +148,8 @@ const sectionMeta: Record<string, SectionMeta> = {
   proactiveConfig: {
     title: 'Proaktif Agentlar',
     description: 'Varsayılan proaktif agent ayarları',
+    readOnly: true,
+    readOnlyNote: 'proactiveConfig PUT /config/defaults whitelist\'inde yok (400). Backend\'de bu bloğu yazan bir endpoint henüz mevcut değil — salt-okunur.',
     fields: [
       { key: 'enabled', label: 'Aktif', type: 'boolean', hint: 'Platform genelinde proaktif agentlar varsayılan olarak açık/kapalı' },
       { key: 'freshnessEnabled', label: 'Freshness Agent', type: 'boolean', hint: 'URL değişiklik kontrolü' },
@@ -168,6 +174,8 @@ const sectionMeta: Record<string, SectionMeta> = {
   dataRetentionConfig: {
     title: 'Veri Saklama',
     description: 'Veri saklama süresi konfigürasyonu. Aktif edildiğinde süresi geçmiş lead\'ler otomatik olarak kalıcı silinir.',
+    readOnly: true,
+    readOnlyNote: 'dataRetentionConfig PUT /config/defaults whitelist\'inde yok (400); başka bir yazma endpoint\'i de yok (set etmek DB-level müdahale gerektirir). Default: enabled=false, leadRetentionDays=365.',
     fields: [
       { key: 'enabled', label: 'Otomatik Temizlik', type: 'boolean', hint: 'Aktif edildiğinde süresi geçmiş lead\'ler geri döndürülemez şekilde silinir' },
       { key: 'leadRetentionDays', label: 'Lead Saklama Süresi (gün)', type: 'number', hint: 'Son temas tarihinden itibaren gün sayısı (min: 30, max: 3650). Varsayılan: 365' },
@@ -242,7 +250,7 @@ export function SettingsPage() {
         ) : activeSection === 'whatsAppConfig' ? (
           <WhatsAppConfigSection
             key="whatsAppConfig"
-            currentValues={defaults?.whatsAppConfig as Record<string, unknown> | undefined}
+            currentValues={defaults?.whatsappConfig as Record<string, unknown> | undefined}
             onSave={handleSave}
             isSaving={isPending}
           />
@@ -266,6 +274,8 @@ export function SettingsPage() {
             onSave={handleSave}
             isSaving={isPending}
             models={models ?? []}
+            readOnly={meta.readOnly}
+            readOnlyNote={meta.readOnlyNote}
           />
         ) : null}
       </main>

@@ -15,7 +15,13 @@ export function WorkingHoursSection({ currentValues, onSave, isSaving }: Working
         WhatsApp ve diğer kanal mesajları için çalışma saatleri. Mesai dışında otomatik yanıt gönderilir.
         WhatsApp entegrasyonu aktif olan firmalar için AI agent yalnızca çalışma saatleri içinde yanıt verir.
       </p>
-      <WorkingHoursForm currentValues={currentValues} onSave={onSave} isSaving={isSaving} />
+      <WorkingHoursForm
+        currentValues={currentValues}
+        onSave={onSave}
+        isSaving={isSaving}
+        readOnly
+        readOnlyNote="PUT /platform/config/defaults bu bloğu kabul etmez (whitelist dışı → 400). Şirket bazında yazma yolu: tenant PATCH /companies/me/working-hours."
+      />
     </div>
   )
 }

@@ -30,13 +30,16 @@ interface WhatsAppConfigFormProps {
   currentValues: WhatsAppConfig | undefined
   onSave: (blockKey: ConfigBlockKey, values: Record<string, unknown>) => void
   isSaving: boolean
+  /** whatsappConfig PUT /config whitelist'inde yok (400) — yazma yolu tenant-admin PATCH /admin/channels/whatsapp/config */
+  readOnly?: boolean
+  readOnlyNote?: string
 }
 
-export function WhatsAppConfigForm({ currentValues, onSave, isSaving }: WhatsAppConfigFormProps) {
+export function WhatsAppConfigForm({ currentValues, onSave, isSaving, readOnly, readOnlyNote }: WhatsAppConfigFormProps) {
   const [templateName, setTemplateName] = useState(currentValues?.defaultTemplateName ?? '')
   const [templateLang, setTemplateLang] = useState(currentValues?.defaultTemplateLanguage ?? 'tr')
   const [typingIndicator, setTypingIndicator] = useState(currentValues?.typingIndicatorEnabled ?? false)
-  const [welcomeEnabled, setWelcomeEnabled] = useState(currentValues?.welcomeMessages?.enabled ?? true)
+  const [welcomeEnabled, setWelcomeEnabled] = useState(currentValues?.welcomeMessages?.enabled ?? false)
   const [newLeadMsg, setNewLeadMsg] = useState(currentValues?.welcomeMessages?.newLead ?? '')
   const [returningLeadMsg, setReturningLeadMsg] = useState(currentValues?.welcomeMessages?.returningLead ?? '')
 
@@ -44,7 +47,7 @@ export function WhatsAppConfigForm({ currentValues, onSave, isSaving }: WhatsApp
     setTemplateName(currentValues?.defaultTemplateName ?? '')
     setTemplateLang(currentValues?.defaultTemplateLanguage ?? 'tr')
     setTypingIndicator(currentValues?.typingIndicatorEnabled ?? false)
-    setWelcomeEnabled(currentValues?.welcomeMessages?.enabled ?? true)
+    setWelcomeEnabled(currentValues?.welcomeMessages?.enabled ?? false)
     setNewLeadMsg(currentValues?.welcomeMessages?.newLead ?? '')
     setReturningLeadMsg(currentValues?.welcomeMessages?.returningLead ?? '')
   }, [currentValues])
@@ -64,6 +67,13 @@ export function WhatsAppConfigForm({ currentValues, onSave, isSaving }: WhatsApp
 
   return (
     <div className="space-y-4">
+      {readOnly && (
+        <div className="flex items-start gap-2 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2">
+          <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
+          <span className="text-xs text-muted-foreground">{readOnlyNote ?? 'Bu blok salt-okunurdur.'}</span>
+        </div>
+      )}
+      <div className={readOnly ? 'pointer-events-none opacity-60 space-y-4' : 'space-y-4'}>
       {/* Template Settings */}
       <div className="space-y-3">
         <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Template Ayarlari</Label>
@@ -147,11 +157,14 @@ export function WhatsAppConfigForm({ currentValues, onSave, isSaving }: WhatsApp
         </div>
       </div>
 
-      <div className="flex justify-end border-t pt-3">
-        <Button size="sm" onClick={handleSave} disabled={isSaving}>
-          {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
-        </Button>
       </div>
+      {!readOnly && (
+        <div className="flex justify-end border-t pt-3">
+          <Button size="sm" onClick={handleSave} disabled={isSaving}>
+            {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

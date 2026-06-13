@@ -29,6 +29,10 @@ interface BlockDef {
   label: string
   icon: string
   fields: FieldDef[]
+  // PUT /platform/companies/:id/config whitelist'i 10 blok kabul eder (02-company-config.md);
+  // dışındaki bloklar forbidNonWhitelisted ile 400 döner — bunlar salt-okunur gösterilir.
+  readOnly?: boolean
+  readOnlyNote?: string
 }
 
 const configBlocks: BlockDef[] = [
@@ -36,6 +40,8 @@ const configBlocks: BlockDef[] = [
     key: 'proactiveConfig',
     label: 'Proaktif Agentlar',
     icon: '🔮',
+    readOnly: true,
+    readOnlyNote: 'proactiveConfig PUT /config whitelist\'inde yok (400). Backend\'de bu bloğu yazan bir endpoint henüz mevcut değil — salt-okunur.',
     fields: [
       { key: 'enabled', label: 'Aktif', type: 'boolean', hint: 'Master switch. Kapalıyken tüm proaktif agentlar durur' },
       { key: 'freshnessEnabled', label: 'Freshness Agent', type: 'boolean', hint: 'URL değişiklik kontrolü' },
@@ -53,9 +59,9 @@ const configBlocks: BlockDef[] = [
     label: 'Embedding Config',
     icon: '🧬',
     fields: [
-      { key: 'model', label: 'Model', type: 'select', options: ['openai/text-embedding-3-small', 'openai/text-embedding-3-large', 'openai/text-embedding-ada-002', 'cohere/embed-multilingual-v3.0', 'cohere/embed-english-v3.0'], hint: 'Metin gomme (embedding) modeli. Dokumanlari vektore cevirir', required: true },
+      { key: 'model', label: 'Model', type: 'select', options: ['google/gemini-embedding-2', 'google/gemini-embedding-2-preview', 'openai/text-embedding-3-small', 'openai/text-embedding-3-large', 'cohere/embed-multilingual-v3.0', 'cohere/embed-english-v3.0'], hint: 'Metin gomme (embedding) modeli (OpenRouter). Platform default: google/gemini-embedding-2 (3072-dim)', required: true },
       { key: 'apiKey', label: 'API Key', hint: 'Embedding API anahtari', required: true },
-      { key: 'dimensions', label: 'Dimensions', type: 'number', hint: 'Embedding vektor boyutu. Model ile uyumlu olmali (or: 1536)' },
+      { key: 'dimensions', label: 'Dimensions', type: 'number', hint: 'Embedding vektor boyutu. Model ile uyumlu olmali (default: 3072)' },
     ],
   },
   {
@@ -124,7 +130,7 @@ const configBlocks: BlockDef[] = [
       { key: 'embeddingBatchSize', label: 'Embedding Batch Size', type: 'number', hint: 'Embedding isleminde batch boyutu. Yuksek = hizli ama daha fazla bellek' },
       { key: 'historyTokenBudget', label: 'History Token Budget', type: 'number', hint: 'Sohbet gecmisi icin ayrilan token butcesi' },
       { key: 'compactionTriggerTokens', label: 'Compaction Trigger Tokens', type: 'number', hint: 'Bu token sayisi asilinca gecmis otomatik ozetlenir' },
-      { key: 'searchDefaultLimit', label: 'Search Default Limit', type: 'number', hint: 'Arama sonuclari varsayilan limit' },
+      { key: 'defaultSearchLimit', label: 'Default Search Limit', type: 'number', hint: 'Arama sonuclari varsayilan limit (effective default: 3). Eski ad searchDefaultLimit gecersiz' },
       { key: 'batchMaxFiles', label: 'Batch Max Files', type: 'number', hint: 'Toplu yukleme: maksimum dosya sayisi' },
       { key: 'batchMaxTotalSizeMb', label: 'Batch Max Total Size (MB)', type: 'number', hint: 'Toplu yukleme: maksimum toplam boyut (MB)' },
       { key: 'singleFileMaxSizeMb', label: 'Single File Max Size (MB)', type: 'number', hint: 'Toplu yuklemede tek dosya maks boyut (MB)' },
@@ -226,19 +232,26 @@ export function ConfigTab({ companyId }: ConfigTabProps) {
             onSave={handleSave}
             isSaving={updateConfig.isPending}
             models={models ?? []}
+            readOnly={block.readOnly}
+            readOnlyNote={block.readOnlyNote}
           />
         ))}
 
+        {/* Backend JSON key'i `whatsappConfig` (küçük a — entity property) */}
         <WhatsAppConfigAccordion
-          currentValues={config?.whatsAppConfig}
+          currentValues={config?.whatsappConfig}
           onSave={handleSave}
           isSaving={updateConfig.isPending}
+          readOnly
+          readOnlyNote="whatsappConfig PUT /config whitelist'inde yok (400). Yazma yolu: tenant-admin PATCH /admin/channels/whatsapp/config."
         />
 
         <WorkingHoursAccordion
           currentValues={config?.workingHoursConfig}
           onSave={handleSave}
           isSaving={updateConfig.isPending}
+          readOnly
+          readOnlyNote="workingHoursConfig PUT /config whitelist'inde yok (400). Yazma yolu: tenant PATCH /companies/me/working-hours."
         />
       </Accordion>
     </div>

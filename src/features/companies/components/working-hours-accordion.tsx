@@ -8,9 +8,11 @@ interface WorkingHoursAccordionProps {
   currentValues: WorkingHoursConfig | undefined
   onSave: (blockKey: ConfigBlockKey, values: Record<string, unknown>) => void
   isSaving: boolean
+  readOnly?: boolean
+  readOnlyNote?: string
 }
 
-export function WorkingHoursAccordion({ currentValues, onSave, isSaving }: WorkingHoursAccordionProps) {
+export function WorkingHoursAccordion({ currentValues, onSave, isSaving, readOnly, readOnlyNote }: WorkingHoursAccordionProps) {
   const hasConfig = currentValues && Object.keys(currentValues).length > 0
 
   return (
@@ -25,7 +27,7 @@ export function WorkingHoursAccordion({ currentValues, onSave, isSaving }: Worki
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-4 pb-4 pt-2">
-        <WorkingHoursForm currentValues={currentValues} onSave={onSave} isSaving={isSaving} />
+        <WorkingHoursForm currentValues={currentValues} onSave={onSave} isSaving={isSaving} readOnly={readOnly} readOnlyNote={readOnlyNote} />
       </AccordionContent>
     </AccordionItem>
   )

@@ -117,7 +117,7 @@ export const limitsConfigSchema = z.object({
   embeddingBatchSize: posNum,
   historyTokenBudget: posNum,
   compactionTriggerTokens: posNum,
-  searchDefaultLimit: posNum,
+  defaultSearchLimit: posNum,
   batchMaxFiles: posNum,
   batchMaxTotalSizeMb: posNum,
   singleFileMaxSizeMb: posNum,

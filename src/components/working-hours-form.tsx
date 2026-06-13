@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Lock } from 'lucide-react'
 import type { ConfigBlockKey } from '@/lib/validations'
 
 export interface DaySchedule {
@@ -57,9 +58,12 @@ interface WorkingHoursFormProps {
   currentValues: WorkingHoursConfig | undefined
   onSave: (blockKey: ConfigBlockKey, values: Record<string, unknown>) => void
   isSaving: boolean
+  /** workingHoursConfig PUT /config whitelist'inde yok (400) — yazma yolu tenant PATCH /companies/me/working-hours */
+  readOnly?: boolean
+  readOnlyNote?: string
 }
 
-export function WorkingHoursForm({ currentValues, onSave, isSaving }: WorkingHoursFormProps) {
+export function WorkingHoursForm({ currentValues, onSave, isSaving, readOnly, readOnlyNote }: WorkingHoursFormProps) {
   const [enabled, setEnabled] = useState(currentValues?.enabled ?? false)
   const [timezone, setTimezone] = useState(currentValues?.timezone ?? 'Europe/Istanbul')
   const [schedule, setSchedule] = useState<Record<string, DaySchedule | null>>(
@@ -99,6 +103,13 @@ export function WorkingHoursForm({ currentValues, onSave, isSaving }: WorkingHou
 
   return (
     <div className="space-y-4">
+      {readOnly && (
+        <div className="flex items-start gap-2 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2">
+          <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
+          <span className="text-xs text-muted-foreground">{readOnlyNote ?? 'Bu blok salt-okunurdur.'}</span>
+        </div>
+      )}
+      <div className={readOnly ? 'pointer-events-none opacity-60 space-y-4' : 'space-y-4'}>
       <div className="flex items-center justify-between rounded-md border px-3 py-2">
         <Label className="text-sm">Aktif</Label>
         <Switch checked={enabled} onCheckedChange={setEnabled} />
@@ -167,11 +178,14 @@ export function WorkingHoursForm({ currentValues, onSave, isSaving }: WorkingHou
         </div>
       </div>
 
-      <div className="flex justify-end border-t pt-3">
-        <Button size="sm" onClick={handleSave} disabled={isSaving}>
-          {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
-        </Button>
       </div>
+      {!readOnly && (
+        <div className="flex justify-end border-t pt-3">
+          <Button size="sm" onClick={handleSave} disabled={isSaving}>
+            {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
+          </Button>
+        </div>
+      )}
     </div>
   )
 }
