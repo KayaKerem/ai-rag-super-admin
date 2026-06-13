@@ -22,12 +22,19 @@ export function TranslationInfoTab() {
       {/* Cost example */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base">Cost Example (Haiku 4.5)</CardTitle>
+          <CardTitle className="text-base">Cost Example (DeepSeek V4 Flash)</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
           <p>
             <span className="text-muted-foreground">Model:</span>{' '}
             <code className="text-xs">{TRANSLATION_INFO.model}</code>
+          </p>
+          <p>
+            <span className="text-muted-foreground">Timeout:</span>{' '}
+            <code className="text-xs">{TRANSLATION_INFO.timeoutMs / 1000}s</code> +{' '}
+            {TRANSLATION_INFO.retry} &nbsp;{' '}
+            <span className="text-muted-foreground">Input cap:</span>{' '}
+            <code className="text-xs">{TRANSLATION_INFO.maxInputChars.toLocaleString()} kr</code>
           </p>
           <p>
             <span className="text-muted-foreground">Input:</span> $
@@ -113,14 +120,21 @@ export function TranslationInfoTab() {
             <span className="text-muted-foreground">Glossary entries:</span>{' '}
             <code className="text-xs">{TRANSLATION_INFO.glossaryLocation}</code>
           </p>
-          <p className="text-muted-foreground">Her LLM çağrısı öncesi maskeli desenler:</p>
-          <div className="flex flex-wrap gap-2">
-            {TRANSLATION_INFO.redactionPatterns.map((p) => (
-              <Badge key={p} variant="outline" className="text-xs">
-                {p}
-              </Badge>
+          <p className="text-muted-foreground">Her LLM çağrısı öncesi maskelenen desenler:</p>
+          <div className="space-y-1.5">
+            {TRANSLATION_INFO.redactionMasks.map((r) => (
+              <div key={r.pattern} className="flex items-center gap-3">
+                <Badge variant="outline" className="text-xs whitespace-nowrap">
+                  {r.pattern}
+                </Badge>
+                <code className="text-xs text-muted-foreground">{r.mask}</code>
+              </div>
             ))}
           </div>
+          <p className="text-xs text-muted-foreground pt-1">
+            {TRANSLATION_INFO.notRedacted.join(' ve ')} <strong>masklanmaz</strong> — verbatim korunur
+            (span-claim, içindeki rakamların yanlışlıkla maskelenmesini önler).
+          </p>
         </CardContent>
       </Card>
     </div>

@@ -26,7 +26,11 @@ export function CronCatalogTab() {
             wizard, per-route audit log henüz yok.
           </p>
           <p className="text-xs">
-            Şu an Coolify Cron veya GitHub Actions schedule üzerinden tetiklenir. Manuel trigger UI{' '}
+            Endpoint'lerin büyük çoğunluğu <strong>Trigger.dev scheduled task</strong>'leri tarafından
+            çağrılır; yalnızca repo'da Trigger task'i olmayan 3 endpoint (process-downgrades,
+            email-lifecycle, subscription-lifecycle) Coolify'da harici cron gerektirir. Tüm çağrılar
+            iki header ister: <code className="text-[10px]">x-ai-internal-key</code> +{' '}
+            <code className="text-[10px]">X-Edfu-Agent-Id</code>. Manuel trigger UI{' '}
             <strong>security risk</strong> (secret expose) için eklenmedi.
           </p>
         </div>

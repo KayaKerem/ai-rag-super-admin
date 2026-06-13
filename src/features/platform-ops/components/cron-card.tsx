@@ -9,6 +9,8 @@ interface CronCardProps {
   entry: CronEntry
 }
 
+// X-Edfu-Agent-Id internal controller'larda ikinci zorunlu header (eksikse 400);
+// değer AGENT_UUIDS içinden bir agent UUID'si — conversation agent'ı default makul.
 function buildSnippet(entry: CronEntry): string {
   const apiBase = import.meta.env.VITE_API_URL || 'https://api.edfu.ai'
   const name = entry.route.split('/').filter(Boolean).pop() ?? 'cron'
@@ -16,7 +18,8 @@ function buildSnippet(entry: CronEntry): string {
   schedule: "${entry.schedule}"
   command: |
     curl -X POST ${apiBase}${entry.route} \\
-      -H "x-ai-internal-key: $AI_INTERNAL_SECRET"`
+      -H "x-ai-internal-key: $AI_INTERNAL_SECRET" \\
+      -H "X-Edfu-Agent-Id: 00000000-0000-4000-8000-000000000001"`
 }
 
 async function copyToClipboard(text: string) {
