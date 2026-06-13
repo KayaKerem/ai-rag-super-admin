@@ -125,7 +125,7 @@ export function PlatformToolPlanlari() {
         <CardContent className="py-4 text-sm text-muted-foreground">
           <div className="font-semibold text-amber-400">🔒 registeredTools — Read-Only</div>
           <div className="mt-2">
-            <code className="rounded bg-muted px-1 py-0.5 text-xs">registeredTools</code> array'i backend tarafından kod düzeyinde belirlenir — super admin düzenleyemez. Tool eklemek / kaldırmak backend release'i gerektirir. Güncel liste her zaman <code className="rounded bg-muted px-1 py-0.5 text-xs">GET /platform/tool-plans</code> response'undan alınır (Nisan 2026'da 24 tool kayıtlı).
+            <code className="rounded bg-muted px-1 py-0.5 text-xs">registeredTools</code> array'i backend tarafından kod düzeyinde belirlenir — super admin düzenleyemez. Tool eklemek / kaldırmak backend release'i gerektirir. Güncel liste her zaman <code className="rounded bg-muted px-1 py-0.5 text-xs">GET /platform/tool-plans</code> response'undan alınır (Haziran 2026'da 27 tool kayıtlı; 2 dispatch tool ayrıca aiConfig.dispatchToolsEnabled ile yönetilir).
           </div>
         </CardContent>
       </Card>

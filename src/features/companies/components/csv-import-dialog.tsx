@@ -66,7 +66,8 @@ export function CsvImportDialog({ companyId }: CsvImportDialogProps) {
               className="block w-full text-sm text-foreground file:mr-3 file:rounded-md file:border file:border-input file:bg-transparent file:px-3 file:py-1 file:text-sm file:font-medium cursor-pointer"
             />
             <p className="text-xs text-muted-foreground">
-              CSV formatı: email, name, role (max 500 satır)
+              CSV formatı: email, name, role (max 500 satır). Role zorunlu — boş/geçersiz satırlar
+              failed olarak raporlanır (varsayılan rol atanmaz); dosya limiti aşılırsa 413 döner.
             </p>
           </div>
           <div className="flex justify-end gap-2">
