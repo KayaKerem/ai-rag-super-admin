@@ -846,14 +846,15 @@ export const handlers = [
   }),
 
   // ─── WP Plugin Version (no-auth public)
+  // URL template'leri backend gibi RELATİF — host'u FE compose eder
   http.get(`${BASE}/public/wp-plugin/version.json`, () => {
     return HttpResponse.json({
-      version: '1.0.0',
-      tested_up_to: '6.9',
-      requires_at_least: '6.2',
-      downloadUrlTemplate: `${BASE}/public/wp-plugin/by-slug/{slug}/edfu-chat.zip`,
-      embedScriptUrlTemplate: `${BASE}/public/wp-plugin/by-slug/{slug}/edfu-chat.js`,
+      latest: '1.0.0',
+      minBackend: '1.0.0',
       available: true,
+      downloadUrlTemplate: '/public/wp-plugin/by-slug/{slug}/edfu-chat.zip',
+      embedScriptUrlTemplate: '/public/wp-plugin/by-slug/{slug}/edfu-chat.js',
+      notes: 'mock',
     })
   }),
 ]

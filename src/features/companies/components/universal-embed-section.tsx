@@ -41,8 +41,9 @@ export function UniversalEmbedSection({ slug }: UniversalEmbedSectionProps) {
 
   const scriptUrl = useMemo(() => {
     const base = import.meta.env.VITE_API_URL || 'https://api.edfu.ai'
+    // embedScriptUrlTemplate relatif path döner — host'u FE ekler (26-wp-plugin.md §2)
     return data?.embedScriptUrlTemplate
-      ? data.embedScriptUrlTemplate.replace('{slug}', slug)
+      ? `${base}${data.embedScriptUrlTemplate.replace('{slug}', slug)}`
       : `${base}/public/wp-plugin/by-slug/${slug}/edfu-chat.js`
   }, [data?.embedScriptUrlTemplate, slug])
 

@@ -1,13 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/lib/query-keys'
 
+// version.json şeması: docs/frontend-admin/26-wp-plugin.md §2.
+// URL template'leri RELATİF path içerir — host'u FE compose eder.
 export interface WpPluginVersion {
-  version: string
-  tested_up_to: string
-  requires_at_least: string
+  latest: string
+  minBackend: string
+  available: boolean
   downloadUrlTemplate: string
   embedScriptUrlTemplate: string
-  available: boolean
+  notes?: string
 }
 
 export function useWpPluginVersion() {

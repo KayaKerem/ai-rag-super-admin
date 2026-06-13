@@ -13,8 +13,9 @@ export function WpPluginSection({ slug }: WpPluginSectionProps) {
   const { data, isLoading } = useWpPluginVersion()
 
   const base = import.meta.env.VITE_API_URL || 'https://api.edfu.ai'
+  // downloadUrlTemplate relatif path döner — host'u FE ekler (26-wp-plugin.md §2)
   const zipUrl = data?.downloadUrlTemplate
-    ? data.downloadUrlTemplate.replace('{slug}', slug)
+    ? `${base}${data.downloadUrlTemplate.replace('{slug}', slug)}`
     : `${base}/public/wp-plugin/by-slug/${slug}/edfu-chat.zip`
 
   const isAvailable = data?.available ?? true
@@ -25,7 +26,7 @@ export function WpPluginSection({ slug }: WpPluginSectionProps) {
         <CardTitle className="text-base">WordPress Plugin</CardTitle>
         {data && (
           <Badge variant="outline" className="text-xs">
-            v{data.version} (WP {data.requires_at_least}+)
+            v{data.latest} (backend {data.minBackend}+)
           </Badge>
         )}
         {!data && !isLoading && (
